@@ -1,0 +1,273 @@
+[nz-button] {
+    margin: 5px 5px 5px 5px;
+}
+::ng-deep .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #f50;
+  border-color: #f50;
+}
+nz-select {
+    margin: 0 8px 10px 0;
+    width: 200px;
+}
+.ant-input-affix-wrapper {
+    width: 200px;
+}
+#Issue{
+  overflow-y: auto;
+  height: 93vh;
+}
+nz-table {
+    text-align: center;
+    width: 100%;
+    text-indent: initial;
+    border: 1px solid #ccc;
+}
+tr:hover{
+    background-color: #f8faeb;
+}
+i:hover{
+    cursor: pointer;
+}
+.progressChild{
+    float: right;
+}
+label{
+    font-weight: 500;
+}
+.ant-modal-header {
+    padding: 16px 24px;
+    color: rgba(0, 0, 0, 0.85);
+    background: #ff7875;
+    border-bottom: 1px solid #f0f0f0;
+    border-radius: 2px 2px 0 0;
+}
+.ant-layout, .ant-layout * {
+    text-align: center;
+    box-sizing: border-box;
+}
+.status{
+    border-radius: 15px 15px 15px;
+    font-size: 13px;
+}
+.choosen{
+    border-radius: 15px 15px 15px;
+    font-size: 14px;
+    border: none;
+    background-color: #f50;
+    color: #f0f0f0;
+}
+ nz-avatar {
+    margin-top: 16px;
+    margin-right: 16px;
+}
+nz-header{
+  text-align: center;
+  background: #f7d1d1;
+  color:black;
+}
+.Options{
+    height: 36px;
+    font-size: 13px;
+    padding-top: 2px;
+    color: rgb(0 0 0 / 85%);
+    background: #fafafa;
+    border-color: #212529;
+    box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
+    text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
+    width: 131px;
+}
+td {
+    height: 50px;
+    text-align: center;
+}
+th{
+    text-align: center;
+}
+@media only screen and (min-width: 740px){
+  #pagingMobile{
+    display: none;
+  }
+  #Issue::-webkit-scrollbar-track
+  {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+    border-radius: 5px;
+  }
+
+  #Issue::-webkit-scrollbar
+  {
+    width: 3px;
+    background-color: #d5ecf7;
+    border-radius: 5px;
+  }
+
+  #Issue::-webkit-scrollbar-thumb
+  {
+    background-color: #f50;
+    border-radius: 5px;
+  }
+}
+@media only screen and (max-width: 740px){
+  #pc-card, #pagingPc{
+    display: none;
+  }
+  .rowSelect{
+    ::ng-deep .ant-divider-horizontal.ant-divider-with-text {
+      margin: 7px 0 !important;
+    }
+  }
+  #br, #rowPc{
+    display: none;
+  }
+  .showMorefilter{
+    width: 25px;
+    border-radius: 15px 15px 15px;
+  }
+
+    .rowSelect{
+      margin-top: -25px !important;
+    }
+    #excel-table{
+        display: none;
+    }
+    #Issue{
+        padding: 10px !important;
+        ::ng-deep .anticon svg {
+            margin: 0px -14px 0px -8px !important;
+        }
+        .iconTag{
+            margin-left: 5px !important;
+        }
+    }
+    .nameIssues{
+        margin-left: 0px !important;
+    }
+    .viewOption{
+        float: left !important;
+        margin-top: 0px !important;
+    }
+    .viewOption1{
+        padding-bottom: 0px !important;
+        padding-top: 0px !important;
+        margin-left: 0px !important;
+        display: none;
+    }
+    ::ng-deep .ant-table-thead > tr > th, .ant-table-tbody > tr > td, .ant-table tfoot > tr > th, .ant-table tfoot > tr > td {
+        padding: 10px 10px;
+    }
+}
+#responTable{
+  ::ng-deep .badge {
+    font-size: 0.9em;
+  }
+  ::ng-deep .ant-tag {
+    margin-right: 0px;
+  }
+  td {
+    height: 40px !important;
+}
+  // max-height: 364px;
+  overflow-y: auto;
+  border: 1px solid #f50;
+  border-radius: 7px;
+  table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+    overflow-x: hidden;
+  }
+
+  table caption {
+    font-size: 1.5em;
+    margin: .5em 0 .75em;
+  }
+
+  table tr {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: .55em;
+  }
+
+  table th,
+  table td {
+    padding: .625em;
+    text-align: center;
+  }
+
+  table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  @media screen and (max-width: 600px) {
+    table {
+      border: 0;
+    }
+
+    table caption {
+      font-size: 1.3em;
+    }
+
+    table thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+
+    table tr {
+      display: block;
+      margin-bottom: .625em;
+      overflow-x: hidden;
+    }
+
+    table td {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      font-size: .78em;
+      text-align: right;
+    }
+
+    table td::before {
+      /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    table td:last-child {
+      border-bottom: 0;
+    }
+  }
+}
+  @media only screen and (min-width: 740px) {
+    #responTable,#mobile-card{
+      display: none;
+    }
+    #btnShowmore{
+      display: none;
+    }
+  }
+#mobile-card{
+  .ant-tag {
+    margin-right: 0px;
+  }
+  ::ng-deep .ant-card-small > .ant-card-body {
+    padding: 0 12px;
+  }
+  ::ng-deep .ant-progress-steps-outer {
+    margin-right: -13px;
+  }
+}

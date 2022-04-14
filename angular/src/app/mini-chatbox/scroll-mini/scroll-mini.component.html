@@ -1,0 +1,268 @@
+<div class="info" *ngIf="isShowInfo">
+  <div class="Image-Avatar">
+    <div *ngIf="avartarUser">
+      <img nz-image *ngIf="avartarUser !== null" [nzSrc]="avartarUser" alt="image" />
+    </div>
+    <div *ngIf="!avartarUser && typeConversation == 0">
+      <img *ngIf="avartarUser === null" src="https://i.imgur.com/b08hxPY.png" />
+    </div>
+    <div *ngIf="!avartarUser && typeConversation == 1">
+      <img
+        *ngIf="avartarUser === null"
+        src="https://lh3.googleusercontent.com/proxy/dwJvaACP3NHjt_KOC66QG4d1fj_q5sXNqMUznlp5jB8SLHLip3B6x24C8-fgGBFtrA8qZDJrBbXcOxSCzVAErLCWgwqFp56VGOL4fLhl7qox"
+        alt="image"
+      />
+    </div>
+  </div>
+  <div *ngIf="typeConversation == 0" class="info-User">
+    <div>
+      <h5>{{ nameUser }}</h5>
+    </div>
+    <div style="display: flex">
+      <i class="fas fa-users"></i>
+      <span>{{ infoUser?.departments }}</span>
+    </div>
+    <div>
+      <i class="fas fa-street-view"></i>
+      <span>{{ infoUser?.teams }}</span>
+    </div>
+    <div>
+      <i class="fas fa-envelope-square"></i>
+      <span style="word-break: break-all">{{ infoUser?.email }}</span>
+    </div>
+    <div>
+      <i class="fas fa-phone-alt"></i>
+      <span>{{ infoUser?.phone }}</span>
+    </div>
+  </div>
+  <div *ngIf="typeConversation == 1" class="info-User">
+    <div>
+      <h5>{{ nameUser }}</h5>
+    </div>
+    <div *ngFor="let item of listUserInGroup">
+      <h6>{{ item.name }}</h6>
+    </div>
+  </div>
+</div>
+<div class="chat-box">
+  <div [class.headerClose]="showUnread === true" class="header" (click)="toggle(item)">
+    <span *ngIf="unreadMess > 0 && show == false" class="chat-message-counter">{{
+      unreadMess
+    }}</span>
+    <div class="avartar" *ngIf="avartarUser">
+      <img nz-image *ngIf="avartarUser !== null" [nzSrc]="avartarUser" alt="image" />
+    </div>
+    <div class="avartar" *ngIf="!avartarUser && typeConversation == 0">
+      <img *ngIf="avartarUser === null" src="https://i.imgur.com/b08hxPY.png" alt="image" />
+    </div>
+    <div class="avartar" *ngIf="!avartarUser && typeConversation == 1">
+      <img
+        *ngIf="avartarUser === null"
+        src="https://lh3.googleusercontent.com/proxy/dwJvaACP3NHjt_KOC66QG4d1fj_q5sXNqMUznlp5jB8SLHLip3B6x24C8-fgGBFtrA8qZDJrBbXcOxSCzVAErLCWgwqFp56VGOL4fLhl7qox"
+        alt="image"
+      />
+    </div>
+    <span
+      (mouseenter)="isShowInfo = true"
+      (mouseleave)="isShowInfo = false"
+      (click)="gotoMess()"
+      class="name"
+    >
+      {{ nameUser }}
+    </span>
+
+    <span class="options">
+      <i nz-icon nzType="close" nzTheme="outline" (click)="closedChat()"></i>
+    </span>
+  </div>
+  <div *ngIf="show" class="message-review">
+    <div class="chat-room" #mini (scroll)="onScroll($event)">
+      <div *ngFor="let mess of message?.items">
+        <div id="divider">
+          <nz-divider
+            *ngIf="mess.showDate"
+            nzText="{{ mess.creationTime | customDayPipe }}"
+          ></nz-divider>
+        </div>
+        <div
+          class="message message-left"
+          *ngIf="mess.senderId != this.shareService.getUserData?.id"
+        >
+          <div
+            *ngIf="typeConversation == 1 && mess.content != ''"
+            style="font-size: 10px; margin-left: 5px; margin-bottom: -4px"
+          >
+            {{ mess?.senderName }}
+          </div>
+          <div
+            [ngClass]="{
+              deleteMessage: mess.content == 'Nội dung đã xoá',
+              tag: mess.content.includes(tagName?.name)
+            }"
+            (click)="showtime(mess.id, mess.content)"
+            *ngIf="mess.content != ''"
+            class="bubble bubble-light"
+          >
+            {{ mess.content }}
+          </div>
+          <div *ngIf="listShowMessageTime.includes(mess.id)" class="chat-msg-date">
+            {{ mess.creationTime | date: 'shortTime' }}
+          </div>
+          <div class="bubble chatIMG" *ngFor="let img of mess?.attachmentDto">
+            <div *ngIf="checkAttachmentOrImage(img.fileExtension)" class="fileLeft">
+              <span>{{ img.untrustedNameForDisplay }}</span>
+              <i (click)="download(img.fileUrl)" nz-icon nzType="download" nzTheme="outline"></i>
+            </div>
+            <img
+              nz-image
+              class="imgAtt"
+              *ngIf="!checkAttachmentOrImage(img.fileExtension)"
+              nzSrc="{{ img.fileUrl }}"
+            />
+          </div>
+        </div>
+        <div
+          *ngIf="mess.senderId == this.shareService.getUserData?.id"
+          class="message message-right"
+        >
+          <div class="ShowMoreDetail">
+            <div
+              *ngIf="mess.content != 'Nội dung đã xoá' && mess.content != ''"
+              class="More"
+              nzTooltipTitle="More"
+              nzTooltipPlacement="top"
+              nz-tooltip
+              nz-dropdown
+              nzTrigger="click"
+              [nzDropdownMenu]="menu"
+              nzPlacement="topCenter"
+            >
+              <i class="fas fa-ellipsis-v"></i>
+            </div>
+            <div
+              [ngClass]="{
+                deleteMessage: mess.content == 'Nội dung đã xoá'
+              }"
+              (click)="showtime(mess.id, mess.content)"
+              *ngIf="mess.content != ''"
+              class="bubble bubble-dark"
+              id="abc"
+              [innerHTML]="mess.content"
+            >
+              {{ mess.content }}
+            </div>
+          </div>
+          <div *ngIf="listShowMessageTime.includes(mess.id)" class="chat-msg-date">
+            {{ mess.creationTime | date: 'shortTime' }}
+          </div>
+          <div class="bubble chatIMG" *ngFor="let img of mess?.attachmentDto">
+            <div *ngIf="checkAttachmentOrImage(img.fileExtension)" class="fileLeft">
+              <span>{{ img.untrustedNameForDisplay }}</span>
+              <i (click)="download(img.fileUrl)" nz-icon nzType="download" nzTheme="outline"></i>
+            </div>
+            <img
+              nz-image
+              class="imgAtt"
+              *ngIf="!checkAttachmentOrImage(img.fileExtension)"
+              nzSrc="{{ img.fileUrl }}"
+            />
+          </div>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu>
+              <li (click)="deleteMessage(mess.id)" nz-menu-item style="font-weight: 500">
+                <i class="fas fa-backspace" style="color: #f50; margin-right: 5px"></i>Delete
+              </li>
+            </ul>
+          </nz-dropdown-menu>
+        </div>
+      </div>
+    </div>
+    <div class="type-area">
+      <!-- <div  class="preview-file-mini col-8" >
+                <div class="preview-at" *ngFor="let urlfile of listAttachments">
+                    <img *ngIf="!checkAttachmentOrImage(urlfile.fileExtension)" [src]="urlfile.fileUrl" height="50"
+                        width="50">
+                    <img *ngIf="checkAttachmentOrImage(urlfile.fileExtension)"
+                        src="https://findicons.com/files/icons/1579/devine/256/file.png" height="50" width="50"
+                        class="rounded-2xl w-full h-full object-cover">
+                    <i style="font-size: 19px;" *ngIf="urlfile!=''" nz-icon nzType="close" nzTheme="outline"
+                        (click)="deleteImg(urlfile.id)"></i>
+                    <p>...{{urlfile.untrustedNameForDisplay | slice:-7}}</p>
+                </div>
+            </div> -->
+      <!-- <ng-template #noAttachment>
+            </ng-template> -->
+      <div class="input-mini">
+        <div class="input-wrapper">
+          <nz-mention
+            [nzNotFoundContent]="'No Suggestions'"
+            nzPlacement="top"
+            [nzSuggestions]="listProjectTag"
+            [nzValueWith]="valueWith"
+            (nzOnSelect)="onSelect($event)"
+            (nzOnSearchChange)="onSearchChange($event)"
+            [nzPrefix]="['@']"
+          >
+            <input
+              nzMentionTrigger
+              type="text"
+              autocomplete="off"
+              id="inputText"
+              placeholder="Type your message here..."
+              [(ngModel)]="inputConten"
+              (keyup.enter)="Content(inputConten)"
+              (click)="updateUnread()"
+            />
+            <ng-container *nzMentionSuggestion="let framework">
+              <span>{{ framework.name }}</span>
+            </ng-container>
+          </nz-mention>
+          <!-- <nz-mention nzPlacement="top" [nzSuggestions]="suggestions" (nzOnSearchChange)="onSearchChange($event)" [nzPrefix]="['#', '@']">
+            <input
+            nzMentionTrigger
+            type="text"
+            autocomplete="off"
+            id="inputText"
+            placeholder="Type your message here..."
+            [(ngModel)]="inputConten"
+            (keyup.enter)="Content(inputConten)"
+            (click)="updateUnread()"
+          />
+          <ng-container *nzMentionSuggestion="let framework">
+            <span>{{framework.name}}</span>
+          </ng-container>
+          </nz-mention> -->
+        </div>
+        <div class="btn-uploadFile">
+          <i
+            nz-tooltip
+            nzTooltipTitle="Choose a file"
+            style="margin-top: 8%; cursor: pointer; margin-left: 10px"
+            nz-icon
+            nzType="link"
+            nzTheme="outline"
+            (click)="selectImages.click()"
+          >
+          </i>
+          <!-- <i (click)="showIcon()" class="far fa-smile-beam"></i>
+                    <emoji-mart class="emoji-mart" *ngIf="showIconChat" (emojiSelect)="addEmoji($event)"></emoji-mart> -->
+          <input
+            type="file"
+            class="d-none"
+            #selectImages
+            (change)="createAttachMent($event.target.files)"
+            multiple
+          />
+        </div>
+        <button
+          nz-tooltip
+          nzTooltipTitle="Send Message"
+          (click)="Content(inputConten)"
+          class="button-send"
+        >
+          <i class="fas fa-paper-plane" style="font-size: 20px; color: rgba(255, 85, 0, 0.8)"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

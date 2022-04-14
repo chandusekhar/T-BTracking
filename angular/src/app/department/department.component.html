@@ -1,0 +1,489 @@
+<div class="container-fluid" id="department">
+  <div class="header-department"  nz-row >
+    <div nz-col nzSpan="12">
+      <input
+        id="nameDepartment"
+        [(ngModel)]="selectedDepartment"
+        (keyup.enter)="DeparmentChange(selectedDepartment)"
+        type="text"
+        nz-input
+        placeholder="Input department name"
+        style="width: 100%"
+      />
+    </div>
+    <div nz-col nzSpan="12">
+      <button
+        id="btnAddDep"
+        class="bt-add"
+        style="float: left; margin-left: 0.52vw;background-color: rgba(255, 85, 0, 0.8)"
+        nz-button
+        (click)="showModalAddDepartment($event)"
+        nzType="primary"
+        nzDanger
+      >
+        <i class="fas fa-plus iconHover"></i>
+        Department
+      </button>
+      <nz-modal
+        [(nzVisible)]="isVisibleAddDepartment"
+        (nzOnCancel)="handleCancelAddDepartment()"
+        (nzOnOk)="handleOkAddDepartment()"
+        [nzOkLoading]="isOkLoadingAddDepartment"
+      >
+        <ng-template nzModalContent>
+          <div>
+            <div><i class="far fa-edit" style="color: rgba(255, 85, 0, 0.8)"></i> Name</div>
+            <div style="margin-top: 10px">
+              <input
+                autofocus
+                nz-input
+                placeholder="Department Name"
+                [(ngModel)]="NameDepartment"
+                required
+              />
+            </div>
+          </div>
+          <div style="margin-top: 1vh">
+            <div>
+              <i class="fas fa-user-shield" style="color: rgba(255, 85, 0, 0.8)"></i> Manager
+            </div>
+            <div style="margin-top: 1vh">
+              <nz-select
+                nzShowSearch
+                nzPlaceHolder="Select manager"
+                style="width: 100%"
+                [(ngModel)]="IdUserManager"
+              >
+                <nz-option
+                  *ngFor="let user of listUser"
+                  nzLabel="{{ user.name }}"
+                  nzValue="{{ user.id }}"
+                >
+                </nz-option>
+              </nz-select>
+            </div></div
+        ></ng-template>
+      </nz-modal>
+    </div>
+  </div>
+  <nz-spin
+  style="
+    display: block;
+    position: relative;
+    margin-left: 45%;
+    margin-top: 25%;
+    width: 50%;
+    z-index: 99;
+    color:#f50
+  "
+  *ngIf="loaderService.isLoading | async; else doneLoad"
+  nzSimple
+  [nzSize]="'large'"
+  [nzIndicator]="indicatorTemplate"
+>
+</nz-spin>
+<ng-template #indicatorTemplate><i nz-icon nzType="loading" style="font-size: 3.5vh; color: rgba(255, 85, 0, 0.8)"></i></ng-template>
+<ng-template #doneLoad>
+  <div nz-row style="margin-top: 1vh ;display: flex;" id="departmentBox">
+    <div  nz-col nzSpan="6" *ngFor="let department of listDepartment" style="padding: 5px">
+      <nz-card
+      class="list-department"
+        nzSize="small"
+        [nzBordered]="false"
+        nzTitle="{{ department.Name }}"
+        [nzExtra]="extraTemplate"
+      >
+        <div nz-row style="border-bottom: 1px solid #f0f2f5; padding-bottom: 1vh">
+          <div nz-col nzSpan="12">Manager:</div>
+          <div nz-col nzSpan="12" style="font-weight: 500">{{ department.NameManager }}</div>
+        </div>
+        <div nz-row style="margin-top: 1vh">
+          <div nz-col nzSpan="12" (click)="showModalGetListMember(department.id)">
+            <a
+              >Members: <nz-tag style="margin-left: 10px;" [nzColor]="'blue'">{{ department.CountMember }}</nz-tag></a
+            >
+          </div>
+          <div nz-col nzSpan="12" (click)="showModalShowIssue(department.id)">
+            Bugs: <nz-tag style="margin-left: 10px;" [nzColor]="'blue'">{{ department.CountIssue }}</nz-tag>
+          </div>
+        </div>
+      </nz-card>
+      <ng-template #extraTemplate>
+        <button
+          nz-button
+          nzType="primary"
+          nzSize="small"
+          style="margin-right: 0.26vw"
+          (click)="
+            showModalEditDepartment(
+              department.Id,
+              department.IdManager,
+              department.NameManager,
+              department.Name
+            )
+          "
+        >
+          <i class="fas fa-user-edit" style="margin-right: 10px"></i>
+          Edit
+        </button>
+        <button
+          nz-button
+          nzType="primary"
+          nzDanger
+          nzSize="small"
+          (click)="RemoveDepartment(department.Id)"
+        >
+          <i class="fas fa-trash" style="margin-right: 10px"></i>
+          Delete
+        </button>
+      </ng-template>
+      <nz-modal
+        *ngIf="idDepartmentEdit == department.Id"
+        [(nzVisible)]="isVisibleEditDepartment"
+        (nzOnCancel)="handleCancelEditDepartment()"
+        (nzOnOk)="handleOkEditDepartment()"
+        [nzOkLoading]="isOkLoadingEditDepartment"
+      >
+        <ng-template nzModalContent>
+          <div>
+            <div><i class="far fa-edit" style="color: rgba(255, 85, 0, 0.8)"></i> Name</div>
+            <div style="margin-top: 10px">
+              <input
+                autofocus
+                nz-input
+                placeholder="Department Name"
+                [(ngModel)]="NameDepartmentEdit"
+                required
+              />
+            </div>
+          </div>
+          <div style="margin-top: 1vh">
+            <div>
+              <i class="fas fa-user-shield" style="color: rgba(255, 85, 0, 0.8)"></i> Manager
+            </div>
+            <div style="margin-top: 10px">
+              <nz-select
+                nzShowSearch
+                nzPlaceHolder="Select manager"
+                style="width: 100%"
+                [(ngModel)]="IdUsermanagerEdit"
+              >
+                <nz-option
+                  *ngFor="let user of listUser"
+                  nzLabel="{{ user.name }}"
+                  nzValue="{{ user.id }}"
+                >
+                </nz-option>
+                <nz-option
+                  nzLabel="{{ nameManagerEdit }}"
+                  nzValue="IdUsermanagerEdit"
+                  nzHide
+                ></nz-option>
+              </nz-select>
+            </div>
+          </div>
+        </ng-template>
+      </nz-modal>
+      <nz-modal
+        *ngIf="idDepartmentGetMember == department.Id"
+        [(nzVisible)]="isVisibleGetListMember"
+        nzWidth="1200px"
+        (nzOnCancel)="handleCancelGetListMember()"
+        (nzOnOk)="handleOkGetListMember()"
+        [nzOkLoading]="isOkLoadingGetListMember"
+      >
+        <ng-template nzModalContent>
+          <div style="margin-top: 20px">
+            <nz-table
+              id="tableMember"
+              #basicTable
+              [nzData]="listMemberDepartment"
+              [nzFrontPagination]="false"
+              [nzShowPagination]="false"
+            >
+              <tbody *ngFor="let data of basicTable.data">
+                <tr style="text-align: center">
+                  <td>
+                    <nz-tag>{{ data.nameMember }}</nz-tag>
+                  </td>
+                  <td>
+                    <nz-tag *ngIf="data.idUser == department.idManager" [nzColor]="'red'"
+                      >Manager</nz-tag
+                    >
+                  </td>
+                  <td>{{ data.email }}</td>
+                  <td>{{ data.phoneNumber }}</td>
+                  <td>
+                    <nz-tag [nzColor]="'red'">{{ data.countIssue }} </nz-tag> Bugs
+                  </td>
+                  <td>
+                    <a
+                      *ngIf="data.idUser != department.idManager"
+                      (click)="RemoveMember(data.id)"
+                      nzTooltipTitle="Remove Member"
+                      nz-tooltip
+                      nzType="default"
+                      ><i style="color: red" class="iconDelete" nz-icon nzType="close"></i
+                    ></a>
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
+            <div id="tableMember1">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone number</th>
+                    <th scope="col">Count issue</th>
+                    <th scope="col">Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of listMemberDepartment">
+                    <td data-label="Name">
+                      <nz-tag [nzColor]="'blue'"
+                        ><a> {{ data.nameMember }}</a></nz-tag
+                      >
+                    </td>
+                    <td data-label="Email">
+                      {{ data.email }}
+                    </td>
+                    <td data-label="phone Number">
+                      {{ data.phoneNumber }}
+                    </td>
+                    <td data-label="count Issue">
+                      <nz-tag [nzColor]="'red'">{{ data.countIssue }}</nz-tag>
+                    </td>
+                    <td data-label="Delete">
+                      <a
+                        *ngIf="data.idUser != department.idManager"
+                        (click)="RemoveMember(data.id)"
+                        nzTooltipTitle="delete"
+                        nz-tooltip
+                        nzType="default"
+                        ><i style="color: red" class="iconDelete" nz-icon nzType="close"></i
+                      ></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </ng-template>
+      </nz-modal>
+    </div>
+  </div>
+  </ng-template>
+</div>
+<!-- <div
+  style="
+    display: flex;
+    flex-direction: column;
+    flex: auto;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+  "
+>
+  <div class="table">
+    <div style="height: 100%">
+      <div class="listDepartment" *ngFor="let department of listDepartment">
+        <nz-card id="card">
+          <nz-card-meta
+            style="display: flex; margin-left: 30%"
+            [nzAvatar]="avatarTemplate"
+            nzTitle="{{ department.name }}"
+          ></nz-card-meta>
+          <hr />
+          <p><i nz-icon nzType="cluster"></i> Manager: {{ department.nameManager }}</p>
+          <div style="display: inline-flex">
+            <button
+              nzTooltipTitle="Edit department"
+              style="margin-right: 5px; color: white; border-radius: 5px"
+              nz-button
+              nzType="primary"
+              nz-tooltip
+              (click)="
+                showModalEditDepartment(
+                  department.id,
+                  department.idManager,
+                  department.nameManager,
+                  department.name
+                )
+              "
+            >
+              Edit
+            </button>
+            <button
+              nzDanger
+              nzTooltipTitle="Delete department"
+              style="color: white; border-radius: 5px"
+              nz-button
+              nzType="primary"
+              nz-tooltip
+              (click)="RemoveDepartment(department.id)"
+            >
+              Delete
+            </button>
+          </div>
+          <div style="margin-top: 1vh; display: flex">
+            <a nz-button nzType="link" (click)="showModalGetListMember(department.id)"
+              ><i nz-icon nzType="team"></i> Members {{ department.countMember }}</a
+            >
+            <a nz-button nzType="link" (click)="showModalShowIssue(department.id)">
+              <i nz-icon nzType="bug"></i> Bugs {{ department.countIssue }}</a
+            >
+          </div>
+        </nz-card>
+        <nz-modal
+          *ngIf="idDepartmentEdit == department.id"
+          [(nzVisible)]="isVisibleEditDepartment"
+          nzTitle="Edit Department"
+          (nzOnCancel)="handleCancelEditDepartment()"
+          (nzOnOk)="handleOkEditDepartment()"
+          [nzOkLoading]="isOkLoadingEditDepartment"
+          modalContent
+        >
+          <div>
+            <p>Name Department</p>
+            <input
+              autofocus
+              nz-input
+              placeholder="Department Name"
+              [(ngModel)]="NameDepartmentEdit"
+              required
+            />
+          </div>
+          <br />
+          <div>
+            <p>Choose Manager</p>
+            <nz-select
+              nzShowSearch
+              nzPlaceHolder="Select a person"
+              style="width: 100%"
+              [(ngModel)]="IdUsermanagerEdit"
+            >
+              <nz-option
+                *ngFor="let user of listUser"
+                nzLabel="{{ user.name }}"
+                nzValue="{{ user.id }}"
+              >
+              </nz-option>
+              <nz-option
+                nzLabel="{{ nameManagerEdit }}"
+                nzValue="IdUsermanagerEdit"
+                nzHide
+              ></nz-option>
+            </nz-select>
+          </div>
+        </nz-modal>
+        <nz-modal
+          *ngIf="idDepartmentGetMember == department.id"
+          [(nzVisible)]="isVisibleGetListMember"
+          nzTitle="List Member"
+          nzWidth="800px"
+          (nzOnCancel)="handleCancelGetListMember()"
+          (nzOnOk)="handleOkGetListMember()"
+          [nzOkLoading]="isOkLoadingGetListMember"
+          modalContent
+        >
+          <div style="margin-top: 20px">
+            <nz-table
+              id="tableMember"
+              #basicTable
+              [nzData]="listMemberDepartment"
+              [nzFrontPagination]="false"
+              [nzShowPagination]="false"
+            >
+              <thead>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody *ngFor="let data of basicTable.data">
+                <tr style="text-align: center">
+                  <td>
+                    <nz-tag [nzColor]="'blue'">{{ data.nameMember }}</nz-tag>
+                  </td>
+                  <td>
+                    <nz-tag *ngIf="data.idUser == department.idManager" [nzColor]="'red'"
+                      >Manager</nz-tag
+                    >
+                  </td>
+                  <td>{{ data.email }}</td>
+                  <td>{{ data.phoneNumber }}</td>
+                  <td>
+                    <nz-tag [nzColor]="'red'">{{ data.countIssue }} </nz-tag> Issue
+                  </td>
+                  <td>
+                    <a
+                      *ngIf="data.idUser != department.idManager"
+                      (click)="RemoveMember(data.id)"
+                      nzTooltipTitle="delete"
+                      nz-tooltip
+                      nzType="default"
+                      ><i style="color: red" class="iconDelete" nz-icon nzType="close"></i
+                    ></a>
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
+            <div id="tableMember1">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone number</th>
+                    <th scope="col">Count issue</th>
+                    <th scope="col">Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of listMemberDepartment">
+                    <td data-label="Name">
+                      <nz-tag [nzColor]="'blue'"
+                        ><a> {{ data.nameMember }}</a></nz-tag
+                      >
+                    </td>
+                    <td data-label="Email">
+                      {{ data.email }}
+                    </td>
+                    <td data-label="phone Number">
+                      {{ data.phoneNumber }}
+                    </td>
+                    <td data-label="count Issue">
+                      <nz-tag [nzColor]="'red'">{{ data.countIssue }}</nz-tag>
+                    </td>
+                    <td data-label="Delete">
+                      <a
+                        *ngIf="data.idUser != department.idManager"
+                        (click)="RemoveMember(data.id)"
+                        nzTooltipTitle="delete"
+                        nz-tooltip
+                        nzType="default"
+                        ><i style="color: red" class="iconDelete" nz-icon nzType="close"></i
+                      ></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </nz-modal>
+      </div>
+    </div>
+    <ng-template #avatarTemplate>
+      <nz-avatar
+        nzSrc="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQb3jesVybZ6w8RaDcjN3WJZKOppHUN5naew&usqp=CAU"
+      ></nz-avatar>
+    </ng-template>
+  </div>
+</div> -->

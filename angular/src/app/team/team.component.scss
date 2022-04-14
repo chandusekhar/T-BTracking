@@ -1,0 +1,344 @@
+.container-fluid{
+  overflow-y: hidden;
+  max-height:92.5vh;
+}
+.cardTeam{
+  padding-top: 5px;
+  margin-bottom: 5px;
+  // :hover{
+  //   background-color: rgba(255, 85, 0, 0.1);
+  // }
+}
+.cardDepartment{
+  :hover{
+    background-color: rgba(255, 85, 0, 0.1);
+  }
+  width: 100%;
+}
+.cardChoice{
+  background-color: rgba(255, 85, 0, 0.1);
+  color: #f50;
+}
+.colSpan{
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 73vh;
+  padding: 10px 0 10px 10px;
+}
+.list-member{
+  overflow-y: auto;
+  max-height: 73vh;
+  padding:10px;
+}
+.colSpan::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+  border-radius: 5px;
+}
+
+.colSpan::-webkit-scrollbar
+{
+	width: 5px;
+	background-color: #d5ecf7;
+  border-radius: 5px;
+}
+
+.colSpan::-webkit-scrollbar-thumb
+{
+	background-color: #ff9059;
+  border-radius: 5px;
+}
+
+.list-member::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+  border-radius: 5px;
+}
+
+.list-member::-webkit-scrollbar
+{
+	width: 5px;
+	background-color: #d5ecf7;
+  border-radius: 5px;
+}
+
+.list-member::-webkit-scrollbar-thumb
+{
+	background-color: #ff9059;
+  border-radius: 5px;
+}
+
+.bt-add{
+    float: right;
+    margin-top: 1vh;
+  }
+  .bt-dp{
+    border-radius: 5px;
+    margin-left: 1vh;
+  }
+  .header-team{
+    margin-top: 0.5vh;
+    height: 5vh;
+    display :flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .container-left {
+    float: left;
+    width: 30%;
+    height: 69vh;
+    max-height: 69vh;
+    overflow-y: auto;
+  }
+  .container-right {
+    float: right;
+    width: 60%;
+    margin-right: 5%;
+    height: 69vh;
+    max-height: 69vh;
+    overflow-y: auto;
+  }
+  .list-team{
+    width: 100%;
+    // text-align: center;
+      margin-top: 1vh;
+  }
+  .bt-list-department{
+    display:inline-flex;
+    margin-top: 5px;
+  }
+  .active{
+    background-color: rgb(76, 211, 87);
+  }
+  .active1{
+    background-color: rgb(76, 211, 87);
+  }
+  .list-dp{
+    display: flex;
+    margin-left: 2vh;
+  }
+
+  .input{
+    margin-right: 2%;
+    margin-top: 1vh;
+    input{
+      width: 50vh;
+    }
+  }
+  .label{
+    margin-top: 0.5vh;
+    margin-left: 2vh;
+  }
+  .body{
+     margin-top: 1vh;
+     height: 100%;
+  }
+  @media only screen and (min-width: 741px) {
+    #mobile{
+      display: none;
+    }
+    #tableMember1{
+      display: none;
+    }
+    .modelMember1{
+      ::ng-deep .ant-modal-content {
+        display: none !important;
+    }
+    }
+    #modelMember1{
+      display: none;
+    }
+     #btnShowmore{
+      display: none;
+    }
+  }
+  @media only screen and (max-width: 740px){
+    #team{
+      ::ng-deep .ant-modal-body {
+        padding: 0 24px;
+      }
+    }
+    #mobile{
+      .ant-btn {
+        padding: 0px 7px;
+      }
+    }
+    #row-dp-pc{
+      display: none;
+    }
+    .row-input{
+      margin-left: -1.5vw;
+    }
+    .container-fluid {
+      overflow-y: auto;
+      max-height: 92.5vh;
+    }
+    #list-member{
+      display: none;
+    }
+    .colSpan{
+      max-height: none;
+      overflow: hidden;
+      .ant-col-18{
+        max-width: 60%;
+      }
+      .ant-col-6 {
+        max-width: 40%;
+      }
+    }
+    #member-team{
+      display: none;
+    }
+    .list-department{
+      .ant-col-2{
+        max-width: 100%;
+      }
+      display: flex;
+      flex-flow: row wrap;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    .list-member{
+    display: none;
+    }
+    .change-column{
+      flex-direction: column;
+      .ant-col-8{
+        max-width: 100%;
+      }
+    }
+    .container-left {
+      height: auto;
+      max-height: none;
+      nz-card{
+        width: 130%;
+        margin-left: -10vw;
+      }
+    }
+    #pc{
+      display: none;
+    }
+    .list-dp{
+      display: block !important;
+
+      p{
+        display: none;
+      }
+    }
+    .input{
+      margin-left: 5% !important;
+      input{
+        width: 180px !important;
+        margin-top: 0px !important;
+        margin-left: 0px !important;
+      }
+    }
+    .list-team{
+      width: 100%;
+        margin-top: 1vh;
+        margin-left: -2%;
+    }
+    .container-right {
+     display: none;
+    }
+    .container-left {
+      float: none !important;
+      width: 100% !important;
+    }
+     .body {
+      margin-top: -6px !important;
+    }
+  }
+  #tableMember1{
+    width: 79vw;
+    max-height: 60vh;
+     overflow-y: auto;
+  border: 1px solid #2db7f5;
+  table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+    overflow-x: hidden;
+  }
+
+  table caption {
+    font-size: 1.5em;
+    margin: .5em 0 .75em;
+  }
+
+  table tr {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: .55em;
+  }
+
+  table th,
+  table td {
+    padding: .625em;
+    text-align: center;
+  }
+
+  table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  @media screen and (max-width: 600px) {
+    table {
+      border: 0;
+    }
+
+    table caption {
+      font-size: 1.3em;
+    }
+
+    table thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+
+    table tr {
+      display: block;
+      margin-bottom: .625em;
+      overflow-x: hidden;
+    }
+
+    table td {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      font-size: .8em;
+      text-align: right;
+      word-wrap: break-word;
+    }
+
+    table td::before {
+      /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    table td:last-child {
+      border-bottom: 0;
+    }
+  }
+  }
+  #nameDepart{
+    background: none !important;
+  }

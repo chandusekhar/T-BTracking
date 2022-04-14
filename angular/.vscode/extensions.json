@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "angular.ng-template",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-typescript-tslint-plugin",
+    "visualstudioexptteam.vscodeintellicode",
+    "christian-kohler.path-intellisense",
+    "christian-kohler.npm-intellisense",
+    "mikael.angular-beastcode",
+    "xabikos.javascriptsnippets",
+    "msjsdiag.debugger-for-chrome",
+    "donjayamanne.githistory",
+    "oderwat.indent-rainbow",
+    "rangav.vscode-thunder-client"
+  ]
+}

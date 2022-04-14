@@ -1,0 +1,64 @@
+<div class="container-fluid">
+  <div nz-row style="margin-top: 10px; margin-bottom: 10px">
+    <div nz-col nzSpan="6">
+      <nz-date-picker
+        [(ngModel)]="dueDate"
+        (ngModelChange)="onChangeDueDate($event)"
+        style="width: 98%"
+      ></nz-date-picker>
+    </div>
+    <div nz-col nzSpan="6">
+      <button (click)="changTypeView()" nz-button nzType="primary" nzDanger style="background-color: rgba(255, 85, 0, 0.8);">
+        <i class="fas fa-calendar-day" style="margin-right: 5px"></i> {{ buttonText }}
+      </button>
+    </div>
+    <div nz-col nzSpan="6"></div>
+    <div nz-col nzSpan="6"></div>
+  </div>
+  <div *ngFor = "let data of listTimeOn">
+    <nz-card
+      nzSize = "small"
+      style = "width: 100%; margin-bottom: 10px"
+      nzTitle= "{{data?.nameUser}}"
+      [nzExtra] = "extraTemplate"
+    >
+      <div nz-row>
+        <div nz-col nzSpan="22">
+          <nz-progress nzPercent="{{getNumber(data?.application?.sumTime/60)/8*100}}" [nzShowInfo]="false" nz-tooltip nzTooltipTitle="{{getNumber(data?.application?.sumTime/60)/8*100}}%"></nz-progress>
+        </div>
+        <div nz-col nzSpan="2" style="padding-left: 20px; font-weight: 500">{{getNumber(data?.application?.sumTime/60)}}/8 Hours</div>
+      </div>
+      <div>
+        <nz-avatar-group>
+          <nz-avatar *ngFor="let value of data?.application?.app" nzText="{{ GetCharAt(value?.name) }}"nz-tooltip nzTooltipTitle="{{ value?.name }}"></nz-avatar>
+        </nz-avatar-group>
+      </div>
+    </nz-card>
+    <ng-template #extraTemplate>
+      <button
+        (click)="showModalDetail(data.id)"
+        nz-button
+        nzType="primary"
+        nzDanger
+        style="background-color: rgba(255, 85, 0, 0.8)"
+        nzSize="small"
+      >
+        <i class="fas fa-info" style="margin-right: 5px"></i>View Details
+      </button>
+    </ng-template>
+    <nz-modal
+    *ngIf="idTimeOn == data.id"
+    [(nzVisible)]="isVisibleDetail"
+    nzTitle="User Time on Details"
+    (nzOnCancel)="handleCancel()"
+  >
+    <div *ngFor="let value of data?.application?.app">
+      <h6 style="color: rgb(194, 9, 9);">{{value?.name}}</h6>
+      <a>Start time : {{value?.startTime | date: 'medium'}}</a><br>
+      <a>End time : {{value?.endTime | date: 'medium'}}</a><br>
+      <a>Total time : {{value?.totalTimeOn?.totalMinutes}} minutes</a><br>
+    </div>
+    <div *nzModalFooter></div>
+  </nz-modal>
+  </div>
+</div>

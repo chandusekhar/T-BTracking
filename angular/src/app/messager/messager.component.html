@@ -1,0 +1,694 @@
+<div class="app">
+  <div class="wrapper">
+    <div class="conversation-area" [ngClass]="{ hidden: swapMessage }">
+      <div class="info-UserLogin">
+        <img
+          (click)="selectAvatar.click()"
+          nz-image
+          [nzSrc]="AvartarUrl"
+          alt=""
+          nzDisablePreview="true"
+        />
+        <input
+          type="file"
+          class="d-none"
+          #selectAvatar
+          (change)="createAvartar($event.target.files)"
+          multiple
+        />
+        <span>
+          {{ shareService.getUserData?.name }}
+        </span>
+      </div>
+      <div nz-row class="top-bar">
+        <div nz-col nzSpan="15">
+          <input
+            class="inputSearch"
+            nz-input
+            placeholder="Basic usage"
+            [(ngModel)]="search"
+            (ngModelChange)="seachUser($event)"
+            type="text"
+            placeholder="Search a Member..."
+          />
+        </div>
+        <div nz-col nzSpan="1"></div>
+        <div style="width: 100%" nz-col nzSpan="8" (click)="showModal()">
+          <button style="width: 100%; padding: 0" nz-button nzType="default" nzDanger>
+            <i class="fas fa-plus"></i> New Group
+          </button>
+        </div>
+      </div>
+      <nz-modal
+        [(nzVisible)]="isVisible"
+        nzTitle="Group Message"
+        (nzOnCancel)="handleCancel()"
+        (nzOnOk)="handleOk()"
+        [nzOkLoading]="isOkLoading"
+      >
+        <div>
+          <label>Group Name</label><br />
+          <input
+            autofocus
+            nz-input
+            placeholder="Group Name"
+            [(ngModel)]="nameConversation"
+            required
+          />
+        </div>
+        <br />
+        <div>
+          <label>User</label><br />
+          <nz-select
+            style="width: 470px"
+            nzMode="tags"
+            nzShowSearch
+            nzAllowClear
+            nzPlaceHolder="Select a member"
+            [(ngModel)]="members"
+          >
+            <nz-option
+              *ngFor="let user of listAll?.items"
+              nzValue="{{ user.id }}"
+              nzLabel="{{ user.name }}"
+            >
+            </nz-option>
+          </nz-select>
+        </div>
+      </nz-modal>
+      <nz-spin
+        style="
+          display: block;
+          position: relative;
+          margin-left: 45%;
+          margin-top: 25%;
+          width: 50%;
+          z-index: 99;
+          color: #f50;
+        "
+        *ngIf="messagesLoading; else doneLoad"
+        nzSimple
+        [nzSize]="'large'"
+        [nzIndicator]="indicatorTemplate"
+      >
+      </nz-spin>
+      <ng-template #indicatorTemplate
+        ><i nz-icon nzType="loading" style="font-size: 35px; color: rgba(255, 85, 0, 0.8)"></i
+      ></ng-template>
+      <ng-template #doneLoad>
+        <div (scroll)="onScrollMember($event)"  class="searchUser" *ngIf="search == ''; else searchUser" >
+          <div *ngFor="let item of listUserAll">
+            <div
+              class="msg row"
+              (click)="getConversation(item.conversationId)"
+              [ngClass]="{ active: isActive(item.conversationId) }"
+            >
+              <div class="avartar-listMember col-2">
+                <div *ngIf="item.avatarUrl; else noAvatar">
+                  <img
+                    *ngIf="item.conversationType == 0"
+                    nz-image
+                    [nzSrc]="item.avatarUrl"
+                    alt=""
+                    nzDisablePreview="true"
+                  />
+                </div>
+                <div *ngIf="item.extraProperties.avatarUrl; else noAvatarGroup">
+                  <img
+                    *ngIf="item.conversationType == 1"
+                    nz-image
+                    [nzSrc]="item.extraProperties.avatarUrl"
+                    alt=""
+                    nzDisablePreview="true"
+                  />
+                </div>
+                <ng-template #noAvatar>
+                  <img
+                    *ngIf="!item.avatarUrl && item.conversationType == 0"
+                    src="https://i.imgur.com/b08hxPY.png"
+                  />
+                </ng-template>
+                <ng-template #noAvatarGroup>
+                  <img
+                    *ngIf="!item.avatarUrl && item.conversationType == 1"
+                    src="https://lh3.googleusercontent.com/proxy/dwJvaACP3NHjt_KOC66QG4d1fj_q5sXNqMUznlp5jB8SLHLip3B6x24C8-fgGBFtrA8qZDJrBbXcOxSCzVAErLCWgwqFp56VGOL4fLhl7qox"
+                  />
+                </ng-template>
+              </div>
+              <div class="msg-detail col-6">
+                <div *ngIf="item.conversationType == 1; else convertType1" class="msg-username">
+                  {{ item.nameConversation }}
+                </div>
+                <ng-template #convertType1>
+                  <div *ngFor="let message of item?.listMembers">
+                    <div
+                      *ngIf="message.userId != shareService.getUserData?.id && message.name == null"
+                      class="msg-username"
+                    >
+                      {{ getNameUserInGroup(message?.userId) | formatMaxstring: [30, '...'] }}
+                    </div>
+                    <div
+                      *ngIf="message.userId != shareService.getUserData?.id && message.name != null"
+                      class="msg-username"
+                    >
+                      {{ message.name | formatMaxstring: [30, '...'] }}
+                    </div>
+                  </div>
+                </ng-template>
+                <div class="msg-content">
+                  <div *ngFor="let message of item?.listMembers">
+                    <div *ngIf="message.userId == shareService.getUserData?.id">
+                      <span *ngIf="item.lastMessage.lastMessageType == 0 &&item.lastMessage?.lastMessageContent != ''"
+                        class="msg-message"
+                        [class.msg-unread]=" item.unReadMessage > 0 && item.conversationId != conversationId">
+                        {{ item.lastMessage?.lastMessageContent | formatMaxstring: [30, '...'] }}
+                        <label *ngIf="item.unReadMessage > 0" style="opacity: 0.5"
+                          >({{ item.unReadMessage }})</label
+                        ></span
+                      >
+                      <span
+                        *ngIf="item.lastMessage.lastMessageType == 1 ||
+                          item.lastMessage?.lastMessageContent == ''"
+                        [class.msg-unread]="
+                        item.unReadMessage > 0 && item.conversationId != conversationId
+                        "
+                        class="msg-message"
+                      >
+                        <i class="fas fa-paperclip" style="font-size: 15px"></i> Sent an
+                        attachment</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="msg-date col-4">
+                <span>{{ item.lastMessage?.lastMessageTime | notification }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+    <ng-template #searchUser>
+      <div class="searchUser">
+        <div *ngFor="let item of listUserAll">
+          <div
+            class="msg"
+            (click)="CreateConversition(item.id)"
+            [ngClass]="{ active: isActive(item) }"
+          >
+            <div class="msg-detail">
+              <div class="msg-username">{{ item.name }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <div class="chat-area" [ngClass]="{ block: swapMessage }">
+      <div class="chat-area-header" *ngIf="conversationId != ''">
+        <div class="chat-area-title">
+          <i
+            class="right-detail"
+            nz-icon
+            nzType="double-left"
+            nzTheme="outline"
+            style="color: #f50; font-size: 16px"
+            (click)="swapListMember()"
+          ></i>
+          <img
+            nz-image
+            *ngIf="!AvartarFriend && typeConver != 1"
+            nzSrc="https://i.imgur.com/b08hxPY.png"
+          />
+          <img
+            nz-image
+            *ngIf="!AvartarFriend && typeConver != 0"
+            nzSrc="https://lh3.googleusercontent.com/proxy/dwJvaACP3NHjt_KOC66QG4d1fj_q5sXNqMUznlp5jB8SLHLip3B6x24C8-fgGBFtrA8qZDJrBbXcOxSCzVAErLCWgwqFp56VGOL4fLhl7qox"
+          />
+          <img nz-image *ngIf="AvartarFriend != null" [nzSrc]="AvartarFriend" />
+          {{ nameUser }}
+        </div>
+        <!-- <div class="chat-area-title" *ngIf="typeConver == 1">
+          <img src="https://www.allthetests.com/quiz22/picture/pic_1171831236_1.png">
+          {{ nameUser}}
+        </div> -->
+        <div class="chat-area-group">
+          <i class="fas fa-video" style="margin-right: 10px" (click)="callVideo()"></i>
+          <!-- doi ten group -->
+          <i
+            class="fas fa-edit"
+            nzTooltipTitle="Change GroupName"
+            nzTooltipPlacement="top"
+            nz-tooltip
+            (click)="showModalGroup()"
+            [hidden]="typeConver != 1"
+          ></i>
+          <nz-modal
+            [(nzVisible)]="isVisibleChangName"
+            nzTitle="Group Message"
+            (nzOnCancel)="handleCancelGroup()"
+            (nzOnOk)="handleOkGroup()"
+            [nzOkLoading]="isOkLoading"
+          >
+            <div>
+              <label>Group Name</label><br />
+              <input autofocus nz-input placeholder="Group Name" [(ngModel)]="groupName" required />
+            </div>
+          </nz-modal>
+          <i
+            id="addMember"
+            class="fas fa-users"
+            nzTooltipTitle="Add or Delete Member"
+            nzTooltipPlacement="top"
+            nz-tooltip
+            (click)="showModalAddmember()"
+            [hidden]="typeConver != 1"
+          ></i>
+          <!-- <i
+            class="fas fa-user-plus"
+            *ngIf="typeConver != 1"
+            style="color: darkgrey"
+            aria-disabled="true"
+          ></i> -->
+          <nz-modal
+            [(nzVisible)]="isVisibleAddmember"
+            nzTitle="Users"
+            (nzOnCancel)="handleCancelAddmember()"
+            (nzOnOk)="handleOkAddmember()"
+            [nzOkLoading]="isOkLoading"
+          >
+            <i nz-icon nzType="search" nzTheme="outline"></i>
+            <input
+              style="border: none; margin-bottom: 10px"
+              placeholder="Search here"
+              type="text"
+              [(ngModel)]="searchAdd"
+              (ngModelChange)="searchAddMember($event)"
+            />
+            <br />
+            <div *ngIf="searchAdd == ''; else searchAddmember">
+              <div *ngFor="let item of AddMember" class="chat-group-item">
+                <div *ngIf="item.name != null">
+                  <div class="row">
+                    <div class="col-2 d-flex align-items-center">
+                      <img
+                        class="profile-image"
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAM1BMVEXk5ueutLeqsbTn6eqpr7PJzc/j5ebf4eLZ3N2wtrnBxsjN0NLGysy6v8HT1tissra8wMNxTKO9AAAFDklEQVR4nO2d3XqDIAxAlfivoO//tEOZWzvbVTEpic252W3PF0gAIcsyRVEURVEURVEURVEURVEURVEURVEURVEURVEURflgAFL/AirAqzXO9R7XNBVcy9TbuMHmxjN6lr92cNVVLKEurVfK/zCORVvW8iUBnC02dj+Wpu0z0Y6QlaN5phcwZqjkOkK5HZyPAjkIjSO4fIdfcOwFKkJlX4zPu7Ha1tIcwR3wWxyFhRG6g4Je0YpSPDJCV8a2Sv2zd1O1x/2WMDZCwljH+clRrHfWCLGK8REMiql//2si5+DKWKcWeAGcFMzzNrXC/0TUwQ2s6+LhlcwjTMlYsUIQzPOCb7YBiyHopyLXIEKPEkI/TgeuiidK/R9FniUDOjRDpvm0RhqjMyyXNjDhCfIMYl1gGjIMIuYsnGEYRMRZOMMunaLVwpWRW008v6fYKDIzxCwVAeNSO90BJW6emelYBRF/kHpYGVaoxTDAaxOFsfP9y8hpJ4xd7gOcij7JNGQ1EYFgkPJa1jQEiYZXRaRINKxSDUW9n+FT82lSKadkiru9/4XPqSLWOekGPoY05TAvLm9orm+YWuwHoBHkZKijNBJGmeb61eL6Ff/6q7bLr7yvv3vKGhpDRjvgjGaPz+gUg6YgcvpyAR2FIZ9U6nEEyZRTovmEU32KichpGn7C17XrfyH9gK/c0CMP05HZIM2uf9sEveizKveBy9/6Qt7o89ne33D525cfcIMW6ab+TMEukQbQbu+xu7X3A9bChmWaCeAkG17bpntwXgWxHaMzGPmUaR5dQZiKqRVeUZ3047fi3nAu28h4CHxCsZAgmEH8Y27jJAhm8c+5RQzRQNVGhVFSfxOYIjp/pP7RxzjevYXVGf4eLt+BJ1vCuLuLkrgABgCGXZ2wik5uty+oBvNirI6mkzhAf4Gsb58Hcm67Jzd+KwD10BYPLL3e0MjvKrgAULnOfveF/O4N2Xb9BZom3gJes3F9X5Zze8/6Yt09b4CrqsEjUv8oFBaR2rl+6CZr2xVrp24o/WitBKuGrrpl1+bFkmK2qXTON4VpbdfLa7o7y/WdLxG7lm2Lqh2clOwTegbvc/vj2U78CwhA87Bn8G5Nk3eOb0Nsr9flz3sG78UUtue4kpv1xvjg3TMay62BMlTlP+vrOMnJsRmt/ze0jsfkPPYdAH57hK+34PeOyc8XIXu5xT2HsUkdZz+adwg8HGFfQ3K5jtDvbUiO4Di9/ywHGrL88pDizZ++oTp+an+SMX/ndymUCwmHMdO7yuOx83pUx/eEMU0AvxWndwgidAqOZ8ypCwdEfvvEo6D9HwpA8wzvmOJEqAg9ySu8g4x0Hb9hSB/BANEKJ+LbPBU0lzbAJs4xt1AoshKkUGQmiH8/jJ0gdhTTLmSegHlPE0oOdXALnqDjKYh3px//fSgSWG8UqfrrIICzYYSJXRr9BSPbpNzw7gBjKjKOYI7ReIGqQRIap5+5MdjyvuDkExvGeXSlONWZAP3/AZBwJohU7QJRGU+cTVH18ELmRPNBmibW6MT/k1b0XhdkRBvyT6SB6EYv/GvhSmRNpGngRULsAlxMCGNXp7w3FfdEbTEEDdLI9TdIKRUzUesa3I461ER8cpNT7gMRhpKmYVS9ELOgCUQsa4SsulciKiLbY+AnHD8cpuhISsnxpamI84sbDq9qYJgf8wiiOBrC7Ml7M7ZECCqKoiiKoiiKoiiKoijv5AvJxlZRyNWWLwAAAABJRU5ErkJggg=="
+                        alt=""
+                      />
+                    </div>
+                    <div class="col-8 d-flex align-items-center">
+                      <span class="nameAddMember">{{ item.name }}</span>
+                    </div>
+                    <div class="col-2 d-flex align-items-center">
+                      <i
+                        class="fas fa-trash-alt chat-group-icon"
+                        (click)="deleteMember(item.userId)"
+                      ></i>
+                    </div>
+                  </div>
+                  <nz-divider></nz-divider>
+                </div>
+              </div>
+            </div>
+
+            <ng-template #searchAddmember>
+              <div *ngFor="let item of listUserAddMember">
+                <div class="chat-group-item">
+                  <div class="row">
+                    <div class="col-2 d-flex align-items-center">
+                      <img
+                        class="profile-image"
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAM1BMVEXk5ueutLeqsbTn6eqpr7PJzc/j5ebf4eLZ3N2wtrnBxsjN0NLGysy6v8HT1tissra8wMNxTKO9AAAFDklEQVR4nO2d3XqDIAxAlfivoO//tEOZWzvbVTEpic252W3PF0gAIcsyRVEURVEURVEURVEURVEURVEURVEURVEURVEURflgAFL/AirAqzXO9R7XNBVcy9TbuMHmxjN6lr92cNVVLKEurVfK/zCORVvW8iUBnC02dj+Wpu0z0Y6QlaN5phcwZqjkOkK5HZyPAjkIjSO4fIdfcOwFKkJlX4zPu7Ha1tIcwR3wWxyFhRG6g4Je0YpSPDJCV8a2Sv2zd1O1x/2WMDZCwljH+clRrHfWCLGK8REMiql//2si5+DKWKcWeAGcFMzzNrXC/0TUwQ2s6+LhlcwjTMlYsUIQzPOCb7YBiyHopyLXIEKPEkI/TgeuiidK/R9FniUDOjRDpvm0RhqjMyyXNjDhCfIMYl1gGjIMIuYsnGEYRMRZOMMunaLVwpWRW008v6fYKDIzxCwVAeNSO90BJW6emelYBRF/kHpYGVaoxTDAaxOFsfP9y8hpJ4xd7gOcij7JNGQ1EYFgkPJa1jQEiYZXRaRINKxSDUW9n+FT82lSKadkiru9/4XPqSLWOekGPoY05TAvLm9orm+YWuwHoBHkZKijNBJGmeb61eL6Ff/6q7bLr7yvv3vKGhpDRjvgjGaPz+gUg6YgcvpyAR2FIZ9U6nEEyZRTovmEU32KichpGn7C17XrfyH9gK/c0CMP05HZIM2uf9sEveizKveBy9/6Qt7o89ne33D525cfcIMW6ab+TMEukQbQbu+xu7X3A9bChmWaCeAkG17bpntwXgWxHaMzGPmUaR5dQZiKqRVeUZ3047fi3nAu28h4CHxCsZAgmEH8Y27jJAhm8c+5RQzRQNVGhVFSfxOYIjp/pP7RxzjevYXVGf4eLt+BJ1vCuLuLkrgABgCGXZ2wik5uty+oBvNirI6mkzhAf4Gsb58Hcm67Jzd+KwD10BYPLL3e0MjvKrgAULnOfveF/O4N2Xb9BZom3gJes3F9X5Zze8/6Yt09b4CrqsEjUv8oFBaR2rl+6CZr2xVrp24o/WitBKuGrrpl1+bFkmK2qXTON4VpbdfLa7o7y/WdLxG7lm2Lqh2clOwTegbvc/vj2U78CwhA87Bn8G5Nk3eOb0Nsr9flz3sG78UUtue4kpv1xvjg3TMay62BMlTlP+vrOMnJsRmt/ze0jsfkPPYdAH57hK+34PeOyc8XIXu5xT2HsUkdZz+adwg8HGFfQ3K5jtDvbUiO4Di9/ywHGrL88pDizZ++oTp+an+SMX/ndymUCwmHMdO7yuOx83pUx/eEMU0AvxWndwgidAqOZ8ypCwdEfvvEo6D9HwpA8wzvmOJEqAg9ySu8g4x0Hb9hSB/BANEKJ+LbPBU0lzbAJs4xt1AoshKkUGQmiH8/jJ0gdhTTLmSegHlPE0oOdXALnqDjKYh3px//fSgSWG8UqfrrIICzYYSJXRr9BSPbpNzw7gBjKjKOYI7ReIGqQRIap5+5MdjyvuDkExvGeXSlONWZAP3/AZBwJohU7QJRGU+cTVH18ELmRPNBmibW6MT/k1b0XhdkRBvyT6SB6EYv/GvhSmRNpGngRULsAlxMCGNXp7w3FfdEbTEEDdLI9TdIKRUzUesa3I461ER8cpNT7gMRhpKmYVS9ELOgCUQsa4SsulciKiLbY+AnHD8cpuhISsnxpamI84sbDq9qYJgf8wiiOBrC7Ml7M7ZECCqKoiiKoiiKoiiKoijv5AvJxlZRyNWWLwAAAABJRU5ErkJggg=="
+                        alt=""
+                      />
+                    </div>
+                    <div class="col-8 d-flex align-items-center">
+                      <span class="nameAddMember">{{ item.name }}</span>
+                    </div>
+                    <div class="col-2 d-flex align-items-center">
+                      <i
+                        class="fas fa-user-plus chat-group-icon-add"
+                        (click)="addmember(item.id)"
+                      ></i>
+                    </div>
+                  </div>
+                  <nz-divider></nz-divider>
+                </div>
+              </div>
+            </ng-template>
+          </nz-modal>
+          <i
+            class="fas fa-info"
+            (click)="toggleCollapsed()"
+            nz-tooltip
+            [nzTooltipTitle]="
+              show ? 'Show Conversation Information' : 'Hide Conversation Information'
+            "
+          ></i>
+          <!-- <i class="fas fa-arrow-right" *ngIf="show == true" (click)="toggleCollapsed()"></i>
+          <i class="fas fa-arrow-left" *ngIf="show == false" (click)="toggleCollapsed()"></i> -->
+        </div>
+      </div>
+      <div class="searchChat" *ngIf="showModalSearch">
+        <div class="search-mes w-100">
+          <input
+            focus="true"
+            style="width: 75%"
+            [(ngModel)]="text"
+            (keyup.enter)="searchMessenger(text)"
+            type="text"
+            placeholder="Enter message"
+          />
+          <div class="result mr-4">
+            <span *ngIf="searchResult?.totalCount > 0"
+              >{{ i + 1 }} of {{ searchResult?.totalCount }} Results</span
+            >
+          </div>
+        </div>
+        <div class="up-down-message d-flex align-items-center">
+          <i
+            [class.down]="i == searchResult?.totalCount - 1 || searchId == ''"
+            (click)="upMess(searchResult.items[i + 1].id)"
+            nz-icon
+            nzType="up"
+            nzTheme="outline"
+          ></i>
+          <i
+            [class.down]="i == 0 || searchId == ''"
+            (click)="downMess(searchResult.items[i - 1].id)"
+            nz-icon
+            nzType="down"
+            nzTheme="outline"
+          ></i>
+          <button nz-button nzType="default" nzDanger (click)="showSearch()">Close</button>
+        </div>
+      </div>
+      <div class="chat-area-main" #messagePanel (scroll)="onScroll($event)">
+        <div *ngFor="let mess of message?.items">
+          <div id="divider">
+            <nz-divider
+              nzPlain
+              *ngIf="mess.showDate"
+              nzText="{{ mess.creationTime | customDayPipe }}"
+            ></nz-divider>
+          </div>
+          <div class="chat-msg" *ngIf="mess.senderId != shareService.getUserData?.id">
+            <div class="chat-msg-content">
+              <div  *ngIf="typeConver == 1 && mess.content != ''" style="font-size: 10px; margin-left: 5px">
+                {{ mess?.senderName }}
+              </div>
+              <div
+                id="{{ mess.id }}"
+                [class.searchResult]="mess.id == searchId"
+                [class.deleteMessage]="mess.content == 'Nội dung đã xoá'"
+                (click)="showtime(mess.id)"
+                *ngIf="mess.content != ''"
+                class="chat-msg-text"
+              >
+                {{ mess.content }}
+              </div>
+              <div
+                (click)="showtime(mess.id)"
+                class="chatIMG"
+                *ngFor="let item of mess?.attachmentDto"
+                [class.chat-msg-text]="checkAttachmentOrImage(item.fileExtension)"
+              >
+                <div *ngIf="checkAttachmentOrImage(item.fileExtension)" class="fileLeft">
+                  <span>{{ item.untrustedNameForDisplay }}</span>
+                  <i
+                    (click)="download(item.fileUrl)"
+                    nz-icon
+                    nzType="download"
+                    nzTheme="outline"
+                  ></i>
+                </div>
+                <img
+                  style="width: 250px; border-radius: 5px"
+                  nz-image
+                  *ngIf="!checkAttachmentOrImage(item.fileExtension)"
+                  nzSrc="{{ item.fileUrl }}"
+                />
+              </div>
+              <div *ngIf="listShowMessageTime.includes(mess.id)" class="chat-msg-date">
+                {{ mess.creationTime | date: 'shortTime' }}
+              </div>
+            </div>
+          </div>
+          <div class="chat-msg owner" *ngIf="mess.senderId == shareService.getUserData?.id">
+            <div class="chat-msg-content">
+              <div
+                id="{{ mess.id }}"
+                [class.searchResult]="mess.id == searchId"
+                [class.deleteMessage]="mess.content == 'Nội dung đã xoá'"
+                (click)="showtime(mess.id)"
+                *ngIf="mess.content != ''"
+                class="chat-msg-text"
+              >
+                {{ mess.content }}
+              </div>
+              <div
+                (click)="showtime(mess.id)"
+                class="chatIMG"
+                *ngFor="let item of mess?.attachmentDto"
+                [class.chat-msg-text]="checkAttachmentOrImage(item.fileExtension)"
+              >
+                <div *ngIf="checkAttachmentOrImage(item.fileExtension)" class="fileLeft">
+                  <span>{{ item.untrustedNameForDisplay }}</span>
+                  <i
+                    (click)="download(item.fileUrl)"
+                    nz-icon
+                    nzType="download"
+                    nzTheme="outline"
+                  ></i>
+                </div>
+                <img
+                  style="width: 250px; border-radius: 5px"
+                  border-radius="5px"
+                  nz-image
+                  *ngIf="!checkAttachmentOrImage(item.fileExtension)"
+                  nzSrc="{{ item.fileUrl }}"
+                />
+              </div>
+              <div *ngIf="listShowMessageTime.includes(mess.id)" class="chat-msg-date">
+                {{ mess.creationTime | date: 'shortTime' }}
+              </div>
+            </div>
+            <div
+              *ngIf="mess.content != 'Nội dung đã xoá'"
+              class="More"
+              nzTooltipTitle="More"
+              nzTooltipPlacement="top"
+              nz-tooltip
+              nz-dropdown
+              nzTrigger="click"
+              [nzDropdownMenu]="menu"
+              nzPlacement="topCenter"
+            >
+              <i class="fas fa-ellipsis-v"></i>
+            </div>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+              <ul nz-menu>
+                <li (click)="deleteMessage(mess.id)" nz-menu-item style="font-weight: 500">
+                  <i class="fas fa-backspace" style="color: #f50; margin-right: 5px"></i>Delete
+                </li>
+              </ul>
+            </nz-dropdown-menu>
+          </div>
+        </div>
+        <div *ngIf="isTyping" class="typing-loader"></div>
+      </div>
+      <div class="chat-area-footer" *ngIf="conversationId != ''">
+        <div class="chat-box-tray row" id="iconAttachments">
+          <div class="send-message col-10">
+            <div class="d-flex">
+              <div class="preview-at" *ngFor="let urlfile of listAttachments">
+                <img
+                  nz-image
+                  *ngIf="!checkAttachmentOrImage(urlfile.fileExtension)"
+                  [nzSrc]="urlfile.fileUrl"
+                  height="50"
+                  width="50"
+                />
+                <img
+                  *ngIf="checkAttachmentOrImage(urlfile.fileExtension)"
+                  src="https://findicons.com/files/icons/1579/devine/256/file.png"
+                  height="50"
+                  width="50"
+                  class="rounded-2xl w-full h-full object-cover"
+                />
+                <i
+                  style="font-size: 2vh; color: #f50; margin: 0 5px 0 5px"
+                  *ngIf="urlfile != ''"
+                  nz-icon
+                  nzType="close"
+                  nzTheme="outline"
+                  (click)="deleteImg(urlfile.id)"
+                ></i>
+                <p style="font-size: 14px">...{{ urlfile.untrustedNameForDisplay | slice: -7 }}</p>
+              </div>
+            </div>
+            <nz-mention
+            [nzNotFoundContent]="'No Suggestions'"
+            nzPlacement="top"
+            [nzSuggestions]="listProjectTag"
+            [nzValueWith]="valueWith"
+            (nzOnSelect)="onSelect($event)"
+            (nzOnSearchChange)="onSearchChange($event)"
+            [nzPrefix]="['@']"
+          >
+            <input
+              nzMentionTrigger
+              class="send-message-input"
+              type="text"
+              [(ngModel)]="inputConten"
+              (keyup.enter)="Content(inputConten)"
+              (click)="clearEmoji()"
+              (ngModelChange)="typingInputchange($event)"
+              placeholder="Input your message here"
+            />
+            <ng-container *nzMentionSuggestion="let framework">
+              <span>{{ framework.name }}</span>
+            </ng-container>
+          </nz-mention>
+            <!-- <input
+              class="send-message-input"
+              type="text"
+              [(ngModel)]="inputConten"
+              (keyup.enter)="Content(inputConten)"
+              (click)="clearEmoji()"
+              (ngModelChange)="typingInputchange($event)"
+              placeholder="Input your message here"
+            /> -->
+          </div>
+          <div class="send-icon col-2">
+            <input
+              type="file"
+              class="d-none"
+              #selectImages
+              (change)="createAttachMent($event.target.files)"
+              multiple
+            />
+            <i (click)="selectImages.click()" class="fas fa-paperclip"> </i>
+            <i
+              class="fas fa-laugh-squint"
+              (click)="isEmojiPickerVisible = !isEmojiPickerVisible"
+            ></i>
+            <emoji-mart
+              class="emoji-mart"
+              *ngIf="isEmojiPickerVisible"
+              (emojiSelect)="addEmoji($event)"
+              title="Choose your emoji"
+            ></emoji-mart>
+            <i class="fas fa-paper-plane" (click)="Content(inputConten)"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="show" class="detail-area" nzCollapsible>
+      <i
+        class="right-detail-info-area"
+        nz-icon
+        nzType="double-left"
+        nzTheme="outline"
+        style="color: #f50; font-size: 16px"
+        (click)="toggleCollapsed()"
+      ></i>
+      <div class="detail-area-header">
+        <div class="msg-profile group" *ngIf="typeConver == 0">
+          <img *ngIf="!AvartarFriend" src="https://i.imgur.com/b08hxPY.png" />
+          <img *ngIf="AvartarFriend != null" [src]="AvartarFriend" />
+        </div>
+        <div class="msg-profile group" *ngIf="typeConver == 1">
+          <img
+            (click)="selectImages.click()"
+            *ngIf="!AvartarFriend"
+            src="https://lh3.googleusercontent.com/proxy/dwJvaACP3NHjt_KOC66QG4d1fj_q5sXNqMUznlp5jB8SLHLip3B6x24C8-fgGBFtrA8qZDJrBbXcOxSCzVAErLCWgwqFp56VGOL4fLhl7qox"
+          />
+          <img (click)="selectImages.click()" *ngIf="AvartarFriend != null" [src]="AvartarFriend" />
+        </div>
+        <!-- <div class="msg-profile group" *ngIf="typeConver == 1">
+          <img src="https://www.allthetests.com/quiz22/picture/pic_1171831236_1.png">
+        </div> -->
+        <!-- <img (click)="selectImages.click()" nz-image [nzSrc]=AvartarUrl alt="" nzDisablePreview="true"/> -->
+        <input
+          type="file"
+          class="d-none"
+          #selectImages
+          (change)="createAvartarGroup($event.target.files, conversationId)"
+          multiple
+        />
+        <div class="User-Chat">
+          {{ nameUser }}
+        </div>
+      </div>
+      <div style="margin: 10px 0 10px 0" *ngIf="conversationId != ''">
+        <button
+          (click)="showSearch()"
+          nz-button
+          nzType="primary"
+          style="width: 100%; height: 40px"
+          nzType="default"
+          nzDanger
+        >
+          <i class="fas fa-search" style="margin-right: 5px"></i>Search Message
+        </button>
+        <!-- <i nz-icon nzType="search" nzTheme="outline"></i>
+        <span>Search Message</span> -->
+      </div>
+      <div class="detail-photos" *ngIf="conversationId != ''">
+        <nz-collapse nzAccordion>
+          <nz-collapse-panel
+            *ngFor="let panel of panels"
+            [nzHeader]="panel.name"
+            [nzActive]="panel.active"
+          >
+            <div class="detail-photo-grid">
+              <div *ngFor="let item of listImage">
+                <img nz-image nzSrc="{{ item.fileUrl }}" />
+              </div>
+            </div>
+            <div *ngIf="load != null" class="view-more">
+              <a [nzLoading]="isLoading" nz-button (click)="getMoreAtt()">{{ LoadAtt }}</a>
+            </div>
+          </nz-collapse-panel>
+        </nz-collapse>
+        <nz-collapse nzAccordion style="margin-top: 10px">
+          <nz-collapse-panel
+            *ngFor="let panelAtt of panelAtt"
+            [nzHeader]="panelAtt.name"
+            [nzActive]="panelAtt.active"
+          >
+            <div *ngFor="let item of listAtt">
+              <p class="historyAtt" (click)="download(item.fileUrl)">
+                {{ item.untrustedNameForDisplay }}
+              </p>
+            </div>
+            <div  class="view-more">
+              <a [nzLoading]="isLoading" nz-button (click)="getMoreAttNotImg()">{{
+                LoadAttNotImg
+              }}</a>
+            </div>
+          </nz-collapse-panel>
+        </nz-collapse>
+      </div>
+      <a href="https://www.facebook.com/tuyendungtruongminhthinh" class="follow-me" target="_blank">
+        <span class="follow-text">
+          <i nz-icon nzType="facebook" nzTheme="outline"></i>
+          Follow Us on FaceBook
+        </span>
+        <span class="developer">
+          <img
+            nz-image
+            nzSrc="https://mail.tmtco.asia/custom/webmail/img/loginlogo_2edd6.PNG"
+            height="50"
+            width="200"
+            alt=""
+            nzDisablePreview="true"
+          />
+          TMT solution
+        </span>
+      </a>
+    </div>
+  </div>
+</div>

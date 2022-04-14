@@ -1,0 +1,394 @@
+<div id="addIssue">
+  <div *ngIf="!isCreated; else SuccessCreate" nz-row class="container-fluid">
+    <div nz-col nzSpan="24" id="layoutAdd" style="padding: 10px">
+      <div style="margin-top: 10px">
+        <div nz-row id="rowBtnAdd">
+          <div nz-col nzSpan="18">
+            <nz-alert
+              style="width: 100%"
+              *ngIf="checkText != ''"
+              nzType="error"
+              nzMessage="{{ checkText }}"
+              nzShowIcon
+            ></nz-alert>
+          </div>
+          <div nz-col nzSpan="6">
+            <button
+              *ngIf="issueLogin; else AddBug"
+              style="float: right"
+              (click)="UpdateIssue()"
+              nz-button
+              nzType="primary"
+              nzDanger
+              style="float: right; background-color: rgba(255, 85, 0, 0.8)"
+            >
+              <i nz-icon [nzType]="isOkLoading ? 'loading' : 'save'" nzTheme="outline"></i
+              >{{ buttonNameEdit }}
+            </button>
+            <ng-template #AddBug>
+              <button
+                style="float: right; background-color: rgba(255, 85, 0, 0.8)"
+                (click)="CreateIssue()"
+                nz-button
+                nzDanger
+                nzType="primary"
+              >
+                <i
+                  nz-icon
+                  [nzType]="isOkLoading ? 'loading' : 'plus'"
+                  nzTheme="outline"
+                  style="font-size: 18px"
+                ></i
+                >{{ buttonNameAdd }}
+              </button>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      <div nz-row id="rowNameParent">
+        <div nz-col nzSpan="19">
+          <input autofocus nz-input placeholder="Name..." [(ngModel)]="Name" required />
+        </div>
+        <div nz-col nzSpan="5" style="padding-left: 5px" id="rowNameParent2">
+          <nz-select
+            [disabled]="issueParentId != ''"
+            style="padding-right: 5px; width: 100%"
+            nzShowSearch
+            nzAllowClear
+            nzPlaceHolder="Select Parent"
+            [(ngModel)]="issueParentId != '' ? issueParentId : selectedParent"
+            (ngModelChange)="getListUserByIdProject()"
+            id="rowNameParent3"
+          >
+            <nz-option
+              *ngFor="let issue of issuesNoParent"
+              nzValue="{{ issue.id }}"
+              nzLabel="{{ issue.name }}"
+            ></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div>
+        <!-- <quill-editor  required="required" [(ngModel)]="descriptionValue" style="height: 200px;"></quill-editor> -->
+        <quill-editor
+          id="addIssuesEditor"
+          style="margin-top: 10px"
+          [modules]="config"
+          placeholder="Description..."
+          class="form-control customArea"
+          rows="8"
+          cols="46"
+          required="required"
+          [(ngModel)]="descriptionValue"
+        ></quill-editor>
+        <quill-editor
+          id="addIssuesEditorMobile"
+          style="margin-top: 5px"
+          [modules]="config2"
+          placeholder="Description issue..."
+          class="form-control customArea"
+          rows="8"
+          cols="46"
+          required="required"
+          [(ngModel)]="descriptionValue"
+        ></quill-editor>
+      </div>
+      <nz-divider></nz-divider>
+      <div
+        id="onlyMobile"
+        class="container-fluid"
+        nz-row
+        [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+      >
+        <div
+          id="row1"
+          nz-col
+          class="gutter-row"
+          [nzSpan]="12"
+          style="display: flex; justify-content: space-around"
+        >
+          <div style="font-size: 14px" class="inner-box">
+            <div class="customMargin1">Priority</div>
+            <div class="customMargin1">Category</div>
+            <div class="customMargin1">Level</div>
+          </div>
+          <div class="inner-box" id="colSelect">
+            <div class="customMargin">
+              <nz-select [(ngModel)]="selectedPriority">
+                <nz-option
+                  *ngFor="let enum of priorityEnumList"
+                  nzValue="{{ enum }}"
+                  nzLabel="{{ enum }}"
+                ></nz-option>
+              </nz-select>
+            </div>
+            <div class="customMargin">
+              <nz-select
+                style="margin-right: 5px"
+                nzShowSearch
+                nzAllowClear
+                nzPlaceHolder="Select a bug category"
+                [(ngModel)]="selectedCategory"
+              >
+                <nz-option
+                  *ngFor="let category of listCategory?.items"
+                  nzValue="{{ category.id }}"
+                  nzLabel="{{ category.name }}"
+                ></nz-option>
+              </nz-select>
+              <i
+                class="fas fa-plus iconRow"
+                nzTooltipTitle="Add Bug Category"
+                nz-tooltip
+                (click)="showModalAddCategory()"
+                style="font-size: 18px; color: rgba(255, 85, 0, 0.8)"
+              ></i>
+            </div>
+            <div class="customMargin">
+              <nz-select [(ngModel)]="selectedLevel">
+                <nz-option
+                  *ngFor="let enum of levelEnumList"
+                  nzValue="{{ enum }}"
+                  nzLabel="{{ enum }}"
+                ></nz-option>
+              </nz-select>
+            </div>
+          </div>
+        </div>
+        <div
+          id="row2"
+          nz-col
+          class="gutter-row"
+          [nzSpan]="12"
+          style="display: flex; justify-content: space-around"
+        >
+          <div style="font-size: 14px" class="inner-box">
+            <div class="customMargin1">Start date</div>
+            <div class="customMargin1">Assigned To</div>
+            <div class="customMargin1">Due date</div>
+          </div>
+          <div class="inner-box">
+            <div class="customMargin">
+              <nz-date-picker
+                [nzDisabled]="idIssueLogin"
+                style="width: 200px"
+                [(ngModel)]="StartDate"
+                (ngModelChange)="onChange($event)"
+              ></nz-date-picker>
+            </div>
+            <div class="customMargin" id="selectAssignee">
+              <nz-select
+                nzMode="multiple"
+                (ngModelChange)="onChangeSelectedUserAssign($event)"
+                nzShowSearch
+                nzAllowClear
+                nzPlaceHolder="Select a person"
+                [(ngModel)]="listUserAssign"
+              >
+                <nz-option
+                  *ngFor="let user of listUser?.items"
+                  nzLabel="{{ user.name }}"
+                  nzValue="{{ user.id }}"
+                ></nz-option>
+              </nz-select>
+              <i
+                class="fas fa-tag iconRow"
+                nzTooltipTitle="Assignee To Myself"
+                nz-tooltip
+                style="font-size: 18px; margin-left: 5px; color: rgba(255, 85, 0, 0.8)"
+                (click)="AssignMyself()"
+              ></i>
+            </div>
+            <div class="customMargin">
+              <nz-date-picker
+                style="width: 200px"
+                [(ngModel)]="DueDate"
+                (ngModelChange)="onChange($event)"
+              ></nz-date-picker>
+            </div>
+          </div>
+        </div>
+        <!-- <div nz-col class="gutter-row" [nzSpan]="6">
+
+        </div> -->
+      </div>
+      <nz-modal
+        [(nzVisible)]="isVisible"
+        nzTitle="New Category"
+        (nzOnCancel)="handleCancel()"
+        (nzOnOk)="CreateCategoryModal()"
+        [nzOkLoading]="isOkLoading"
+      >
+        <ng-template nzModalContent>
+          <div>
+            <input
+              autofocus
+              nz-input
+              placeholder="Category Name"
+              [(ngModel)]="valueAddCategory"
+              required
+            />
+          </div>
+          <div>
+            <label> ( Existing items ) :</label>
+          </div>
+          <div>
+            <label *ngFor="let category of listCategory?.items"> {{ category.name }} /</label>
+          </div>
+        </ng-template>
+      </nz-modal>
+      <nz-divider></nz-divider>
+      <nz-modal
+        [nzVisible]="previewVisible"
+        [nzContent]="modalContent"
+        [nzFooter]="null"
+        (nzOnCancel)="previewVisible = false"
+      >
+        <ng-template #modalContent>
+          <img
+            *ngIf="fileImage; else fileVideo"
+            [src]="previewImage"
+            [ngStyle]="{ width: '100%' }"
+          />
+          <ng-template #fileVideo>
+            <video width="100%" height="100%" controls>
+              <source [src]="previewImage" type="video/mp4" />
+            </video>
+          </ng-template>
+        </ng-template>
+      </nz-modal>
+      <div>
+        <nz-upload
+          nzType="drag"
+          [nzMultiple]="true"
+          [nzFileList]="listFile"
+          [nzPreview]="handlePreview"
+          [nzRemove]="handleRemove"
+          [nzLimit]="28"
+          [nzOpenFileDialogOnClick]="true"
+          [nzFileType]="'image/png,image/jpeg,image/gif,image/bmp,image/jpg,video/mp4'"
+          nzAction="{{ shareService.REST_API_SERVER }}/api/app/attachment/attachment"
+          (nzChange)="handleChange($event)"
+        >
+          <p class="ant-upload-drag-icon">
+            <i nz-icon nzType="upload"></i>
+          </p>
+          <p class="ant-upload-text">Click or drag file to this area to upload</p>
+          <p class="ant-upload-hint">
+            Support for a single or bulk upload. Strictly prohibit from uploading company data or
+            other band files
+          </p>
+        </nz-upload>
+        <div>
+          <label style="margin-top: 5px; text-decoration: underline; font-size: 14px"
+            >Notify Mail To</label
+          >
+          <nz-select
+            style="width: 100%; margin-bottom: 10px"
+            nzMode="multiple"
+            (ngModelChange)="onChangeUserNotify($event)"
+            nzShowSearch
+            nzAllowClear
+            nzPlaceHolder="Select a person"
+            [(ngModel)]="listUserNotify"
+          >
+            <nz-option
+              *ngFor="let user of listUser?.items"
+              nzLabel="{{ user.name }}"
+              nzValue="{{ user.id }}"
+            ></nz-option>
+          </nz-select>
+        </div>
+        <div>
+          <label style="text-decoration: underline; font-size: 14px">Apply Workflow</label>
+          <div nz-row>
+            <div nz-col nzSpan="21">
+              <nz-select
+                style="width: 100%; margin-bottom: 10px;padding-right: 10px;"
+                nzMode="multiple"
+                nzShowSearch
+                nzAllowClear
+                nzPlaceHolder="Select workflows"
+                [(ngModel)]="workflowsSelect"
+              >
+                <nz-option
+                  *ngFor="let definition of definitions?.items"
+                  nzLabel="{{ definition.name }}"
+                  nzValue="{{ definition.definitionId }}"
+                ></nz-option>
+              </nz-select>
+            </div>
+            <div nz-col nzSpan="3">
+              <button
+              [disabled]="!shareService.admin"
+                nz-button
+                nzType="primary"
+                nzDanger
+                style="background-color: rgba(255, 85, 0, 0.8); float: right"
+              >
+                <a href="{{ shareService.ELSA_REST_API_SERVER }}/elsa" target="blank"
+                  ><i class="fas fa-code-branch" style="margin-right: 5px"></i>Workflow Manager</a
+                >
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #SuccessCreate>
+    <div class="container-fluid">
+      <nz-result
+        nzStatus="success"
+        nzTitle="Create Successfully!"
+        nzSubTitle="ID: {{ issuesId }}"
+      >
+        <div nz-result-extra *ngIf="idProjectCalendar == ''">
+          <nz-tag
+            (click)="showBug()"
+            nzTooltipTitle="View Issue Details"
+            nz-tooltip
+            routerLink="/project/{{ shareService.getIdProject() }}/issues/view/{{ issuesId }}"
+            style="cursor: pointer"
+            >{{ Name }}</nz-tag
+          >
+        </div>
+        <div nz-result-extra *ngIf="idProjectCalendar == ''">
+          <button
+          *ngIf="shareService.modalAddIssue == false"
+            (click)="NewCreate()"
+            routerLink="/project/{{ shareService.getIdProject() }}/add-issue"
+            nz-button
+            nzType="primary"
+            nzDanger
+            style="background-color: rgba(255, 85, 0, 0.8)"
+          >
+            <i class="fas fa-plus" style="margin-right: 10px"></i>Another Bug
+          </button>
+          <button
+          *ngIf="shareService.modalAddIssue == true"
+            (click)="NewBugModal()"
+            nz-button
+            nzType="primary"
+            nzDanger
+            style="background-color: rgba(255, 85, 0, 0.8)"
+          >
+            <i class="fas fa-plus" style="margin-right: 10px"></i>Another Bug
+          </button>
+
+          <nz-modal [nzStyle]="{ top: '20px' }" [nzWidth]="1200" [(nzVisible)]="showModalAddIssue" [nzFooter]="modalFooter"
+          (nzOnCancel)="handleCancelAddIssue()">
+          <ng-container *nzModalContent>
+            <app-add-issue></app-add-issue>
+          </ng-container>
+          <ng-template #modalFooter></ng-template>
+        </nz-modal>
+
+          <button (click)="showBug()" routerLink="/project/{{ shareService.getIdProject() }}/issues" nz-button>
+            <i class="fas fa-bars" style="margin-right: 10px"></i>Bug List
+          </button>
+        </div>
+      </nz-result>
+    </div>
+  </ng-template>
+</div>

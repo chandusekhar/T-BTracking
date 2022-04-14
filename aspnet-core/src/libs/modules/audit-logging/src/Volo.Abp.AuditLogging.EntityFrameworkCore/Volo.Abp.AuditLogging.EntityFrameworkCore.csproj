@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<!--<Import Project="..\..\..\configureawait.props" />
+	<Import Project="..\..\..\common.props" />-->
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<RootNamespace />
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Elsa.Designer.Components.Web" Version="2.3.0" />
+		<PackageReference Include="Hangfire" Version="1.7.24" />
+		<PackageReference Include="Hangfire.SqlServer" Version="1.7.24" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
+		<PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="16.170.0" />
+		<PackageReference Include="Microsoft.TeamFoundationServer.ExtendedClient" Version="16.170.0" />
+		<PackageReference Include="Volo.Abp.BackgroundJobs.HangFire" Version="4.3.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\frameworks\TMT.EntityFramworkCore\TMT.EntityFramworkCore.csproj" />
+		<ProjectReference Include="..\Volo.Abp.AuditLogging.Domain\Volo.Abp.AuditLogging.Domain.csproj" />
+	</ItemGroup>
+
+</Project>

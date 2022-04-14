@@ -1,0 +1,90 @@
+<div id="settingCategory" class="container-fluid">
+  <div>
+    <button nz-button (click)="showModalAddCategory()" nzType="primary" nzDanger style="background-color:#f50">
+      <i nz-icon nzType="plus" nzTheme="outline"></i> New Category ({{
+        listCategories?.items.length
+      }})
+    </button>
+    <nz-modal
+      [(nzVisible)]="isVisibleAddCategory"
+      nzTitle="Add Category"
+      (nzOnCancel)="handleCancelAddCategory()"
+      (nzOnOk)="CreateCategory()"
+      [nzOkLoading]="isOkLoadingAddCategory"
+    >
+      <ng-template nzModalContent>
+        <input nz-input placeholder="Input Status Name..." [(ngModel)]="selectedCategory" />
+      </ng-template>
+    </nz-modal>
+  </div>
+  <div style="margin-top: 10px" class="boxCat">
+    <div nz-row >
+      <div nz-col nzSpan="6" *ngFor="let category of listCategories?.items" style="padding: 5px" class="colCat">
+        <nz-card
+          nzSize="small"
+          style="width: 100%; padding: 5px; border: 1px solid #f3aa86"
+          [nzBordered]="false"
+          nzTitle="{{ category.name }}"
+          [nzExtra]="extraTemplate"
+          class="rowChild"
+        >
+          <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px" >
+            <div nz-col nzSpan="12" style="font-weight: 500">Creation Time:</div>
+            <div nz-col nzSpan="12"><span style="float: right">{{ category.creationTime | date }}</span></div>
+          </div>
+          <div
+            nz-row
+            style="border-bottom: 1px solid #f0f2f5; margin-top: 5px; padding-bottom: 5px"
+          >
+            <div nz-col nzSpan="12" style="font-weight: 500">Bugs In Category:</div>
+            <div nz-col nzSpan="12">
+              <nz-tag [nzColor]="'#f50'" style="float: right">{{ category.count }}</nz-tag>
+            </div>
+          </div>
+          <div
+            nz-row
+            style="border-bottom: 1px solid #f0f2f5; margin-top: 5px; padding-bottom: 5px"
+          >
+            <div nz-col nzSpan="12" style="font-weight: 500">Created By:</div>
+            <div nz-col nzSpan="12">
+              <nz-tag [nzColor]="'blue'" style="float: right">{{ category.createdBy }}</nz-tag>
+            </div>
+          </div>
+        </nz-card>
+        <ng-template #extraTemplate>
+          <button
+            nz-button
+            nzType="primary"
+            nzSize="small"
+            style="margin-right: 5px"
+            (click)="showModalEditCategory(category.id,category.name)"
+          >
+            <i class="fas fa-user-edit" style="margin-right: 10px"></i>
+            Edit
+          </button>
+          <button
+            nz-button
+            nzType="primary"
+            nzDanger
+            nzSize="small"
+            (click)="RemoveCategory(category.id)"
+          >
+            <i class="fas fa-trash" style="margin-right: 10px"></i>
+            Delete
+          </button>
+        </ng-template>
+      </div>
+      <nz-modal
+        [(nzVisible)]="isVisible"
+        nzTitle="Edit Category"
+        (nzOnCancel)="handleCancelEditCategory()"
+        (nzOnOk)="EditCategory()"
+        [nzOkLoading]="isOkLoadingEditCategory"
+      >
+        <ng-template nzModalContent>
+          <input nz-input placeholder="Input Category Name..." [(ngModel)]="selectedCategoryEdit"
+        /></ng-template>
+      </nz-modal>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,582 @@
+::ng-deep .container-fluid {
+  // padding-right: 2vw;
+  // padding-left: 2vw;
+}
+::ng-deep .ant-collapse {
+  background-color: #f3dacd;
+}
+.modalInformation {
+  margin-top:2vh;
+  height: 75vh;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+// nz-card {
+//   cursor: pointer;
+// }
+
+.btnNewProject {
+  :hover {
+    background-color: white;
+    color: #f50;
+  }
+  background-color: rgba(255, 85, 0, 0.8);
+}
+
+.dashboard-container-left {
+  float: left;
+  width: 50%;
+  padding: 0 10px 0 0;
+}
+.dashboard-container-right {
+  float: right;
+  width: 50%;
+  padding: 0 0 0 10px;
+}
+
+.make-it-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.make-it-justify {
+  display: flex;
+  justify-content: center;
+}
+
+.make-it-align {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+nz-select {
+  width: 100%;
+}
+[nz-icon] {
+  margin-right: 6px;
+  font-size: 20px;
+  color: #f50;
+}
+.group {
+  float: left;
+}
+
+.strong-size {
+  font-weight: bold;
+  font-size: 17px;
+  margin-bottom: 10px;
+}
+
+.margin-left-container {
+  margin-left: 20px;
+  padding-bottom: 10px;
+}
+
+.margin-avatar {
+  margin-right: 10px;
+}
+
+.entity {
+  background-color: red;
+  border-radius: 10px;
+  padding: 1.5px;
+}
+
+.ant-timeline-item-head {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-color: #fff;
+  border: 4px solid transparent;
+  border-radius: 100px;
+}
+
+.main-dashboard {
+  font-size: 13px;
+  font-weight: 500;
+  max-width: 1200px;
+  min-width: 1100px;
+}
+
+.loadmore {
+  text-align: center;
+  margin-top: 12px;
+  height: 32px;
+  line-height: 32px;
+}
+.chart-header {
+  background-color: rgb(250 250 250);
+  border-radius: 0 0 2px 2px;
+  border: 1px 1px 0px 1px solid #d9d9d9;
+}
+
+.chart-filter {
+  padding: 15px;
+  display: table-row;
+}
+
+[data-toggle='collapse'] .fa:before {
+  content: '\f205';
+  margin-right: 5px;
+  color: #f50;
+}
+
+[data-toggle='collapse'].collapsed .fa:before {
+  content: '\f204';
+  margin-right: 5px;
+}
+.container-header {
+  height: 40px;
+  font-size: 16px;
+}
+.updates-list {
+  padding: 0 0;
+}
+.update-container-full {
+  max-height: 85.4vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.update-container-full::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+.update-container-full::-webkit-scrollbar {
+  width: 5px;
+  background-color: #d5ecf7;
+  border-radius: 5px;
+}
+
+.update-container-full::-webkit-scrollbar-thumb {
+  background-color: #ff9059;
+  border-radius: 5px;
+}
+.modalInformation::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+.modalInformation::-webkit-scrollbar {
+  width: 5px;
+  background-color: #d5ecf7;
+  border-radius: 5px;
+}
+
+.modalInformation::-webkit-scrollbar-thumb {
+  background-color: #ff9059;
+  border-radius: 5px;
+}
+.card {
+  border-radius: 1%;
+}
+#col2 {
+  max-height: 86vh;
+  overflow-x: hidden;
+}
+#col2::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+#col2::-webkit-scrollbar {
+  width: 5px;
+  background-color: #d5ecf7;
+  border-radius: 5px;
+}
+
+#col2::-webkit-scrollbar-thumb {
+  background-color: #ff9059;
+  border-radius: 5px;
+}
+[nz-carousel-content] {
+  text-align: center;
+  height: 160px;
+  line-height: 160px;
+  background: #364d79;
+  color: #fff;
+  overflow: hidden;
+}
+i:hover {
+  cursor: pointer;
+}
+h3 {
+  color: #fff;
+  margin-bottom: 0;
+  user-select: none;
+}
+
+.my-issue-board {
+  margin-top: 30px;
+}
+
+#project {
+  margin-top: 7px;
+  overflow-y: auto;
+  max-height: 76.6vh;
+  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%);
+}
+#project::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.8);
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+#project::-webkit-scrollbar {
+  width: 5px;
+  background-color: #d5ecf7;
+  border-radius: 5px;
+}
+
+#project::-webkit-scrollbar-thumb {
+  background-color: #ff9059;
+  border-radius: 5px;
+}
+.list-project {
+  margin-top: 80px;
+  padding: 0 10px;
+}
+#listUser {
+  padding: 0 10px;
+}
+.open-button {
+  background-color: #3385ff;
+  color: white;
+  padding: 15px 5px;
+  cursor: pointer;
+  opacity: 0.8;
+  position: fixed;
+  bottom: 29px;
+  right: 35px;
+  width: 72px;
+  border-radius: 50px;
+}
+.head-example {
+  width: 42px;
+  height: 42px;
+  border-radius: 4px;
+  background: #eee;
+  display: inline-block;
+  vertical-align: middle;
+  color: white;
+  bottom: 29px;
+  right: 35px;
+  cursor: pointer;
+  position: fixed;
+  opacity: 0.5;
+  .bag {
+    bottom: 29px;
+    right: 35px;
+  }
+}
+.head-example:hover {
+  opacity: 1;
+}
+#update {
+  ::ng-deep .anticon svg {
+    margin: 0px !important;
+  }
+}
+#mobile-card{
+  .ant-row {
+    flex-direction: row;
+  }
+  .ant-tag {
+    margin-right: 0px;
+  }
+  ::ng-deep .ant-card-small > .ant-card-body {
+    padding: 0 12px 12px;
+  }
+}
+#statisticMobile{
+  ::ng-deep .ant-card-small > .ant-card-body {
+    padding: 13px 12px;
+  }
+}
+:host::ng-deep .ant-progress-line {
+  margin-top: 6px;
+}
+#processingModelMobile{
+  ::ng-deep .ant-card-small > .ant-card-body {
+    padding: 0 12px;
+  }
+  .ant-row{
+    flex-direction: row;
+  }
+  .ant-btn {
+    padding: 0px 7px;
+    margin-bottom: 5px;
+  }
+  .ant-btn-dangerous.ant-btn-primary {
+    border-color: #e9b9a5;
+  }
+}
+@media only screen and (min-width: 740px) {
+  #timePipe2 {
+    display: none;
+  }
+  #responTable, #responTable2, #mobile-card, #processingModelMobile{
+    display: none;
+  }
+}
+@media only screen and (max-width: 740px) {
+  #col2 {
+    max-height: 100%;
+  }
+  #canvasMobile, #statisticMobile{
+    padding: 0 !important;
+  }
+  #processingModelPc{
+    display: none;
+  }
+  .modalInformation {
+    overflow-y: hidden;
+    height: 100%;
+    max-height: 100%;
+  }
+  .dashboardModelPc{
+    display: none;
+  }
+  #project {
+    overflow-y: hidden;
+    max-height: 100%;
+  }
+  .update-container-full {
+    overflow-y: hidden;
+    max-height: 100%;
+  }
+  #layoutDashboard {
+    overflow-y: auto;
+  }
+  #userName {
+    margin-bottom: 6px;
+  }
+  #timePipe {
+    display: none;
+  }
+  #timePipe2 {
+    margin-top: 4px;
+  }
+  nz-avatar {
+    margin-top: -3px;
+  }
+  .iconTAGMAIL {
+    padding-left: 13px;
+  }
+  #iconTag {
+    margin-right: 4px !important;
+  }
+  #update {
+    ::ng-deep .ant-timeline-item {
+      padding-bottom: 5px;
+    }
+    ::ng-deep .anticon svg {
+      margin: 0px 0px 3px -1px !important;
+    }
+    ::ng-deep .ant-collapse > .ant-collapse-item:last-child,
+    .ant-collapse > .ant-collapse-item:last-child > .ant-collapse-header {
+      min-width: 100% !important;
+    }
+  }
+  #headerDashboard {
+    .ant-row {
+      display: flex;
+      flex-flow: row wrap;
+      flex-direction: row;
+      flex-wrap: wrap;
+      min-width: 75vw;
+    }
+    .ant-col-4 {
+      max-width: 100%;
+    }
+  }
+  .ant-row {
+    display: flex;
+    flex-flow: row wrap;
+    flex-direction: column;
+  }
+  .ant-col-8 {
+    max-width: 100%;
+  }
+  .make-it-center {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  #update {
+    display: flex !important;
+    flex-direction: row !important;
+    .ant-col-8 {
+      max-width: 100%;
+    }
+    .updates-list {
+      width: 100%;
+    }
+    .ant-row {
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: space-between;
+    }
+    ::ng-deep .ant-collapse-content > .ant-collapse-content-box {
+      padding: 0px !important;
+    }
+  }
+}
+::ng-deep .ant-collapse-content > .ant-collapse-content-box {
+  padding: 16px;
+}
+#headerDashboard {
+  margin-top: 0.5vh;
+}
+#layoutDashboard {
+  height: 92.5vh;
+  overflow-y: auto;
+}
+#btnAddProject {
+  ::ng-deep .ant-btn-dangerous.ant-btn-primary {
+    background: #f50;
+  }
+}
+.iconTAGMAIL {
+  i {
+    margin: 0 -10px 0 15px;
+    position: relative;
+    left: -10px;
+    color: rgba(255, 85, 0, 0.8);
+  }
+}
+.list-group-item:hover {
+  background: rgba(255, 85, 0, 0.5);
+  transition: 0.3s;
+  width: 98%;
+  margin-left: 1%;
+  a,
+  i,
+  span {
+    color: white;
+  }
+  .group,
+  .groupName,
+  .devider {
+    color: white;
+  }
+  .iconTAGMAIL {
+    i {
+      color: white;
+    }
+  }
+}
+.devider {
+  font-size: 10px;
+  font-weight: normal;
+  color: rgb(8, 26, 189);
+}
+.groupName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f50;
+}
+.list-group-item {
+  border: 1px solid rgba(255, 85, 0, 0.1);
+}
+#responTable,#responTable2{
+  ::ng-deep .badge {
+    font-size: 0.9em;
+  }
+  ::ng-deep .ant-tag {
+    margin-right: 0px;
+  }
+  td {
+    // height: 40px !important;
+}
+  // max-height: 364px;
+  overflow-y: auto;
+  border: 1px solid #f50;
+  border-radius: 7px;
+  table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+    overflow-x: hidden;
+  }
+
+  table caption {
+    font-size: 1.5em;
+    margin: .5em 0 .75em;
+  }
+
+  table tr {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: .55em;
+  }
+
+  table th,
+  table td {
+    padding: .625em;
+    text-align: center;
+  }
+
+  table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  @media screen and (max-width: 600px) {
+    table {
+      border: 0;
+    }
+
+    table caption {
+      font-size: 1.3em;
+    }
+
+    table thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+
+    table tr {
+      display: block;
+      margin-bottom: .625em;
+      overflow-x: hidden;
+    }
+
+    table td {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      font-size: .78em;
+      text-align: right;
+    }
+
+    table td::before {
+      /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    table td:last-child {
+      border-bottom: 0;
+    }
+  }
+}

@@ -1,0 +1,345 @@
+<div class="container-fluid">
+  <button *ngIf="!isShowFilter && !shareService.manager && !shareService.leader" id="btnShowmore" style="width: 100%; background-color: rgba(255, 85, 0, 0.8)" nz-button
+  (click)="showFilterInMobile()" nzType="primary" nzDanger>
+  <i class="fas fa-plus" style="margin-right: 0.52vw"></i>Show department
+</button>
+  <div id="row-dp-pc">
+    <nz-card *ngIf="shareService.admin" class="list-department" nzSize="small">
+      <div style="padding-left: 5px">
+        <i class="fas fa-building" style="font-size: 16px; color: rgba(255, 85, 0, 0.8)"></i>
+        Departments
+      </div>
+      <div *ngIf="shareService.admin" nz-row>
+        <div nz-col nzSpan="2" style="padding: 5px; font-size: 16px; font-weight: 500;border: 1px solid rgba(255, 85, 0, 0.2);" class="cardDepartment"
+          (click)="changeDepartmentSearchIssue('','')">
+          <nz-card style="width: 100%;cursor: pointer;" nzSize="small" [class.cardDepartmentChoice]="idDepartmentIssue == ''">
+            <p>All</p>
+          </nz-card>
+        </div>
+        <div nz-col nzSpan="2" *ngFor="let department of listDepartment"
+          style="padding: 5px; font-size: 16px; font-weight: 500;border: 1px solid rgba(255, 85, 0, 0.2);" class="cardDepartment"
+          (click)="changeDepartmentSearchIssue(department.id,department.name)">
+          <nz-card style="width: 100%;cursor: pointer;" nzSize="small" [class.cardDepartmentChoice]="idDepartmentIssue == department.id">
+            <p>{{ department.name }}</p>
+          </nz-card>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+  <div *ngIf="isShowFilter">
+    <nz-card *ngIf="shareService.admin" class="list-department" nzSize="small">
+      <div style="padding-left: 5px">
+        <i class="fas fa-building" style="font-size: 16px; color: rgba(255, 85, 0, 0.8)"></i>
+        Departments
+      </div>
+      <div *ngIf="shareService.admin" nz-row>
+        <div nz-col nzSpan="2" style="padding: 5px; font-size: 16px; font-weight: 500;border: 1px solid rgba(255, 85, 0, 0.2);" class="cardDepartment"
+          (click)="changeDepartmentSearchIssue('','')">
+          <nz-card style="width: 100%" nzSize="small" [class.cardDepartmentChoice]="idDepartmentIssue == ''">
+            <p>All</p>
+          </nz-card>
+        </div>
+        <div nz-col nzSpan="2" *ngFor="let department of listDepartment"
+          style="padding: 5px; font-size: 16px; font-weight: 500;border: 1px solid rgba(255, 85, 0, 0.2);" class="cardDepartment"
+          (click)="changeDepartmentSearchIssue(department.id,department.name)">
+          <nz-card style="width: 100%" nzSize="small" [class.cardDepartmentChoice]="idDepartmentIssue == department.id">
+            <p>{{ department.name }}</p>
+          </nz-card>
+        </div>
+      </div>
+    </nz-card>
+    <nz-divider *ngIf="isShowFilter" (click)="showFilterInMobile()" [nzText]="text">
+      <ng-template #text>
+        <i nz-icon nzType="caret-up" nzTheme="outline"></i>
+      </ng-template>
+    </nz-divider>
+  </div>
+  <button *ngIf="!isShowSearch" id="btnShowmore" style="width: 100%; margin-top: 1vh;margin-bottom: 1vh; background-color: rgba(255, 85, 0, 0.8)" nz-button
+  (click)="showSearchInMobile()" nzType="primary" nzDanger>
+  <i class="fas fa-plus" style="margin-right: 0.52vw"></i>Show Search
+</button>
+  <div id="row-dp-pc">
+    <nz-card class="card-search" nzSize="small">
+      <div class="name-search" nz-row>
+        <div nz-col nzSpan="3" class="inputChild">
+          <div> Select Team</div>
+          <div>
+            <nz-select nzShowSearch nzAllowClear (ngModelChange)="changeSearchTeamIssue($event)"
+              nzPlaceHolder="Select Team" [(ngModel)]="idTeamIssue">
+              <nz-option *ngFor="let team of listTeamSearchIssue" nzValue="{{ team.Id }}" nzLabel="{{ team.Name }}">
+              </nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div nz-col nzSpan="3" class="inputChild">
+          <div>Filter Bugs ({{ listIssue?.length }})</div>
+          <div>
+            <input id="inputFil" [(ngModel)]="searchIssue" (keyup.enter)="IssueChange(searchIssue)" type="text" nz-input
+              placeholder="Select a name" />
+          </div>
+        </div>
+        <div nz-col nzSpan="3" class="inputChild">
+          <div>Project</div>
+          <div>
+            <nz-select nzShowSearch nzAllowClear (ngModelChange)="getByProject($event)" nzPlaceHolder="Select project"
+              [(ngModel)]="idProjectIssue">
+              <nz-option *ngFor="let project of listProject" nzValue="{{ project.id }}" nzLabel="{{ project.name }}">
+              </nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div nz-col nzSpan="3" class="inputChild">
+          <div>User</div>
+          <div>
+            <nz-select nzShowSearch nzAllowClear (ngModelChange)="getUserNameIssue($event)"
+              nzPlaceHolder="Select Person" [(ngModel)]="idUserIssue">
+              <nz-option *ngFor="let user of listUser" nzValue="{{ user.id }}" nzLabel="{{ user.name }}"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div nz-col nzSpan="3" class="inputChild">
+          <div>Status</div>
+          <div>
+            <nz-select nzShowSearch nzAllowClear (ngModelChange)="getByStatus($event)" nzPlaceHolder="Select status"
+              [(ngModel)]="idStatus">
+              <nz-option *ngFor="let status of listStatus" nzValue="{{ status.id }}" nzLabel="{{ status.name }}">
+              </nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div nz-col nzSpan="3" class="inputChild">
+          <div>Category</div>
+          <div>
+            <nz-select nzShowSearch nzAllowClear (ngModelChange)="getByCategory($event)" nzPlaceHolder="Select category"
+              [(ngModel)]="idCategory">
+              <nz-option *ngFor="let category of listCategory" nzValue="{{ category.id }}"
+                nzLabel="{{ category.name }}"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div nz-col nzSpan="3" class="inputChild" *ngFor="let bt of button" id="filCreate">
+          <div class="filName">Filter {{ bt.type }}</div>
+          <div>
+            <button class="bt-name" nz-button (click)="changeSearchIssue(bt.id)"
+              [ngClass]="{ active2: isActive2(bt.id) }" nzType="primary" nzDanger>
+              <i class="{{ bt.class }}" style="margin-right: 10px"></i>{{ bt.name }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+  <div *ngIf="isShowSearch" id="cardsearch">
+    <nz-card class="card-search" nzSize="small" >
+      <div class="name-search" nz-row >
+        <div nz-col nzSpan="3" class="inputChild">
+          <div> Select Team</div>
+          <div>
+            <nz-select nzShowSearch nzAllowClear (ngModelChange)="changeSearchTeamIssue($event)"
+              nzPlaceHolder="Select Team" [(ngModel)]="idTeamIssue">
+              <nz-option *ngFor="let team of listTeamSearchIssue" nzValue="{{ team.id }}" nzLabel="{{ team.name }}">
+              </nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div nz-col nzSpan="3" class="inputChild">
+          <div>Filter Bugs ({{ listIssue?.length }})</div>
+          <div>
+            <input id="inputFil" [(ngModel)]="searchIssue" (keyup.enter)="IssueChange(searchIssue)" type="text" nz-input
+              placeholder="Select a name" />
+          </div>
+        </div>
+        <div nz-col nzSpan="3" class="inputChild">
+          <div>Project</div>
+          <div>
+            <nz-select nzShowSearch nzAllowClear (ngModelChange)="getByProject($event)" nzPlaceHolder="Select project"
+              [(ngModel)]="idProjectIssue">
+              <nz-option *ngFor="let project of listProject" nzValue="{{ project.id }}" nzLabel="{{ project.name }}">
+              </nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div nz-col nzSpan="3" class="inputChild">
+          <div>User</div>
+          <div>
+            <nz-select nzShowSearch nzAllowClear (ngModelChange)="getUserNameIssue($event)"
+              nzPlaceHolder="Select Person" [(ngModel)]="idUserIssue">
+              <nz-option *ngFor="let user of listUser" nzValue="{{ user.id }}" nzLabel="{{ user.name }}"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div nz-col nzSpan="3" class="inputChild">
+          <div>Status</div>
+          <div>
+            <nz-select nzShowSearch nzAllowClear (ngModelChange)="getByStatus($event)" nzPlaceHolder="Select status"
+              [(ngModel)]="idStatus">
+              <nz-option *ngFor="let status of listStatus" nzValue="{{ status.id }}" nzLabel="{{ status.name }}">
+              </nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div nz-col nzSpan="3" class="inputChild">
+          <div>Category</div>
+          <div>
+            <nz-select nzShowSearch nzAllowClear (ngModelChange)="getByCategory($event)" nzPlaceHolder="Select category"
+              [(ngModel)]="idCategory">
+              <nz-option *ngFor="let category of listCategory" nzValue="{{ category.id }}"
+                nzLabel="{{ category.name }}"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div nz-col nzSpan="3" class="inputChild" *ngFor="let bt of button" id="filCreate">
+          <div class="filName">Filter {{ bt.type }}</div>
+          <div>
+            <button class="bt-name" nz-button (click)="changeSearchIssue(bt.id)"
+              [ngClass]="{ active2: isActive2(bt.id) }" nzType="primary" nzDanger>
+              <i class="{{ bt.class }}" style="margin-right: 10px"></i>{{ bt.name }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </nz-card>
+    <nz-divider *ngIf="isShowSearch" (click)="showSearchInMobile()" [nzText]="text">
+      <ng-template #text>
+        <i nz-icon nzType="caret-up" nzTheme="outline"></i>
+      </ng-template>
+    </nz-divider>
+  </div>
+  <div class="table-Issue">
+    <div>
+      <nz-card style="width: 100%; padding: 5px; margin: 0.5vh;border: 1px solid rgba(255, 85, 0, 0.2);" nzSize="small">
+        <div nz-row>
+          <div nz-col nzSpan="3">Project</div>
+          <div nz-col nzSpan="6">Name</div>
+          <div nz-col nzSpan="3">User</div>
+          <div nz-col nzSpan="4">Category</div>
+          <div nz-col nzSpan="2">Due Date</div>
+          <div nz-col nzSpan="2">Finish Date</div>
+          <div nz-col nzSpan="2">Creation Time</div>
+          <div nz-col nzSpan="2">Status</div>
+        </div>
+      </nz-card>
+    </div>
+    <nz-spin style="
+        display: block;
+        position: relative;
+        margin-left: 45%;
+        margin-top: 15%;
+        width: 50%;
+        z-index: 99;
+        color: #f50;
+      " *ngIf="loaderService.isLoading | async; else doneLoad" nzSimple [nzSize]="'large'"
+      [nzIndicator]="indicatorTemplate">
+    </nz-spin>
+    <ng-template #indicatorTemplate><i nz-icon nzType="loading"
+        style="font-size: 35px; color: rgba(255, 85, 0, 0.8)"></i></ng-template>
+    <ng-template #doneLoad>
+      <div class="container-card">
+        <nz-card style="width: 100%; padding: 5px; margin: 5px;border: 1px solid rgba(255, 85, 0, 0.2);" nzSize="small" *ngFor="let issue of listIssue?.items">
+          <div nz-row>
+            <div nz-col nzSpan="3">{{ issue.projectName }}</div>
+            <div nz-col nzSpan="6">
+                <a
+                  style="text-decoration: none; color: black;"
+                  nzTooltipTitle="Issue details"
+                  nz-tooltip
+                  routerLink="/project/{{ issue.projectID }}/issues/view/{{ issue.id }}"
+                >
+                  {{ issue.name }}</a>
+            </div>
+            <div nz-col nzSpan="3">{{ issue.userName }}</div>
+            <div nz-col nzSpan="4">
+              <nz-tag>{{ issue.categoryName }}</nz-tag>
+            </div>
+            <div nz-col nzSpan="2">
+              <nz-tag>{{
+                issue.dueDate | date: 'longDate'
+                }}</nz-tag>
+            </div>
+            <div nz-col nzSpan="2">
+              {{ issue.finishDate | date: 'longDate' }}
+            </div>
+            <div nz-col nzSpan="2">
+              {{ issue.creationTime | date: 'longDate' }}
+            </div>
+            <div nz-col nzSpan="2"><nz-badge nzColor="{{issue.nzColor}}" nzText="{{ issue.statusName }}"></nz-badge></div>
+          </div>
+        </nz-card>
+        <nz-pagination
+        style="float: right; margin-top: 5px"
+        class="pagination"
+        nzShowSizeChanger
+        nzShowQuickJumper
+        [nzTotal]="totalCount"
+        [(nzPageIndex)]="pageIndex"
+        [(nzPageSize)]="pageSize"
+        (nzPageSizeChange)="IssueChange(searchIssue)"
+        (nzPageIndexChange)="IssueChange(searchIssue)"
+        [nzSize]="'small'"
+      >
+      </nz-pagination>
+        <div nz-row>
+          <div nz-col nzSpan="12"><label style="margin-top: 1vh">Total: <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'">
+                BUGS {{ listIssue?.totalCount }}</nz-tag></label></div>
+          <div nz-col nzSpan="12" style="float :right;">
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+
+  <div id="mobile-card">
+    <div *ngFor="let data of listIssue?.items">
+      <nz-card
+        nzSize="small"
+        style="width: 100%; padding: 5px; border: 1px solid #f8895191; margin-top: 5px;"
+        [nzBordered]="false"
+      >
+        <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+          <div nz-col nzSpan="6" style="font-weight: 500"><span style="float: left;">Project:</span></div>
+          <div nz-col nzSpan="18" ><span style="float: right;" >{{ data?.projectName }}</span></div>
+        </div>
+        <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+          <div nz-col nzSpan="6" style="font-weight: 500"><span style="float: left;">Name:</span></div>
+          <div nz-col nzSpan="18" ><span style="float: right;" ><nz-tag>
+            <a
+            style="text-decoration: none"
+              nzTooltipTitle="Issue details"
+              nzTooltipPlacement="bottom"
+              nz-tooltip
+              routerLink="/project/{{ data.projectID }}/issues/view/{{ data.id }}"
+            >
+              {{ data.name }}</a></nz-tag></span></div>
+        </div>
+        <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+          <div nz-col nzSpan="6" style="font-weight: 500"><span style="float: left;">User:</span></div>
+          <div nz-col nzSpan="18" ><span style="float: right;" >{{ data?.userName }}</span></div>
+        </div>
+        <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+          <div nz-col nzSpan="6" style="font-weight: 500"><span style="float: left;">Category:</span></div>
+          <div nz-col nzSpan="18" ><span style="float: right;" >{{ data.categoryName }}</span></div>
+        </div>
+        <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+          <div nz-col nzSpan="6" style="font-weight: 500"><span style="float: left;">Due Date:</span></div>
+          <div nz-col nzSpan="18" ><span style="float: right;" ><nz-tag>{{
+            data.dueDate | date: 'longDate'
+            }}</nz-tag></span></div>
+        </div>
+        <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+          <div nz-col nzSpan="8" style="font-weight: 500"><span style="float: left;">Finish Date:</span></div>
+          <div nz-col nzSpan="16" ><span style="float: right;" >{{ data.finishDate | date: 'longDate' }}</span></div>
+        </div>
+        <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+          <div nz-col nzSpan="10" style="font-weight: 500"><span style="float: left;">Creation Time:</span></div>
+          <div nz-col nzSpan="14" ><span style="float: right;" >{{ data.creationTime | date: 'longDate' }}</span></div>
+        </div>
+        <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+          <div nz-col nzSpan="6" style="font-weight: 500"><span style="float: left;">Status:</span></div>
+          <div nz-col nzSpan="18" ><span style="float: right;" ><nz-badge nzColor="{{data?.nzColor}}" nzText="{{ data?.statusName }}"></nz-badge></span></div>
+        </div>
+      </nz-card>
+    </div>
+  </div>
+
+
+</div>

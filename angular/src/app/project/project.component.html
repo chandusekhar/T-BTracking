@@ -1,0 +1,14 @@
+
+<nz-list nzItemLayout="horizontal" [nzLoading]="loading">
+  <nz-list-item *ngFor="let list of listProject?.items">
+    <nz-list-item-meta
+      nzAvatar="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMAPXfZj8Xwph-gPamGw5QGMNPsETyQsX07w&usqp=CAU"
+      nzDescription="Bấm chọn project"
+    >
+      <nz-list-item-meta-title>
+        <a routerLink="/projects/{{list?.id}}">{{ list?.name }}</a>
+      </nz-list-item-meta-title>
+    </nz-list-item-meta>
+  </nz-list-item>
+  <!-- <nz-list-empty *ngIf="listProject.length === 0"></nz-list-empty> -->
+</nz-list>

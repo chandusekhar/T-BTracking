@@ -1,0 +1,23 @@
+<div nz-row style="height:100%">
+    <div nz-col nzSpan="8">
+        <div style="height: 500px;
+        background-color: cadetblue;
+        margin-right: 10px;">
+        <button nz-button nzType="primary" (click)="addEvent()">Get more issues</button>
+        <nz-select [(ngModel)]="projectSelect" (ngModelChange)="changeProjectSelect()" nzPlaceHolder="Select a person">
+            <nz-option *ngFor="let e of projectList" nzValue={{e.projectId}} nzLabel={{e.projectName}}></nz-option>
+            <!-- <nz-option nzValue="jack" nzLabel="Jack"></nz-option>
+            <nz-option nzValue="lucy" nzLabel="Lucy"></nz-option>
+            <nz-option nzValue="disabled" nzLabel="Disabled" nzDisabled></nz-option> -->
+        </nz-select>
+    </div>
+    </div>
+    <div nz-col nzSpan="16">
+        <div style="position: absolute;
+        top: 0;
+        margin-left: 20px;"><nz-date-picker nzMode="month" [(ngModel)]="datePicked" (ngModelChange)="datePicker_onChange($event)"></nz-date-picker>
+        <button style="padding: 3px 5px;
+        margin-left: 5px; margin-top: -2px;" type="button" (click)="todayClick()" class="btn btn-primary">Today</button></div>
+        <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+    </div>
+</div>

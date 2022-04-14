@@ -1,0 +1,3 @@
+/aspnet-core/src/BugTracking.HttpApi.Host/appsettings.json
+/aspnet-core/src/BugTracking.DbMigrator/appsettings.json
+/aspnet-core/src/BugTracking.HttpApi.Host/wwwroot/dist

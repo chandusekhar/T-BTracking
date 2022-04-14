@@ -1,0 +1,410 @@
+<div id="team">
+  <div class="container-fluid">
+      <button *ngIf="!isShowFilter && !shareService.manager && !shareService.leader" id="btnShowmore" style="width: 100%; background-color: rgba(255, 85, 0, 0.8)" nz-button
+    (click)="showFilterInMobile()" nzType="primary" nzDanger>
+    <i class="fas fa-plus" style="margin-right: 0.52vw"></i>Show department
+  </button>
+    <div id="row-dp-pc">
+      <nz-card *ngIf="shareService.admin" style="width: 100%; padding: 5px; margin: 5px" nzSize="small">
+        <div style="padding-left: 5px">
+          <i class="fas fa-building" style="font-size: 16px; color: rgba(255, 85, 0, 0.8)"></i>
+          Departments
+        </div>
+        <div class="list-department" nz-row>
+          <div nz-col nzSpan="2" style="padding: 5px; font-size: 16px; font-weight: 500;border: 1px solid rgba(255, 85, 0, 0.2);" class="cardDepartment"
+            (click)="changeSearchDepartment('','')">
+          <nz-card style="cursor: pointer;" nzSize="small" [class.cardChoice]="IdDeparmentAdd == ''">
+              <p id="nameDepart">All</p>
+            </nz-card>
+          </div>
+          <div nz-col nzSpan="2" *ngFor="let department of listDepartment"
+            style="padding: 5px; font-size: 16px; font-weight: 500;border: 1px solid rgba(255, 85, 0, 0.2);" class="cardDepartment"
+            (click)="changeSearchDepartment(department.Id,department.Name)">
+          <nz-card style="cursor: pointer;" nzSize="small" [class.cardChoice]="IdDeparmentAdd == department.Id">
+              <p id="nameDepart">{{ department.Name }}</p>
+            </nz-card>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+    <div *ngIf="isShowFilter">
+      <nz-card *ngIf="shareService.admin" style="width: 100%; padding: 5px; margin: 5px;" nzSize="small">
+        <div style="padding-left: 5px">
+          <i class="fas fa-building" style="font-size: 16px; color: rgba(255, 85, 0, 0.8)"></i>
+          Departments
+        </div>
+        <div class="list-department" nz-row>
+          <div nz-col nzSpan="2" style="padding: 5px; font-size: 16px; font-weight: 500;border: 1px solid rgba(255, 85, 0, 0.2);" class="cardDepartment"
+            (click)="changeSearchDepartment('','')">
+          <nz-card nzSize="small" [class.cardChoice]="IdDeparmentAdd == ''">
+              <p>All</p>
+            </nz-card>
+          </div>
+          <div nz-col nzSpan="2" *ngFor="let department of listDepartment"
+            style="padding: 5px; font-size: 16px; font-weight: 500;border: 1px solid rgba(255, 85, 0, 0.2);" class="cardDepartment"
+            (click)="changeSearchDepartment(department.Id,department.Name)">
+          <nz-card nzSize="small" [class.cardChoice]="IdDeparmentAdd == department.Id">
+              <p>{{ department.Name }}</p>
+            </nz-card>
+          </div>
+        </div>
+      </nz-card>
+      <nz-divider *ngIf="isShowFilter" (click)="showFilterInMobile()" [nzText]="text">
+        <ng-template #text>
+          <i nz-icon nzType="caret-up" nzTheme="outline"></i>
+        </ng-template>
+      </nz-divider>
+    </div>
+    <nz-spin style="
+        display: block;
+        position: relative;
+        margin-left: 45%;
+        margin-top: 25%;
+        width: 50%;
+        z-index: 99;
+        color: #f50;
+      " *ngIf="loaderService.isLoading | async; else doneLoad" nzSimple [nzSize]="'large'"
+      [nzIndicator]="indicatorTemplate">
+    </nz-spin>
+    <ng-template #indicatorTemplate><i nz-icon nzType="loading" style="font-size: 35px; color: rgba(255, 85, 0, 0.8)"></i>
+    </ng-template>
+    <ng-template #doneLoad>
+      <div class="change-column" nz-row>
+        <div *ngIf="shareService.admin || shareService.manager" nz-col nzSpan="8" class="colSpan">
+          <div class="row-input" nz-row>
+            <div nz-col nzSpan="18">
+              <input [(ngModel)]="selectedTeam" (keyup.enter)="TeamChange(selectedTeam)" type="text" nz-input
+                placeholder="Select a name" />
+            </div>
+            <div nz-col nzSpan="6" style="padding-left: 5px">
+              <button style="width: 100%; background-color: rgba(255, 85, 0, 0.8)" nz-button
+                (click)="showModalAddTeam($event)" nzType="primary" nzDanger>
+                <i class="fas fa-plus" style="margin-right: 0.52vw"></i> New Team ({{
+                listTeam?.length
+                }})
+              </button>
+              <nz-modal [(nzVisible)]="isVisibleAddTeam" (nzOnCancel)="handleCancelAddTeam()" (nzOnOk)="handleOkAddTeam()"
+                [nzOkLoading]="isOkLoadingAddTeam">
+                <ng-template nzModalContent>
+                  <div>
+                    <div>
+                      <i class="fas fa-edit" style="margin-right: 0.52vw; color: rgba(255, 85, 0, 0.8)"></i>
+                      Name
+                    </div>
+                    <div style="margin-top: 1vh">
+                      <input autofocus nz-input placeholder="Team Name" [(ngModel)]="NameTeam" required />
+                    </div>
+                    <div style="margin-top: 1vh">
+                      <i class="fas fa-user-shield" style="margin-right: 0.52vw; color: rgba(255, 85, 0, 0.8)"></i>
+                      Leader
+                    </div>
+                    <div style="margin-top: 1vh">
+                      <nz-select nzShowSearch nzPlaceHolder="Select a leader" style="width: 100%"
+                        [(ngModel)]="IdUserLeader">
+                        <nz-option *ngFor="let user of listUser" nzLabel="{{ user.name }}" nzValue="{{ user.id }}">
+                        </nz-option>
+                      </nz-select>
+                    </div>
+                    <div style="margin-top: 1vh">
+                      <i class="fas fa-building" style="margin-right: 0.52vw; color: rgba(255, 85, 0, 0.8)"></i>
+                      Department
+                    </div>
+                    <div style="margin-top: 1vh">
+                      <nz-select *ngIf="shareService.admin " nzShowSearch nzPlaceHolder="Select a department" style="width: 100%"
+                        [(ngModel)]="IdDeparmentAdd">
+                        <nz-option nzLabel="{{ nameDepartmentShow }}" nzValue="IdDeparmentAdd" nzHide></nz-option>
+                        <nz-option *ngFor="let department of listDepartment" nzLabel="{{ department.Name }}"
+                          nzValue="{{ department.Id }}">
+                        </nz-option>
+                      </nz-select>
+                      <nz-select *ngIf="shareService.manager " nzShowSearch nzPlaceHolder="Select a department" style="width: 100%" nzDisabled
+                      [(ngModel)]="IdDeparmentAdd">
+                      <nz-option nzLabel="{{ nameDepartmentShow }}" nzValue="IdDeparmentAdd" nzHide></nz-option>
+                      <nz-option *ngFor="let department of listDepartment" nzLabel="{{ department.Name }}"
+                        nzValue="{{ department.Id }}">
+                      </nz-option>
+                    </nz-select>
+                    </div>
+                  </div>
+                </ng-template>
+              </nz-modal>
+              <nz-modal [(nzVisible)]="isVisibleEditTeam" (nzOnCancel)="handleCancelEditTeam()"
+                (nzOnOk)="handleOkEditTeam()" [nzOkLoading]="isOkLoadingEditTeam">
+                <ng-template nzModalContent>
+                  <div>
+                    <i class="fas fa-edit" style="margin-right: 0.52vw; color: rgba(255, 85, 0, 0.8)"></i>
+                    Name
+                  </div>
+                  <div style="margin-top: 1vh">
+                    <input autofocus nz-input placeholder="Team Name" [(ngModel)]="NameTeamEdit" required />
+                  </div>
+                  <div style="margin-top: 1vh">
+                    <i class="fas fa-user-shield" style="margin-right: 0.52vw; color: rgba(255, 85, 0, 0.8)"></i>
+                    Leader
+                  </div>
+                  <div style="margin-top: 1vh">
+                    <nz-select nzShowSearch nzPlaceHolder="Select a person" style="width: 100%"
+                      [(ngModel)]="IdUserLeaderEdit">
+                      <nz-option *ngFor="let user of listUser" nzLabel="{{ user.name }}" nzValue="{{ user.id }}">
+                      </nz-option>
+                      <nz-option nzLabel="{{ nameLeaderEditTeam }}" nzValue="IdUserLeaderEdit" nzHide></nz-option>
+                    </nz-select>
+                  </div>
+                  <div style="margin-top: 1vh">
+                    <i class="fas fa-building" style="margin-right: 0.52vw; color: rgba(255, 85, 0, 0.8)"></i>
+                    Department
+                  </div>
+                  <div style="margin-top: 1vh">
+                    <nz-select nzShowSearch nzPlaceHolder="Select a department" style="width: 100%"
+                      ngModel="idDepartmentEdit">
+                      <nz-option nzLabel="{{ nameDepartmentShow }}" nzValue="idDepartmentEdit" nzHide></nz-option>
+                      <nz-option *ngFor="let department of listDepartment" nzLabel="{{ department.Name }}"
+                        nzValue="{{ department.Id }}">
+                      </nz-option>
+                    </nz-select>
+                  </div>
+                </ng-template>
+              </nz-modal>
+            </div>
+          </div>
+          <div class="list-team" style="cursor: pointer;">
+            <div *ngFor="let team of listTeam">
+              <nz-card class="cardTeam" id="pc" nzSize="small"
+                style="width: 100%;margin-bottom: 0.5vh; padding: 5px; border: 1px solid rgba(255, 85, 0, 0.2)" [nzBordered]="false"
+                nzTitle="{{ team.Name }}" [nzExtra]="extraTemplate" (click)="getMemberTeampc(team.Id,team.Name,team.IdLeader)"
+                [class.cardChoice]="IdTeamAddMember == team.Id">
+                <div  nz-row style="padding-bottom: 1vh; border-bottom: 1px solid #f0f2f5">
+                  <div  nz-col nzSpan="12">Leader:</div>
+                  <div  nz-col nzSpan="12" style="font-weight: 500">{{ team.NameLeader }}</div>
+                </div>
+                <div   nz-row style="margin-top: 1vh">
+                  <div  nz-col nzSpan="12">
+                    Member: <nz-tag [nzColor]="'blue'">{{ team.CountMember }}</nz-tag>
+                  </div>
+                  <div  nz-col nzSpan="12">
+                    Bugs: <nz-tag [nzColor]="'blue'">{{ team.CountIssue }}</nz-tag>
+                  </div>
+                </div>
+              </nz-card>
+              <nz-card class="cardTeam" id="mobile" nzSize="small"
+                style="width: 100%; padding: 5px; border: 1px solid #f8b28d" [nzBordered]="false"
+                nzTitle="{{ team.Name }}" [nzExtra]="extraTemplate" (click)="getMemberTeam(team.Id,team.Name,team.IdLeader)"
+                [class.cardChoice]="IdTeamAddMember == team.Id">
+                <div nz-row style="padding-bottom: 10px; border-bottom: 1px solid #f0f2f5">
+                  <div nz-col nzSpan="12">Leader:</div>
+                  <div nz-col nzSpan="12" style="font-weight: 500">{{ team.NameLeader }}</div>
+                </div>
+                <div nz-row style="margin-top: 10px">
+                  <div nz-col nzSpan="12">
+                    Member: <nz-tag [nzColor]="'blue'">{{ team.CountMember }}</nz-tag>
+                  </div>
+                  <div nz-col nzSpan="12">
+                    Bugs: <nz-tag [nzColor]="'blue'">{{ team.CountIssue }}</nz-tag>
+                  </div>
+                </div>
+              </nz-card>
+              <ng-template #extraTemplate>
+                <button nz-button nzType="primary" nzSize="small" style="margin-right: 0.26vw" (click)="
+                    showModalEditTeam(
+                      team.Id,
+                      team.IdDepartment,
+                      team.NameDepartment,
+                      team.IdLeader,
+                      team.NameLeader,
+                      team.Name
+                    )
+                  ">
+                  <i class="fas fa-user-edit" style="margin-right: 0.52vw"></i>
+                  Edit
+                </button>
+                <button nz-button nzType="primary" nzDanger nzSize="small" (click)="RemoveTeam(team.Id)">
+                  <i class="fas fa-trash" style="margin-right: 0.52vw"></i>
+                  Delete
+                </button>
+              </ng-template>
+              <div class="modelMember" id="modelMember1">
+                <nz-modal *ngIf="IdTeamAddMember == team.Id" [(nzVisible)]="isVisibleGetListMember" nzTitle="List Member"
+                  nzWidth=345px (nzOnCancel)="handleCancelGetListMember()" (nzOnOk)="handleOkGetListMember()"
+                  [nzOkLoading]="isOkLoadingGetListMember" modalContent>
+                  <div style=" float: right; margin-bottom: 0.5vh;">
+                    <button style="width: 100%" nz-button (click)="showModalAddMember($event)"
+                      nzTooltipTitle="add member team" nzType="primary" nz-tooltip>New Member</button>
+                  </div>
+                  <div style="margin-top: 5vh">
+                    <div id="mobile-card">
+                      <div *ngFor="let data of listMemberTeam">
+                        <nz-card
+                          nzSize="small"
+                          style="width: 100%; padding: 5px; border: 1px solid #f8895191; margin-top: 5px;"
+                          [nzBordered]="false"
+                        >
+                          <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                            <div nz-col nzSpan="4" style="font-weight: 500"><span style="float: left;">Name:</span></div>
+                            <div nz-col nzSpan="20" ><span style="float: right;word-break: break-all;" >{{ data.NameMember }}</span></div>
+                          </div>
+                          <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                            <div nz-col nzSpan="4" style="font-weight: 500"><span style="float: left;">Email:</span></div>
+                            <div nz-col nzSpan="20" ><span style="float: right;word-break: break-all;" >{{ data.Email }}</span></div>
+                          </div>
+                          <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                            <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Phone number:</span></div>
+                            <div nz-col nzSpan="12" ><span style="float: right;word-break: break-all;" >{{ data.PhoneNumber }}</span></div>
+                          </div>
+                          <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                            <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Count issue:</span></div>
+                            <div nz-col nzSpan="12" ><span style="float: right;word-break: break-all;" ><nz-tag>{{ data.CountIssue }}</nz-tag> Bugs</span></div>
+                          </div>
+                          <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                            <div nz-col nzSpan="4" style="font-weight: 500"><span style="float: left;">Delete:</span></div>
+                            <div nz-col nzSpan="20" ><span *ngIf="data.IdUser != userLogin" (click)="RemoveMember(data.Id)" style="float: right;word-break: break-all;" ><i class="fas fa-user-minus" style="color: rgba(255, 85, 0, 0.8)"></i></span></div>
+                          </div>
+                        </nz-card>
+                      </div>
+                    </div>
+
+                  </div>
+                </nz-modal>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="shareService.admin || shareService.manager " nz-col nzSpan="16" class="list-member">
+          <div nz-row>
+            <div nz-col nzSpan="12"></div>
+            <div nz-col nzSpan="12">
+              <button *ngIf="IdTeamAddMember" style="background-color: rgba(255, 85, 0, 0.8); float: right" nz-button
+                (click)="showModalAddMember($event)" nzType="primary" nzDanger>
+                <i class="fas fa-plus" style="margin-right: 0.52vw"></i>
+                New Member ({{ listMemberTeam?.length }})
+              </button>
+              <nz-modal [(nzVisible)]="isVisibleAddMember" (nzOnCancel)="handleCancelAddMember()"
+                (nzOnOk)="handleOkAddMember()" [nzOkLoading]="isOkLoadingAddMember">
+                <ng-template nzModalContent>
+                  <div>
+                    <i class="fas fa-users" style="margin-right: 0.52vw; color: rgba(255, 85, 0, 0.8)"></i>
+                    Choose Members
+                  </div>
+                  <div style="margin-top: 1vh">
+                    <nz-select nzMode="multiple" nzShowSearch nzAllowClear nzPlaceHolder="Select a person"
+                      style="width: 100%" [(ngModel)]="IdMemberAdd">
+                      <nz-option *ngFor="let user of listUserAddMember" nzLabel="{{ user.name }}" nzValue="{{ user.id }}">
+                      </nz-option>
+                    </nz-select>
+                  </div>
+                </ng-template>
+              </nz-modal>
+            </div>
+          </div>
+          <div style="margin-top: 1vh">
+            <nz-card style="width: 100%; padding: 5px; margin-bottom: 0.5vh;border: 1px solid rgba(255, 85, 0, 0.2);" nzSize="small"
+              *ngFor="let member of listMemberTeam">
+              <div nz-row>
+                <div nz-col nzSpan="4">{{ member.NameMember }}</div>
+                <div nz-col nzSpan="4">{{ member.PhoneNumber }}</div>
+                <div nz-col nzSpan="10">{{ member.Email }}</div>
+                <div nz-col nzSpan="5">
+                  <nz-tag>{{ member.CountIssue }}</nz-tag> Bugs
+                </div>
+                <div nz-col nzSpan="1" *ngIf="member.IdUser != IdLeaderShow" (click)="RemoveMember(member.Id)" nz-tooltip
+                  nzTooltipTitle="Remove member">
+                  <i class="fas fa-user-minus" style="color: rgba(255, 85, 0, 0.8);cursor: pointer;"></i>
+                </div>
+              </div>
+            </nz-card>
+          </div>
+        </div>
+        <div id="list-member" *ngIf="shareService.leader && !shareService.manager" nz-col nzSpan="24" class="colSpan">
+          <div nz-row>
+            <div nz-col nzSpan="12"></div>
+            <div nz-col nzSpan="12">
+              <button  style="background-color: rgba(255, 85, 0, 0.8); float: right" nz-button
+                (click)="showModalAddMember($event)" nzType="primary" nzDanger>
+                <i class="fas fa-plus" style="margin-right: 0.52vw"></i>
+                New Member ({{ listMemberTeam?.length }})
+              </button>
+              <nz-modal [(nzVisible)]="isVisibleAddMember" (nzOnCancel)="handleCancelAddMember()"
+                (nzOnOk)="handleOkAddMember()" [nzOkLoading]="isOkLoadingAddMember">
+                <ng-template nzModalContent>
+                  <div>
+                    <i class="fas fa-users" style="margin-right: 0.52vw; color: rgba(255, 85, 0, 0.8)"></i>
+                    Choose Members
+                  </div>
+                  <div style="margin-top: 1vh">
+                    <nz-select nzMode="multiple" nzShowSearch nzAllowClear nzPlaceHolder="Select a person"
+                      style="width: 100%" [(ngModel)]="IdMemberAdd">
+                      <nz-option *ngFor="let user of listUserAddMember" nzLabel="{{ user.name }}" nzValue="{{ user.id }}">
+                      </nz-option>
+                    </nz-select>
+                  </div>
+                </ng-template>
+              </nz-modal>
+            </div>
+          </div>
+          <div style="margin-top: 1vh">
+            <nz-card style="width: 100%; padding: 5px; margin-bottom: 0.5vh;border: 1px solid rgba(255, 85, 0, 0.2);" nzSize="small"
+              *ngFor="let member of listMemberTeam">
+              <div nz-row>
+                <div nz-col nzSpan="4">{{ member.NameMember }}</div>
+                <div nz-col nzSpan="4">{{ member.PhoneNumber }}</div>
+                <div nz-col nzSpan="10">{{ member.Email }}</div>
+                <div nz-col nzSpan="5">
+                  <nz-tag>{{ member.CountIssue }}</nz-tag> Bugs
+                </div>
+                <div nz-col nzSpan="1" *ngIf="member.IdUser != userLogin" (click)="RemoveMember(member.Id)" nz-tooltip
+                  nzTooltipTitle="Remove member">
+                  <i class="fas fa-user-minus" style="color: rgba(255, 85, 0, 0.8)"></i>
+                </div>
+              </div>
+            </nz-card>
+          </div>
+        </div>
+        <div *ngIf="shareService.leader " class="modelMember" id="modelMember1">
+          <div style=" float: right; margin-bottom: 5px;">
+            <button *ngIf="IdTeamAddMember" style="background-color: rgba(255, 85, 0, 0.8); float: right" nz-button
+              (click)="showModalAddMember($event)" nzType="primary" nzDanger>
+              <i class="fas fa-plus" style="margin-right: 0.52vw"></i>
+              New Member ({{ listMemberTeam?.length }})
+            </button>
+          </div>
+          <div style="margin-top: 1vh">
+            <div id="tableMember1">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone number</th>
+                    <th scope="col">Count issue</th>
+                    <th scope="col">Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of listMemberTeam">
+                    <td data-label="Name">
+                      <nz-tag [nzColor]="'blue'"><a>
+                          {{ data.NameMember }}</a></nz-tag>
+                    </td>
+                    <td data-label="Email">
+                      {{data.Email}}
+                    </td>
+                    <td data-label="phone Number">
+                      {{data.PhoneNumber}}
+                    </td>
+                    <td data-label="count Issue">
+                      <nz-tag>{{ data.CountIssue }}</nz-tag>
+                    </td>
+                    <td data-label="Delete">
+                      <a *ngIf="data.IdUser != IdLeaderShow" (click)="RemoveMember(data.Id)" nzTooltipTitle="delete"
+                        nz-tooltip nzType="default"><i style="color: red;" class="iconDelete" nz-icon
+                          nzType="close"></i></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

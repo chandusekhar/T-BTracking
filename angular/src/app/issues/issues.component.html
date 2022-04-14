@@ -1,0 +1,419 @@
+<header style="padding: 5px" id="Issue">
+  <div>
+    <button
+      nzSize="small"
+      class="status"
+      [class.choosen]="filterStatus == 'All'"
+      (click)="setNullStatusId()"
+      nz-button
+    >
+      <span>All</span>
+    </button>
+    <ng-container *ngFor="let item of listStatus">
+      <button
+        nzSize="small"
+        class="status"
+        [class.choosen]="filterStatus == item.name"
+        (click)="GetStatusId(item.id, item.name)"
+        nz-button
+      >
+        {{ item.name }}
+      </button>
+    </ng-container>
+    <button
+      *ngIf="!isShowFilter"
+      nzSize="small"
+      class="showMorefilter"
+      nz-button
+      id="btnShowmore"
+      (click)="showFilterInMobile()"
+    >
+      <span>...</span>
+    </button>
+  </div>
+  <br id="br" />
+  <div nz-row style="margin-top: -25px" class="rowSelect" id="rowPc">
+    <div>
+      <label style="font-size: 14px">Category</label><br />
+      <nz-select
+        (ngModelChange)="CategoryChange($event)"
+        nzShowSearch
+        nzAllowClear
+        nzPlaceHolder="Select a Category"
+        [(ngModel)]="selectedCategory"
+      >
+        <nz-option
+          *ngFor="let category of listCategory"
+          nzValue="{{ category.id }}"
+          nzLabel="{{ category.name }}"
+        >
+        </nz-option>
+      </nz-select>
+    </div>
+
+    <div>
+      <label style="font-size: 14px">Created By</label><br />
+      <nz-select
+        nzShowSearch
+        nzAllowClear
+        (ngModelChange)="getUserName($event)"
+        nzPlaceHolder="Select a Person"
+        [(ngModel)]="userName"
+      >
+        <nz-option
+          *ngFor="let user of listUser?.items"
+          nzValue="{{ user.id }}"
+          nzLabel="{{ user.name }}"
+        ></nz-option>
+      </nz-select>
+      <i
+        class="fas fa-tag iconTag"
+        style="font-size: 20px; color: rgba(255, 85, 0, 0.8)"
+        (click)="AssignMyself()"
+        nzTooltipTitle="Created By Me"
+        nz-tooltip
+      ></i>
+    </div>
+
+    <div class="nameIssues" style="margin-left: 10px">
+      <label style="font-size: 14px">Filter Bug</label><br />
+      <nz-input-group [nzSuffix]="suffixIconSearch">
+        <input
+          type="text"
+          [(ngModel)]="searchText"
+          (keyup.enter)="filterChange(searchText)"
+          nz-input
+          placeholder="Enter Bug Name"
+        />
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <i (click)="filterChange(searchText)" nz-icon nzType="search"></i>
+      </ng-template>
+    </div>
+  </div>
+  <br *ngIf="isShowFilter" />
+  <div *ngIf="isShowFilter" nz-row style="margin-top: -13px" class="rowSelect">
+    <div>
+      <label> <nz-tag>Category</nz-tag> </label><br />
+      <nz-select
+        (ngModelChange)="CategoryChange($event)"
+        nzShowSearch
+        nzAllowClear
+        nzPlaceHolder="Select a Category"
+        [(ngModel)]="selectedCategory"
+      >
+        <nz-option
+          *ngFor="let category of listCategory"
+          nzValue="{{ category.id }}"
+          nzLabel="{{ category.name }}"
+        >
+        </nz-option>
+      </nz-select>
+    </div>
+
+    <div>
+      <label> <nz-tag>Created By</nz-tag> </label><br />
+      <nz-select
+        nzShowSearch
+        nzAllowClear
+        (ngModelChange)="getUserName($event)"
+        nzPlaceHolder="Select a Person"
+        [(ngModel)]="userName"
+      >
+        <nz-option
+          *ngFor="let user of listUser?.items"
+          nzValue="{{ user.id }}"
+          nzLabel="{{ user.name }}"
+        ></nz-option>
+      </nz-select>
+      <i
+        class="fas fa-user iconTag"
+        style="font-size: 20px; margin-left: -5px"
+        (click)="AssignMyself()"
+        nzTooltipTitle="Created By Me"
+        nz-tooltip
+      ></i>
+    </div>
+
+    <div class="nameIssues" style="margin-left: 10px">
+      <label> <nz-tag>Filter Bug</nz-tag> </label><br />
+      <nz-input-group [nzSuffix]="suffixIconSearch">
+        <input
+          type="text"
+          [(ngModel)]="searchText"
+          (keyup.enter)="filterChange(searchText)"
+          nz-input
+          placeholder="Enter Bug Name"
+        />
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <i (click)="filterChange(searchText)" nz-icon nzType="search"></i>
+      </ng-template>
+    </div>
+    <nz-divider *ngIf="isShowFilter" (click)="showFilterInMobile()" [nzText]="text">
+      <ng-template #text>
+        <i nz-icon nzType="caret-up" nzTheme="outline"></i>
+      </ng-template>
+    </nz-divider>
+  </div>
+  <div class="viewOption" nz-row style="float: right; margin-top: -49px">
+    <div nz-col>
+      <div class="viewOption1" style="padding-bottom: 10px; padding-top: 10px; margin-left: 10px">
+        <!-- <button
+          nz-button
+          nzType="primary"
+          (click)="showModal()"
+          nzDanger
+          style="background-color: rgba(255, 85, 0, 0.8)"
+        >
+          <i class="fas fa-filter" style="margin-right: 5px"></i> View Options
+        </button> -->
+      </div>
+
+      <div>
+        <nz-modal
+          [(nzVisible)]="isVisible"
+          nzTitle="Choose Item Display"
+          (nzOnCancel)="handleCancel()"
+          (nzOnOk)="handleOk()"
+          nzWidth="800px"
+        >
+          <ng-container *nzModalContent>
+            <nz-checkbox-wrapper style="width: 100%" (nzOnChange)="log($event)">
+              <div nz-row>
+                <ng-template ngFor let-item [ngForOf]="theader" let-i="index">
+                  <div nz-col nzSpan="6">
+                    <label nz-checkbox nzValue="Issue" [(ngModel)]="item.status">{{
+                      item.key | formatString
+                    }}</label>
+                  </div>
+                </ng-template>
+              </div>
+              <br />
+              <p class="text" style="color: blue">Rearrange columns using drag & drop</p>
+              <p class="text" style="color: blue">Reset rearranged columns</p>
+              <p class="text" style="color: blue">
+                The settings you have saved are stored on your browser and will be remembered.
+              </p>
+            </nz-checkbox-wrapper>
+          </ng-container>
+        </nz-modal>
+      </div>
+    </div>
+  </div>
+
+  <div id="pc-card">
+    <nz-card
+      style="width: 100%; padding: 5px; border-left: solid 2px rgba(255, 85, 0, 0.8)"
+      nzSize="small"
+    >
+      <div nz-row style="font-weight: 500">
+        <div nz-col nzSpan="8">Name</div>
+        <div nz-col nzSpan="3">Category</div>
+        <div nz-col nzSpan="2">Priority</div>
+        <div nz-col nzSpan="2">Level</div>
+        <div nz-col nzSpan="2">Due Date</div>
+        <div nz-col nzSpan="2">Status</div>
+        <div nz-col nzSpan="2">Created By</div>
+        <div nz-col nzSpan="3"><span style="float: right; margin-right: 40px;">Due Time</span></div>
+      </div>
+    </nz-card>
+    <nz-spin
+      style="
+        display: block;
+        position: relative;
+        margin-left: 45%;
+        margin-top: 15%;
+        width: 50%;
+        z-index: 99;
+        color: #f50;
+      "
+      *ngIf="loaderService.isLoading | async; else doneLoad"
+      nzSimple
+      [nzSize]="'large'"
+      [nzIndicator]="indicatorTemplate"
+    >
+    </nz-spin>
+    <ng-template #indicatorTemplate
+      ><i nz-icon nzType="loading" style="font-size: 35px; color: rgba(255, 85, 0, 0.8)"></i
+    ></ng-template>
+    <ng-template #doneLoad>
+      <ng-container *ngIf="listIsssueByProject?.items.length > 0; else noData">
+        <nz-card
+          style="
+            width: 100%;
+            padding: 5px;
+            margin-top: 5px;
+            border-left: solid 2px rgba(255, 85, 0, 0.8);
+          "
+          nzSize="small"
+          *ngFor="let item of listIsssueByProject?.items; let i = index"
+          @fadeIn
+        >
+          <div nz-row>
+            <div nz-col nzSpan="8">
+              <span style="font-weight: 500;word-break: break-all; cursor: pointer" routerLink="/project/{{ item.projectID }}/issues/view/{{ item.id }}"
+               nzTooltipTitle="View Issue Details" nz-tooltip>{{ item.name }} </span>
+            </div>
+            <div nz-col nzSpan="3">
+              {{ item.categoryName }}
+            </div>
+            <div nz-col nzSpan="2">{{ item.priorityValue }}</div>
+            <div nz-col nzSpan="2">{{ item.levelValue }}</div>
+
+            <div nz-col nzSpan="2">
+              <nz-tag>{{ item.dueDate | date }}</nz-tag>
+            </div>
+            <div nz-col nzSpan="2">
+              <nz-badge nzColor="{{item.nzColor}}" nzText="{{ item.statusName }}"></nz-badge>
+            </div>
+            <div nz-col nzSpan="2">{{ item.userName }}</div>
+            <div nz-col nzSpan="3">
+              <div class="progressChild">
+                <span
+                  *ngIf="calculateProgress[i].text != ''"
+                  [style.color]="calculateProgress[i].color.textColor"
+                  [style.fontWeight]="calculateProgress[i].color.fontWeight"
+                  style="margin-bottom: -5px; display: flex; font-size: smaller"
+                >
+                  {{ calculateProgress[i].text }}</span
+                >
+                <nz-progress
+                  [nzPercent]="calculateProgress[i].percent"
+                  [nzSteps]="5"
+                  [nzStrokeColor]="calculateProgress[i].color.strokeColor"
+                  [nzFormat]="calculateProgress[i].formatString"
+                  [nzStatus]="calculateProgress[i].status"
+                ></nz-progress>
+              </div>
+            </div>
+          </div>
+        </nz-card>
+      </ng-container>
+      <ng-template #noData>
+        <nz-empty nzNotFoundImage="simple"></nz-empty>
+      </ng-template>
+    </ng-template>
+  </div>
+
+  <div *ngFor="let data of listIsssueByProject?.items; let i = index" id="mobile-card">
+    <nz-card
+      nzSize="small"
+      style="width: 100%; padding: 5px; border: 1px solid #f8895191; margin-top: 5px"
+      [nzBordered]="false"
+    >
+      <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+        <div nz-col nzSpan="6" style="font-weight: 500">Name:</div>
+        <div nz-col nzSpan="18">
+          <span
+            nzTooltipTitle="View Issue Details"
+            nz-tooltip
+            routerLink="/project/{{ data.projectID }}/issues/view/{{ data.id }}"
+            class="span"
+            style="float: right; cursor: pointer; text-decoration: underline"
+            >{{ data.name }}</span
+          >
+        </div>
+      </div>
+      <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+        <div nz-col nzSpan="6" style="font-weight: 500">Category:</div>
+        <div nz-col nzSpan="18">
+          <span class="span" style="float: right">{{ data.categoryName }}</span>
+        </div>
+      </div>
+      <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+        <div nz-col nzSpan="4" style="font-weight: 500">Priotity:</div>
+        <div nz-col nzSpan="20">
+          <span class="span" style="float: right">{{ data.priorityValue }}</span>
+        </div>
+      </div>
+      <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+        <div nz-col nzSpan="4" style="font-weight: 500">Level:</div>
+        <div nz-col nzSpan="20">
+          <span class="span" style="float: right">{{ data.levelValue }}</span>
+        </div>
+      </div>
+      <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+        <div nz-col nzSpan="4" style="font-weight: 500">Duedate:</div>
+        <div nz-col nzSpan="20">
+          <nz-tag style="float: right" [nzColor]="'rgba(255, 85, 0, 0.8)'">{{
+            data.dueDate | date
+          }}</nz-tag>
+        </div>
+      </div>
+      <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+        <div nz-col nzSpan="4" style="font-weight: 500">Status:</div>
+        <div nz-col nzSpan="20">
+          <nz-tag style="float: right" [nzColor]="'rgba(255, 85, 0, 0.8)'">{{
+            data.statusName
+          }}</nz-tag>
+        </div>
+      </div>
+      <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+        <div nz-col nzSpan="8" style="font-weight: 500">Created By:</div>
+        <div nz-col nzSpan="16">
+          <span class="span" style="float: right">{{ data.userName }}</span>
+        </div>
+      </div>
+      <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+        <div nz-col nzSpan="6" style="font-weight: 500">Due Time:</div>
+        <div nz-col nzSpan="18">
+          <div class="progressChild">
+            <span
+              *ngIf="calculateProgress[i].text != ''"
+              [style.color]="calculateProgress[i].color.textColor"
+              [style.fontWeight]="calculateProgress[i].color.fontWeight"
+              style="
+                margin-bottom: -5px;
+                display: flex;
+                font-size: smaller;
+                justify-content: flex-end;
+              "
+            >
+              {{ calculateProgress[i].text }}</span
+            >
+            <nz-progress
+              [nzPercent]="calculateProgress[i].percent"
+              [nzSteps]="5"
+              [nzStrokeColor]="calculateProgress[i].color.strokeColor"
+              [nzFormat]="calculateProgress[i].formatString"
+              [nzStatus]="calculateProgress[i].status"
+            ></nz-progress>
+          </div>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+  <nz-pagination
+    id="pagingPc"
+    style="float: right; margin-top: 10px"
+    class="pagination"
+    nzShowSizeChanger
+    nzShowQuickJumper
+    [nzTotal]="totalCount"
+    [(nzPageIndex)]="pageIndex"
+    [(nzPageSize)]="pageSize"
+    (nzPageSizeChange)="filterChange(searchText)"
+    (nzPageIndexChange)="filterChange(searchText)"
+    [nzSize]="'small'"
+  >
+  </nz-pagination>
+
+  <label style="margin-top: 5px">
+    <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'">BUGS {{ listIsssueByProject?.totalCount }}</nz-tag>
+  </label>
+  <nz-pagination
+    id="pagingMobile"
+    nzSize="small"
+    style="float: right; margin-top: 5px"
+    class="pagination"
+    nzShowSizeChanger
+    nzShowQuickJumper
+    [nzTotal]="totalCount"
+    [(nzPageIndex)]="pageIndex"
+    [(nzPageSize)]="pageSize"
+    (nzPageSizeChange)="filterChange(searchText)"
+    (nzPageIndexChange)="filterChange(searchText)"
+  >
+  </nz-pagination>
+</header>

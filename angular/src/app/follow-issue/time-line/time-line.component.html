@@ -1,0 +1,60 @@
+<nz-modal nzCentered nzWidth="80vw" [(nzVisible)]="isVisible" nzTitle="View by day" [nzFooter]="null"
+  (nzOnCancel)="handleCancel()">
+  <nz-table [nzData]="listIssueFollow.data" nzShowPagination="false" nzBordered="true" nzPageSize="Infinity"
+    [nzScroll]="{ x: 'auto', y: 'auto' }">
+    <thead>
+      <tr>
+        <th nzWidth="40px">Hour</th>
+        <th colSpan="{{listIssueFollow.columns}}">Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let e of listIssueFollow.data">
+        <tr>
+          <td style="justify-content: center;text-align: center;">
+            <span *ngIf="e.time<10">0</span>{{e.time}}:00
+          </td>
+          <ng-container *ngFor="let e_ of e.data; let index = index ">
+            <td style="justify-content: center;text-align: center; color: '{{e_[0].textColor}}'"
+              [style.color]="e_[0].textColor" [style.background-color]="e_[0].backgroundColor"
+              (click)="showModal(e.data[index])">
+              <div>
+                <div>{{e_[0].issueName}}</div>
+                <div>{{e_.length}} changes</div>
+              </div>
+            </td>
+          </ng-container>
+        </tr>
+      </ng-container>
+    </tbody>
+  </nz-table>
+</nz-modal>
+<nz-modal nzWidth="auto" nzCentered [(nzVisible)]="detailShow" nzTitle="Detail"
+  (nzOnCancel)="handleCancel_detail()" [nzFooter]="null">
+  <div style="display: flex;
+  justify-content: center;
+  align-items: center;">
+    <nz-timeline nzMode="left" style="margin-top: 20px; padding-left: 15px; margin-bottom: -30px">
+      <ng-container *ngIf="detailData!">
+        <ng-container *ngFor="let e of detailData">
+          <nz-timeline-item [nzDot]="dotTemplate">
+            <span style="margin-left:5px"></span>
+              {{ e.userName }}
+              <nz-tag nzColor="{{e.oldValue == null ? 'rgb(6, 171, 18)' : 'rgb(23, 146, 218)'}}">
+                {{e.oldValue == null ? "CREATED" : "UPDATED"}}
+              </nz-tag>
+            this issue
+            <div style="position: absolute;
+            left: 10px;
+            font-size: small;color: #909094;
+        ">Status: {{e.oldValue}} {{e.oldValue !=
+              null ? '->' : "" }} {{e.newValue}}</div>
+          </nz-timeline-item>
+          <ng-template #dotTemplate>
+            [{{e.mmHH}}]
+          </ng-template>
+        </ng-container>
+      </ng-container>
+    </nz-timeline>
+  </div>
+</nz-modal>

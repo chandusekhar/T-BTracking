@@ -1,0 +1,213 @@
+[nz-button] {
+        margin-right: 8px;
+        margin-bottom: 12px;
+}
+:host::ng-deep .ant-divider-horizontal {
+  margin: 23px 0;
+}
+.container-fluid{
+    background-color: #fff;
+    max-height: 100%;;
+    padding-right: 0;
+    padding-left: 0;
+}
+input.ng-touched.ng-invalid{
+border: 1px solid #f50;
+}
+textarea.ng-touched.ng-invalid{
+border: 1px solid #f50;
+}
+.DescriptionTouched{
+    input.ng-touched{
+        border: 1px solid lightgoldenrodyellow;
+    }
+}
+nz-select {
+        width: 200px;
+}.checkText{
+    font-weight: 500;
+    color: red;
+}
+.customMargin{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.customMargin1{
+    margin-top: 10px;
+}
+.ButtonHover :hover{
+    background-color: whitesmoke;
+}
+input:focus {
+background-color: rgb(248, 245, 196);
+}
+textarea:focus{
+    background-color: rgb(248, 245, 196);
+}
+icon-margin{
+    margin-right: 5px;
+}
+i:hover{
+    cursor: pointer;
+}
+::ng-deep .ant-upload.ant-upload-drag .ant-upload-btn{
+  background-color: #fff;
+}
+.quill-editor-element{
+    height: 24.81520591341077vh
+}
+#addIssuesEditor{
+  ::ng-deep .ql-editor {
+      height: 22vh;
+  }
+}
+
+#addIssue{
+  overflow-y: auto;
+  ::ng-deep .form-control {
+    padding: 0;
+    border: 0;
+  }
+}
+
+@media only screen and (min-width: 740px){
+  #addIssue::-webkit-scrollbar-track
+  {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+    border-radius: 3px;
+  }
+
+  #addIssue::-webkit-scrollbar
+  {
+    width: 3px;
+    background-color: #d5ecf7;
+    border-radius: 3px;
+  }
+
+  #addIssue::-webkit-scrollbar-thumb
+  {
+    background-color: #f50;
+    border-radius: 3px;
+  }
+  #addIssuesEditorMobile{
+    display: none;
+  }
+}
+@media only screen and (max-width: 740px){
+  #layoutAdd{
+    padding: 0px !important;
+  }
+  #selectAssignee{
+    ::ng-deep .anticon svg {
+      margin: 0px !important;
+  }
+  }
+  #colSelect{
+    padding-right: 6px;
+  }
+  ::ng-deep .ant-divider-horizontal {
+    margin: 10px 0;
+  }
+  #rowBtnAdd{
+    height: 38px;
+    margin-right: 1vw;
+    ::ng-deep .ant-btn > .anticon + span{
+      margin-left: 0px;
+    }
+    ::ng-deep .ant-btn {
+      padding: 4px 15px;
+    }
+  }
+    #rowNameParent{
+      flex-direction: column;
+      ::ng-deep .ant-col-19 {
+        max-width: 100%;
+      }
+      ::ng-deep .ant-col-5 {
+        max-width: 100%;
+      }
+    }
+    #rowNameParent2{
+      padding-left: 0px !important;
+    }
+    #rowNameParent3{
+      padding-right: 0px !important;
+      margin-top: 5px !important;
+    }
+    #addIssuesEditor{
+      display: none;
+    }
+    #addIssue{
+        .headerAdd{
+          ::ng-deep .ant-col-8 {
+            max-width: 100%;
+          }
+          justify-content: space-between;
+          nz-select{
+            width: 160px !important;
+          }
+        }
+        .alertCheck{
+          display: none;
+        }
+        [nz-button] {
+            margin-right: 0px;
+        }
+
+        ::ng-deep .anticon svg {
+          margin: -6px 3px 0px -7px !important;
+        }
+        ::ng-deep .container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+            padding-right: var(--bs-gutter-x,0.35rem);
+            padding-left: var(--bs-gutter-x,0.35rem);
+        }
+        ::ng-deep .ql-editor {
+            height: 88px;
+        }
+        ::ng-deep .ql-toolbar.ql-snow {
+            padding: 0px;
+        }
+        ::ng-deep .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
+            height: 14px;
+            padding: 0px 0px;
+            width: 18px;
+        }
+        ::ng-deep .ql-snow .ql-picker.ql-header {
+            width: 75px;
+        }
+        ::ng-deep .ql-toolbar.ql-snow .ql-formats {
+            margin-right: 10px;
+        }
+        #onlyMobile{
+            display: flex;
+            flex-direction: column;
+            ::ng-deep .ant-col-12 {
+                max-width: 100%;
+            }
+            .customMargin{
+                display: flex !important;
+            }
+            .iconRow {
+                margin: 12px 0px 0px 2px !important;
+            }
+            nz-select {
+                width: 160px;
+                margin-right: 0px !important;
+            }
+            nz-date-picker{
+                width: 160px !important;
+            }
+            .iconRow{
+                margin-top: 7px !important;
+            }
+        }
+
+    }
+}
+#layoutAdd{
+  height: 93vh;
+}
+::ng-deep .ant-upload.ant-upload-drag p.ant-upload-drag-icon .anticon {
+  color: #f50;
+}

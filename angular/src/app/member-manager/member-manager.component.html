@@ -1,0 +1,184 @@
+<nz-spin
+  style="
+    display: block;
+    position: relative;
+    margin-left: 50%;
+    margin-top: 25%;
+    width: 50%;
+    z-index: 99;
+  "
+  *ngIf="memberLoading; else doneLoad"
+  [nzIndicator]="indicatorTemplate"
+  nzSimple
+  [nzSize]="'large'"
+>
+</nz-spin>
+<ng-template #indicatorTemplate
+  ><i nz-icon nzType="loading" style="font-size: 35px; color: #f50"></i
+></ng-template>
+<ng-template #doneLoad>
+  <div class="container-fluid" style="padding: 10px" id="memberManager">
+    <div>
+      <nz-input-group nzSearch nzSize="medium" [nzAddOnAfter]="suffixButton">
+        <input
+          [(ngModel)]="search"
+          (keyup.enter)="filterChange(search)"
+          type="text"
+          nz-input
+          placeholder="Search in Name,Email Or Phone number"
+        />
+      </nz-input-group>
+      <ng-template #suffixButton>
+        <button (click)="filterChange(search)" nz-button nzType="primary" nzSize="medium" nzSearch style="background-color: rgba(255, 85, 0, 0.8);border-color: rgb(240 166 130 / 80%);">
+          Search
+        </button>
+      </ng-template>
+    </div>
+    <div style="margin-top: 10px; text-align: left">
+      <div nz-row class="cardBox">
+        <div style="padding: 5px" nz-col nzSpan="8" *ngFor="let user of listUser" class="boxChild">
+          <nz-card
+            nzSize="small"
+            style="width: 100%; padding: 5px; border: 1px solid #f8895191; margin-top: 5px;"
+            [nzBordered]="false"
+            nzTitle="{{ user.Name }}"
+            [nzExtra]="extraTemplate"
+          >
+            <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+              <div nz-col nzSpan="4" style="font-weight: 500">Phone:</div>
+              <div nz-col nzSpan="20"><span style="float: right;">{{ user.PhoneNumber }}</span></div>
+            </div>
+            <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+              <div nz-col nzSpan="4" style="font-weight: 500">Email:</div>
+              <div nz-col nzSpan="20" style="word-break: break-all;"><span style="float: right;">{{ user.Email }}</span></div>
+            </div>
+            <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+              <div nz-col nzSpan="8" style="font-weight: 500">Joined on:</div>
+              <div nz-col nzSpan="16"><span class="span">{{ user.CreationTime | date }}</span></div>
+            </div>
+            <div
+              nz-row
+              style="border-bottom: 1px solid #f0f2f5; margin-top: 5px; padding-bottom: 5px"
+            >
+              <div nz-col nzSpan="12" style="font-weight: 500">Total Bugs In Project:</div>
+              <div nz-col nzSpan="12">
+                <nz-tag style="float: right">{{
+                  user.CountIssue
+                }}</nz-tag>
+              </div>
+            </div>
+            <div
+              nz-row
+              style="border-bottom: 1px solid #f0f2f5; margin-top: 5px; padding-bottom: 5px"
+            >
+              <div nz-col nzSpan="12" style="font-weight: 500">Added By:</div>
+              <div nz-col nzSpan="12">
+                <nz-tag style="float: right">{{ user.CreatedBy }}</nz-tag>
+              </div>
+            </div>
+          </nz-card>
+          <ng-template #extraTemplate>
+            <button
+              nz-button
+              nzType="primary"
+              nzDanger
+              nzSize="small"
+              *ngIf="(project?.userId == userLogin && project?.userId != user.Id) || checkAdmin"
+              (click)="RemoveMember(user.IdMember)"
+              style="background-color: rgba(255, 85, 0, 0.8)"
+            >
+              <i class="fas fa-trash" style="margin-right: 10px"></i> Remove
+            </button>
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- <nz-table #basicTable [nzData]="listUser">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone Number</th>
+          <th>Joined on</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let data of basicTable.data">
+        <tr style="text-align: center">
+          <td>
+            <nz-tag>{{ data.id }}</nz-tag>
+          </td>
+          <td>
+            <nz-tag>{{ data.name }}</nz-tag>
+          </td>
+          <td>
+            <nz-tag>{{ data.email }}</nz-tag>
+          </td>
+          <td>
+            <nz-tag>{{ data.phoneNumber }}</nz-tag>
+          </td>
+          <td>
+            <nz-tag>{{ data.creationTime | date:'medium' }}</nz-tag>
+          </td>
+          <td>
+            <a
+              *ngIf="(project?.userId == userLogin && project?.userId != data.id) || checkAdmin"
+              (click)="RemoveMember(data.idMember)"
+              nzType="default"
+              ><i class="iconDelete" nz-icon nzType="close"></i
+            ></a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table> -->
+    </div>
+    <!-- <div style="margin-top: 10px" id="responTable">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Phone Number</th>
+          <th scope="col">Joined on</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td data-label="Id">
+            <label>{{ data.id }}</label>
+          </td>
+          <td data-label="Name">
+            <label>{{ data.name }}</label>
+          </td>
+          <td data-label="Email">
+            <label>{{ data.email }}</label>
+          </td>
+          <td data-label="Phone Number">
+            <nz-tag [nzColor]="'blue'">{{ data.phoneNumber }}</nz-tag>
+          </td>
+          <td data-label="Joined on">
+            <nz-tag [nzColor]="'blue'">{{ data.creationTime | date:'medium' }}</nz-tag>
+          </td>
+          <td data-label="Action">
+            <a
+              *ngIf="(project?.userId == userLogin && project?.userId != data.id) || checkAdmin"
+              (click)="RemoveMember(data.idMember)"
+              nzType="default"
+              ><i class="iconDelete" nz-icon nzType="close"></i
+            ></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div> -->
+    <div>
+      <label
+        >Total:
+        <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'">USER--{{ listUser?.length }}</nz-tag></label
+      >
+    </div>
+  </div>
+</ng-template>

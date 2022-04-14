@@ -1,0 +1,887 @@
+<div class="container-fluid" id="viewIsues">
+  <div style="float: right; margin-bottom: 5px">
+    <button
+      class="btnFlow"
+      nz-button
+      (click)="updateFollow()"
+      style="margin-right: 5px"
+      nzSize="small"
+    >
+      <i
+        class="{{ checkFollow ? 'fas fa-star' : 'fas fa-star-half-alt' }}"
+        style="margin-right: 5px; color: rgba(255, 85, 0, 0.8)"
+      ></i>
+      {{ checkFollow ? 'Following' : 'Follow' }}
+    </button>
+    <button
+      class="btnEditIssues"
+      style="margin-right: 5px"
+      nz-button
+      nzType="primary"
+      (click)="updateIssue()"
+      nzSize="small"
+      [disabled]="!isValueIssuesChange"
+    >
+      <i class="fas fa-save" style="margin-right: 5px"></i>Save
+    </button>
+    <button
+      class="btnEditIssues"
+      style="margin-right: 5px"
+      nz-button
+      nzType="primary"
+      nzSize="small"
+      *ngIf="isValueIssuesChange"
+      (click)="onUndoUpdateIssue()"
+    >
+      <i class="fas fa-undo-alt" style="margin-right: 5px"></i>Cancel
+    </button>
+    <button
+      *ngIf="checkUserId || checkAdmin"
+      nz-button
+      nzType="primary"
+      nzDanger
+      nz-popconfirm
+      nzPopconfirmTitle="Are you sure delete this?"
+      [nzPopconfirmShowArrow]="false"
+      (nzOnConfirm)="deleteIssue(Issue)"
+      nzSize="small"
+    >
+      <i class="fas fa-trash" style="margin-right: 5px"></i>Delete
+    </button>
+  </div>
+  <div>
+    <input
+      nz-input
+      placeholder="Bug Name"
+      (ngModelChange)="onChangesIssuesName($event)"
+      [(ngModel)]="dataIssue.Name"
+    />
+  </div>
+  <div style="font-size: 14px; margin-top: 5px">
+    <div nz-row class="bodyView">
+      <div nz-col nzSpan="8" style="padding-right: 5px" class="rowTime">
+        <div class="rowbodyView" style="margin-top: 5px">
+          Priority
+          <nz-select
+            id="selectStatus"
+            class="inputView"
+            class="selectStatus"
+            [(ngModel)]="selectedPriority"
+            (ngModelChange)="updatePriority($event)"
+            style="position: relative"
+          >
+            <nz-option
+              *ngFor="let enum of priorityEnumList"
+              nzValue="{{ enum }}"
+              nzLabel="{{ enum }}"
+            ></nz-option>
+          </nz-select>
+        </div>
+        <div class="rowbodyView">
+          Level
+          <nz-select
+            id="selectStatus"
+            class="inputView"
+            class="selectStatus"
+            [(ngModel)]="selectedLevel"
+            (ngModelChange)="updateLevel($event)"
+            style="position: relative"
+          >
+            <nz-option
+              *ngFor="let enum of levelEnumList"
+              nzValue="{{ enum }}"
+              nzLabel="{{ enum }}"
+            ></nz-option>
+          </nz-select>
+        </div>
+        <div class="rowbodyView" style="margin-top: 5px">
+          Category
+          <nz-select
+            id="selectStatus"
+            class="inputView"
+            class="selectStatus"
+            [(ngModel)]="selectedCat"
+            (ngModelChange)="updateCategory($event)"
+            style="position: relative"
+          >
+            <nz-option
+              *ngFor="let cat of listCategory?.items"
+              nzValue="{{ cat.id }}"
+              nzLabel="{{ cat.name }}"
+            >
+            </nz-option>
+          </nz-select>
+        </div>
+        <div style="margin-top: 5px" class="rowbodyView">
+          Status
+          <nz-select
+            id="selectStatus"
+            class="inputView"
+            class="selectStatus"
+            [(ngModel)]="selectedStatus"
+            (ngModelChange)="updateStatus($event)"
+            style="position: relative"
+          >
+            <nz-option
+              *ngFor="let status of listStatus"
+              nzValue="{{ status.id }}"
+              nzLabel="{{ status.name }}"
+            >
+            </nz-option>
+          </nz-select>
+        </div>
+        <div style="margin-top: 5px">
+          <div nz-row>
+            <div nz-col nzSpan="12">Creation Time</div>
+            <div nz-col nzSpan="12">
+              <nz-tag>{{ Issue?.creationTime | date: 'medium' }}</nz-tag>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 5px">
+          <div nz-row>
+            <div nz-col nzSpan="12">Start Date</div>
+            <div nz-col nzSpan="12">
+              <nz-tag>{{ Issue?.startDate | date: 'medium' }}</nz-tag>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 5px">
+          <div nz-row style="cursor: pointer;">
+            <div nz-col nzSpan="12">Due Date</div>
+            <div nz-col nzSpan="12">
+              <nz-tag *ngIf="!isShowDueDate">{{ selectedDueDate | date: 'medium' }} </nz-tag>
+              <nz-date-picker
+                (ngModelChange)="onChangesDueDate($event)"
+                *ngIf="isShowDueDate"
+                nzBorderless
+                [(ngModel)]="selectedDueDate"
+                class="dueDate"
+              ></nz-date-picker>
+              <i
+                style="font-size: 18px; margin-top: 2px; color: rgba(255, 85, 0, 0.8)"
+                class="far fa-calendar-alt"
+                (click)="showDueDateEdit()"
+              ></i>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 5px">
+          <div nz-row>
+            <div nz-col nzSpan="12">Finish Date</div>
+            <div nz-col nzSpan="12">
+              <nz-tag>{{ Issue?.finishDate | date: 'medium' }}</nz-tag>
+            </div>
+          </div>
+        </div>
+        <div class="rowbodyView" id="createdBy" style="margin-top: 5px">
+          <div nz-row>
+            <div nz-col nzSpan="12">Created By</div>
+            <div nz-col nzSpan="12">
+              <nz-tag>{{ dataIssue.Creator }}</nz-tag>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 5px; ">
+          <div nz-row>
+            <div nz-col nzSpan="12">Assigned To</div>
+            <div nz-col nzSpan="11">
+              <nz-tag class="tagAssignee" *ngFor="let assignee of listAssign?.items">{{
+                assignee.userName
+              }}</nz-tag>
+            </div>
+            <div nz-col nzSpan="1">
+              <a
+                class="iconEditAss"
+                (click)="showModalEditAssignee()"
+                *ngIf="checkUserId || checkAdmin"
+                nzTooltipTitle="Edit assignee"
+                nz-tooltip
+                ><i class="fas fa-tags" style="font-size: 18px; color: rgba(255, 85, 0, 0.8)"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- list assign -->
+      <nz-modal
+        class="customModal"
+        [nzWidth]="1000"
+        [(nzVisible)]="isVisible"
+        (nzOnCancel)="handleCancel()"
+        (nzOnOk)="handleOk()"
+      >
+        <ng-container *nzModalContent>
+          <nz-table #borderedTable nzBordered [nzData]="listAssign?.items">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>User Name</th>
+                <th>Due Date</th>
+                <th>Finish Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody style="text-align: center">
+              <tr [class.Close]="data?.isClose" *ngFor="let data of borderedTable.data">
+                <td>{{ data?.issueName }}</td>
+                <td>{{ data?.userName }}</td>
+                <td>{{ data?.dueDate | date }}</td>
+                <td>{{ data?.finishDate | date }}</td>
+                <td>
+                  <nz-tag nzColor="{{ data?.nzColor }}">{{ data?.statusName }}</nz-tag>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </ng-container>
+      </nz-modal>
+      <!-- list assign -->
+
+      <!-- edit issue -->
+      <nz-modal
+        [nzStyle]="{ top: '20px' }"
+        [(nzVisible)]="isVisible2"
+        [nzWidth]="1200"
+        [nzFooter]="modalFooter"
+        (nzOnCancel)="handleCancel2()"
+      >
+        <ng-container *nzModalContent>
+          <app-add-issue [issueParentId]="currentIssueParentId"></app-add-issue>
+        </ng-container>
+        <ng-template #modalFooter></ng-template>
+      </nz-modal>
+
+      <!-- edit assignee -->
+      <nz-modal
+        [(nzVisible)]="isVisibleEditAssignee"
+        nzTitle="Edit Assignee"
+        (nzOnCancel)="handleCancelEditAssignee()"
+        (nzOnOk)="EditAssignee()"
+      >
+        <ng-template nzModalContent>
+          <nz-select
+            nzMode="multiple"
+            (ngModelChange)="onChangeSelectedUserAssign($event)"
+            nzShowSearch
+            nzAllowClear
+            nzPlaceHolder="Select a person"
+            [(ngModel)]="listUserAssign"
+            style="width: 100%"
+          >
+            <nz-option
+              *ngFor="let user of listUser?.items"
+              nzLabel="{{ user.name }}"
+              nzValue="{{ user.id }}"
+            ></nz-option>
+          </nz-select>
+        </ng-template>
+      </nz-modal>
+      <!-- edit issue -->
+      <div nz-col nzSpan="16">
+        <div class="parentDescrip">
+          <div style="font-size: 14px">Description</div>
+          <div class="DescriptionEdit" id="DescriptionEdit">
+            <quill-editor #quillInput
+            id="addIssuesEditor"
+            [modules]="config"
+            placeholder="Description..."
+            class="form-control customArea"
+            rows="8"
+            cols="46"
+            required="required"
+            [(ngModel)]="selectedDescrip"
+            (ngModelChange)="onChangesDescription($event)"
+            ></quill-editor>
+          </div>
+        </div>
+
+        <div style="margin-top: 5px; border: 1px solid #e9e8e6; padding: 5px 0 5px 0" id="iconAtt">
+          <nz-image-group>
+            <img
+              *ngFor="let image of Issue?.attachmentListImage"
+              style="margin: 0 5px 0 5px; object-fit: cover; cursor: pointer"
+              nz-image
+              width="100px"
+              height="100px"
+              nzSrc="{{ shareService.REST_API_SERVER }}/{{ image.url }}"
+              alt=""
+            />
+          </nz-image-group>
+          <nz-upload
+          [nzMultiple]="true"
+          [nzFileList]="listFile"
+          [nzPreview]="handlePreview"
+          [nzRemove]="handleRemove"
+          [nzLimit]="28"
+          [nzOpenFileDialogOnClick]="true"
+          [nzFileType]="'image/png,image/jpeg,image/gif,image/bmp,image/jpg,video/mp4'"
+          nzAction="{{ shareService.REST_API_SERVER }}/api/app/attachment/attachment"
+          (nzChange)="handleChange($event)">
+            <i
+            nzType="upload"
+            class="fas fa-paperclip"
+            nz-tooltip
+            nzTooltipTitle="Attachments"
+            style="padding-left: 10px; font-size: 18px; color: rgba(255, 85, 0, 0.8); cursor: pointer;"
+          ></i>
+          </nz-upload>
+
+
+        </div>
+        <div>
+          <!-- <nz-upload
+          nzType="drag"
+          [nzMultiple]="true"
+          [nzFileList]="listFile"
+          [nzPreview]="handlePreview"
+          [nzRemove]="handleRemove"
+          [nzLimit]="28"
+          [nzOpenFileDialogOnClick]="true"
+          [nzFileType]="'image/png,image/jpeg,image/gif,image/bmp,image/jpg,video/mp4'"
+          nzAction="{{ shareService.REST_API_SERVER }}/api/app/attachment/attachment"
+          (nzChange)="handleChange($event)"
+        >
+          <p class="ant-upload-drag-icon">
+            <i nz-icon nzType="upload"></i>
+          </p>
+          <p class="ant-upload-text">Click or drag file to this area to upload</p>
+          <p class="ant-upload-hint">
+            Support for a single or bulk upload. Strictly prohibit from uploading company data or
+            other band files
+          </p>
+        </nz-upload> -->
+        <nz-modal
+        [nzVisible]="previewVisible"
+        [nzContent]="modalContent"
+        [nzFooter]="null"
+        (nzOnCancel)="previewVisible = false"
+      >
+        <ng-template #modalContent>
+          <img
+            *ngIf="fileImage; else fileVideo"
+            [src]="previewImage"
+            [ngStyle]="{ width: '100%' }"
+          />
+          <ng-template #fileVideo>
+            <video width="100%" height="100%" controls>
+              <source [src]="previewImage" type="video/mp4" />
+            </video>
+          </ng-template>
+        </ng-template>
+      </nz-modal>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top: 5px">
+    <nz-image-group>
+      <video
+        style="margin: 0 5px 0 5px"
+        width="320"
+        height="240"
+        *ngFor="let video of Issue?.attachmentListVideo"
+        controls
+      >
+        <source src="{{ shareService.REST_API_SERVER }}/{{ video.url }}" type="video/mp4" />
+      </video>
+    </nz-image-group>
+  </div>
+  <nz-divider
+    style="font-size: 14px"
+    nzText="{{ countComent }} comments"
+    nzOrientation="left"
+  ></nz-divider>
+  <div style="margin-top: 10px">
+    <div nz-row class="cmtHistory">
+      <div nz-col nzSpan="12" style="padding-right: 10px" id="cmtContent">
+        <div
+          style="border: 1px solid #e9e8e6; padding: 0 0 0 10px; margin-bottom: 5px"
+          *ngFor="let item of listComments?.items"
+        >
+          <nz-comment [nzAuthor]="item.userName" [nzDatetime]="item.datetime | date: 'short'">
+            <nz-avatar
+              nz-comment-avatar
+              nzText="{{ GetCharAt(item.userName) }}"
+              nzSize="small"
+            ></nz-avatar>
+            <nz-comment-content style="display: flex">
+              <div style="width: 96%; display: flex">
+                <quill-view-html
+                  [content]="item.content"
+                  theme="snow"
+                  style="max-width: 96%"
+                ></quill-view-html>
+                <div
+                  nz-tooltip
+                  nzTooltipTitle="{{ item?.lastModificationTime | date: 'short' }}"
+                  *ngIf="item?.dateModify"
+                  style="font-size: 13px; margin: 9px 0px 0px 10px; color: #ccc"
+                >
+                  Edited
+                </div>
+              </div>
+              <div
+                id="btnEditDel"
+                *ngIf="item.userID == userLogin.id"
+                style="font-size: 14px; display: flex; margin-top: 7px"
+              >
+                <a id="hoverItem" nzTrigger="click" nz-dropdown [nzDropdownMenu]="menu">
+                  <i class="fas fa-caret-down iconHover" style="font-size: 18px"></i>
+                </a>
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                  <ul nz-menu nzSelectable style="font-weight: 500">
+                    <li nz-menu-item (click)="selectedID(item?.id)">
+                      <i class="fas fa-user-edit iconHover"></i>
+                      Edit
+                    </li>
+                    <li
+                      nz-menu-item
+                      nz-popconfirm
+                      nzPopconfirmTitle="Are you sure delete this comment?"
+                      [nzPopconfirmShowArrow]="false"
+                      (nzOnConfirm)="deleteComment(item?.id)"
+                    >
+                      <i class="fas fa-trash iconHover"></i>
+                      Delete
+                    </li>
+                  </ul>
+                </nz-dropdown-menu>
+              </div>
+            </nz-comment-content>
+          </nz-comment>
+          <div *ngIf="item?.attachmentList" style="margin-left: 45px; width: 96%">
+            <nz-image-group *ngFor="let img of item?.attachmentList">
+              <img
+                nz-image
+                width="200px"
+                height="200px"
+                nzSrc="{{ img.url }}"
+                alt=""
+                style="margin-right: 2px; cursor: pointer; object-fit: cover"
+              />
+            </nz-image-group>
+          </div>
+        </div>
+        <nz-pagination
+          *ngIf="totalCount > pageSize"
+          (nzPageIndexChange)="page($event)"
+          [(nzPageIndex)]="pageIndex"
+          [nzTotal]="totalCount"
+          [nzPageSize]="pageSize"
+          nzSize="small"
+          style="display: flex; justify-content: flex-end"
+        >
+        </nz-pagination>
+        <div style="margin-top: 10px" class="comMents">
+          <div id="comt">
+            <nz-comment>
+              <nz-avatar
+                nz-comment-avatar
+                nzText="{{ GetCharAt(userLogin.name) }}"
+                nzSize="small"
+              ></nz-avatar>
+              <nz-comment-content>
+                <quill-editor
+                  id="textEditor"
+                  [modules]="config"
+                  *ngIf="event"
+                  [(ngModel)]="inputValue"
+                  placeholder="Add comment..."
+                  style="margin-top: 10px"
+                  class="form-control customArea"
+                  rows="10"
+                  cols="46"
+                  required="required"
+                >
+                </quill-editor>
+
+                <quill-editor
+                  id="textEditor2"
+                  [modules]="config"
+                  *ngIf="!event"
+                  [(ngModel)]="inputValue1"
+                  placeholder="Edit comment..."
+                  style="margin-top: 10px"
+                  class="form-control customArea"
+                  rows="10"
+                  cols="46"
+                  required="required"
+                >
+                </quill-editor>
+                <quill-editor
+                  id="textEditorMobile"
+                  [modules]="config2"
+                  *ngIf="event"
+                  [(ngModel)]="inputValue"
+                  placeholder="Add comment..."
+                  style="margin-top: 10px"
+                  class="form-control customArea"
+                  rows="10"
+                  cols="46"
+                  required="required"
+                >
+                </quill-editor>
+
+                <quill-editor
+                  id="textEditorMobile2"
+                  [modules]="config2"
+                  *ngIf="!event"
+                  [(ngModel)]="inputValue1"
+                  placeholder="Edit comment..."
+                  style="margin-top: 10px"
+                  class="form-control customArea"
+                  rows="10"
+                  cols="46"
+                  required="required"
+                >
+                </quill-editor>
+                <!-- <input type="file" (change)="onFileSelected($event.target.files)"> -->
+                <nz-form-item
+                  style="display: flex; justify-content: space-between"
+                  class="attButtom"
+                >
+                  <div style="max-width: 75%; font-size: 14px">
+                    <label style="margin: 10px">
+                      <a>
+                        <i nz-icon nzType="paper-clip" style="color: rgba(255, 85, 0, 0.8)">
+                          <input
+                            id="file-upload"
+                            type="file"
+                            class="d-none"
+                            (change)="selectListImg($event.target.files)"
+                            multiple
+                          />
+                        </i>
+                        Attachments
+                      </a>
+                    </label>
+                    <nz-image-group *ngFor="let img of listImg">
+                      <img
+                        nz-image
+                        width="100px"
+                        height="100px"
+                        nzSrc="{{ img }}"
+                        alt=""
+                        style="margin: 5px 5px 0px 0px; cursor: pointer"
+                      />
+                    </nz-image-group>
+                    <i
+                      *ngIf="listImg?.length > 0"
+                      nz-icon
+                      nzType="delete"
+                      nzTheme="outline"
+                      (click)="deleteImg()"
+                    ></i>
+                  </div>
+                  <button
+                    *ngIf="event"
+                    style="margin: 10px; background-color: rgba(255, 85, 0, 0.8)"
+                    nz-button
+                    nzType="primary"
+                    [nzLoading]="submitting"
+                    [hidden]="!inputValue"
+                    (click)="handleSubmit()"
+                    nzDanger
+                  >
+                    Add Comment
+                  </button>
+                  <button
+                    *ngIf="!event"
+                    style="margin: 10px; background-color: rgba(255, 85, 0, 0.8)"
+                    nz-button
+                    nzType="primary"
+                    [disabled]="!inputValue1"
+                    (click)="updateCmt(selectIdComment)"
+                    nzDanger
+                  >
+                    Edit Comment
+                  </button>
+                </nz-form-item>
+              </nz-comment-content>
+            </nz-comment>
+          </div>
+        </div>
+      </div>
+      <div nz-col nzSpan="12">
+        <nz-tabset>
+          <nz-tab nzTitle="Child / Parent">
+            <div
+              *ngIf="Issue?.issueParentDto; else haveChildIssue"
+              style="font-size: 14px; padding-left: 10px"
+              class="hisTory"
+            >
+              <nz-divider nzOrientation="left" nzPlain [nzText]="'Parent'"></nz-divider>
+              <div nz-row class="rowChilParent">
+                <div
+                  nz-col
+                  nzSpan="8"
+                  nz-tooltip
+                  nzTooltipTitle="Open Bug"
+                  style="cursor: pointer;"
+                  routerLink="/project/{{ projectLogin }}/issues/view/{{ Issue.issueParentDto.id }}"
+                >
+                  <i
+                    class="fas fa-chess-king"
+                    style="margin-right: 10px"
+                    style="color: rgba(255, 85, 0, 0.8)"
+                  ></i>
+                  {{ Issue.issueParentDto.name }}
+                </div>
+                <div nz-col nzSpan="8" nz-tooltip nzTooltipTitle="Assignees">
+                  <nz-tag *ngFor="let assignee of Issue.issueParentDto.assigneesList">{{
+                    assignee.name
+                  }}</nz-tag>
+                </div>
+                <div nz-col nzSpan="8" class="dueCreated">
+                  <div nz-col nzSpan="4" nz-tooltip nzTooltipTitle="Due Date">
+                    <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'">{{
+                      Issue.issueParentDto.dueDate | date
+                    }}</nz-tag>
+                  </div>
+                  <div nz-col nzSpan="4" nz-tooltip nzTooltipTitle="Created By">
+                    <nz-tag>{{ Issue.issueParentDto.userName }}</nz-tag>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ng-template #haveChildIssue>
+              <div style="font-size: 14px; padding-left: 10px" class="hisTory">
+                <nz-divider
+                  style="font-weight: 500"
+                  nzOrientation="left"
+                  nzPlain
+                  nzText="{{ Issue?.issuesChildDto.totalCount }}/{{
+                    Issue?.issuesChildDto.items.length
+                  }} child Tasks"
+                ></nz-divider>
+                <div
+                  style="border: 1px solid #e9e8e6; margin: 5px 0 0 5px; padding: 5px"
+                  *ngFor="let childIssue of Issue?.issuesChildDto.items"
+                >
+                  <div nz-row class="rowChilParent">
+                    <div
+                      nz-col
+                      nzSpan="6"
+                      nz-tooltip
+                      nzTooltipTitle="Open Task"
+                      style="cursor: pointer;"
+                      routerLink="/project/{{ projectLogin }}/issues/view/{{ childIssue.id }}"
+                    >
+                      <i
+                        style="color: rgba(255, 85, 0, 0.8)"
+                        nz-tooltip
+                        nzTooltipTitle="{{ childIssue.statusName }}"
+                        nz-icon
+                        [nzType]="childIssue.statusName != 'Closed' ? 'bug' : 'check'"
+                        nzTheme="outline"
+                      ></i>
+                      {{ childIssue.name }}
+                    </div>
+                    <div
+                      nz-col
+                      nzSpan="8"
+                      nz-tooltip
+                      nzTooltipTitle="Assignees"
+                      style="font-size: 13px"
+                    >
+                      <nz-tag *ngFor="let assignee of childIssue.assigneesList">{{
+                        assignee.name
+                      }}</nz-tag>
+                    </div>
+                    <div nz-col nzSpan="9" class="dueCreated">
+                      <div nz-row>
+                        <div
+                          nz-col
+                          nzSpan="12"
+                          nz-tooltip
+                          nzTooltipTitle="Creation Time"
+                          id="creationTime"
+                        >
+                          {{ childIssue.creationTime | date: 'short' }}
+                        </div>
+                        <div
+                          nz-col
+                          nzSpan="12"
+                          nz-tooltip
+                          nzTooltipTitle="Due Date"
+                          style="padding-left: 20px"
+                          id="dueDate"
+                        >
+                          <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'">{{
+                            childIssue.dueDate | date
+                          }}</nz-tag>
+                        </div>
+                      </div>
+                    </div>
+                    <div nz-col nzSpan="1" nz-tooltip nzTooltipTitle="Delete">
+                      <i
+                        class="fas fa-trash"
+                        style="color: red"
+                        (click)="deleteChildTask(childIssue)"
+                      ></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </nz-tab>
+          <nz-tab nzTitle="History" id="History">
+            <ng-container *ngIf="listHistory.length > 0;">
+              <div *ngFor="let item of listHistory">
+                <div>
+                  <nz-card [nzBordered]="false" nzTitle="{{ item[0] }}" nzSize="small">
+                    <nz-timeline>
+                      <nz-timeline-item *ngFor="let value of item[1]" nzColor="{{ value.color }}">
+                        <span
+                          ><nz-tag>{{ value.userName }}</nz-tag></span
+                        >
+                        <span class="spanAction" style="margin: 1px 0px 0px 0px">
+                          <nz-tag
+                            *ngIf="value.action == 'DELETE'"
+                            [nzColor]="'rgba(255, 85, 0, 0.8)'"
+                          >
+                            {{ value.action }}</nz-tag
+                          >
+                          <nz-tag *ngIf="value.action == 'UPDATE'" [nzColor]="'#4f89c5'">
+                            {{ value.action }}</nz-tag
+                          >
+                          <nz-tag *ngIf="value.action == 'CREATED'" [nzColor]="'#a2ae38'">
+                            {{ value.action }}</nz-tag
+                          >
+                          <span
+                            class="badge"
+                            style=" background-color: rgba(255, 85, 0, 0.8)"
+                            routerLink="/project/{{ value.idProject }}/issues/view/{{
+                              value.issueId
+                            }}"
+                            >{{ value.entity | formatMaxstring: [80, '...']}}</span>
+                        </span>
+                        <div style="float: right">
+                          <span
+                            ><nz-tag>{{ value.excutitonTime | fomatTimePipe }}</nz-tag></span
+                          >
+                        </div>
+                        <br />
+                        <span
+                          *ngIf="value.action == 'UPDATE'"
+                          style="font-size: small; padding-left: 10px; opacity: 0.5"
+                          >Status: [{{ value.oldValue }}] ->
+                        </span>
+                        <span *ngIf="value.action == 'UPDATE'" style="font-size: small; opacity: 0.5"
+                          >[{{ value.newValue }}]
+                        </span>
+                      </nz-timeline-item>
+                    </nz-timeline>
+                  </nz-card>
+                </div>
+              </div>
+              <div *ngIf="listHistory.length > 0 && load != null">
+                <i
+                style="margin: -5% 0 1% 50%; font-size: 20px; color: rgba(255, 85, 0, 0.8)"
+                nz-tooltip
+                nzTooltipTitle="Load More"
+                nz-icon
+                nzType="caret-down"
+                nzTheme="outline"
+                *ngIf="listHistory.length > 0"
+                (click)="onScroll()"
+              ></i>
+              </div>
+            </ng-container>
+            <!-- <div class="croll">
+              <div *ngFor="let items of listHistory">
+                <nz-card [nzBordered]="false" nzTitle="{{ items.date }}">
+                  <div style="margin-left: 10px" class="cardDiv">
+                    <nz-timeline>
+                      <nz-timeline-item *ngFor="let item of items.data" nzColor="red">
+                        <div class="rowHistory">
+                          <span>
+                            <nz-tag>{{ item.userName }}</nz-tag>
+                          </span>
+                          <span>
+                            <span *ngIf="item.lastChangeMethod == 'POST'">
+                              <nz-tag class="history" [nzColor]="'#a2ae38'"> CREATE</nz-tag>
+                              <br />
+                              <span *ngFor="let action of item.listChange">
+                                <span *ngIf="action.propertyName == 'Content'"
+                                  >{{ action.propertyName }} : [{{ action?.newValue }}]</span
+                                >
+                              </span>
+                            </span>
+                            <span *ngIf="item.lastChangeMethod == 'PUT'">
+                              <nz-tag class="history" [nzColor]="'#4f89c5'">UPDATE</nz-tag>
+                              <span *ngFor="let action of item.listChange">
+                                <span *ngIf="action.propertyName == 'StatusName'"
+                                  ><i
+                                    nz-icon
+                                    nzType="edit"
+                                    nzTheme="outline"
+                                    style="margin-right: 10px"
+                                  ></i>
+                                  <nz-tag>{{ action.originalValue }}</nz-tag>
+                                  <i nz-icon nzType="swap-right" nzTheme="outline"></i>
+                                  <nz-tag style="margin-left: 5px" [nzColor]="'#2db7f5'">{{
+                                    action?.newValue
+                                  }}</nz-tag>
+                                </span>
+                                <span *ngIf="action.propertyName == 'CategoryID'">
+                                  <nz-tag>Category has Updated</nz-tag>
+                                </span>
+                                <span *ngIf="action.propertyName == 'Description'">
+                                  <nz-tag>Description has Updated</nz-tag>
+                                </span>
+                                <span *ngIf="action.propertyName == 'DueDate'">
+                                  <nz-tag>DueDate has Updated</nz-tag>
+                                </span>
+                                <span *ngIf="action.propertyName == 'Priority'"
+                                  ><nz-tag>{{ action.propertyName }}</nz-tag>
+                                  <nz-tag>{{ action.originalValue }}</nz-tag>
+                                  <i nz-icon nzType="swap-right" nzTheme="outline"></i>
+                                  <nz-tag style="margin-left: 5px" [nzColor]="'#2db7f5'">{{
+                                    action?.newValue
+                                  }}</nz-tag>
+                                </span>
+                                <span *ngIf="action.propertyName == 'IssueLevel'"
+                                  ><nz-tag>{{ action.propertyName }}</nz-tag>
+                                  <nz-tag>{{ action.originalValue }}</nz-tag>
+                                  <i nz-icon nzType="swap-right" nzTheme="outline"></i>
+                                  <nz-tag style="margin-left: 5px" [nzColor]="'#2db7f5'">{{
+                                    action?.newValue
+                                  }}</nz-tag>
+                                </span>
+                                <br />
+                              </span>
+                            </span>
+                            <span *ngIf="item.lastChangeMethod == 'DELETE'">
+                              <nz-tag class="history" [nzColor]="'rgba(255, 85, 0, 0.8)'">
+                                {{ item.lastChangeMethod }}</nz-tag
+                              ><nz-tag>a comment</nz-tag>
+                            </span>
+                          </span>
+                          <span style="float: right">
+                            <nz-tag>{{ item.time | fomatTimePipe }}</nz-tag>
+                          </span>
+                        </div>
+                      </nz-timeline-item>
+                    </nz-timeline>
+                  </div>
+                </nz-card>
+              </div>
+              <i
+                style="margin: -5% 0 1% 50%; font-size: 20px; color: rgba(255, 85, 0, 0.8); cursor: pointer;"
+                nz-tooltip
+                nzTooltipTitle="Load More"
+                nz-icon
+                nzType="caret-down"
+                nzTheme="outline"
+                *ngIf="listHistory.length > 0"
+                (click)="loadMore()"
+              ></i>
+            </div> -->
+          </nz-tab>
+        </nz-tabset>
+      </div>
+    </div>
+  </div>
+</div>

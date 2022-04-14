@@ -1,0 +1,319 @@
+<nz-tabset class="group-department">
+    <nz-tab [nzTitle]="titleTemplate">
+      <ng-template #titleTemplate>
+        <i nz-icon [nzType]="'team'"></i>
+        Members
+      </ng-template>
+      <div class="member-team">
+        <div class="header-team">
+          <div style="margin-top: 0.5vh; margin-left: 1.04vw;"><h3>Members</h3></div>
+       </div>
+       <div class="table-member" >
+           <div nz-col >
+               <div class="list-member">
+             <div style="float: right; margin-top: 0.5vh; margin-right: 1vw;">
+               <nz-tag [nzColor]="'#f50'">{{  listMemberTeam?.length }}</nz-tag>
+             </div>
+             <div class="bt-add" >
+               <button style="width: 100%" nz-button (click)="showModalAddMember($event)" nzType="primary">Add New
+               </button>
+             </div>
+             <nz-modal
+       [(nzVisible)]="isVisibleAddMember"
+       nzTitle="New Member"
+       (nzOnCancel)="handleCancelAddMember()"
+       (nzOnOk)="handleOkAddMember()"
+       [nzOkLoading]="isOkLoadingAddMember"
+       modalContent>
+       <div>
+         <p>Choose Member</p>
+         <nz-select
+         nzMode="multiple"
+         nzShowSearch
+         nzAllowClear
+         nzPlaceHolder="Select a person"
+         style="width: 100%;"
+         [(ngModel)]="IdMemberAdd"
+       >
+         <nz-option
+           *ngFor="let user of listUserAddMember"
+           nzLabel="{{ user.name }}"
+           nzValue="{{ user.id }}"
+         >
+         </nz-option>
+       </nz-select>
+       </div>
+     </nz-modal>
+             <div >
+               <nz-table class="tableMember" #basicTable [nzData]="listMemberTeam" [nzFrontPagination]="false" [nzShowPagination]="false">
+                 <thead>
+                   <tr>
+                     <th></th>
+                     <th></th>
+                     <th></th>
+                     <th></th>
+                     <th></th>
+                     <th></th>
+                   </tr>
+                 </thead>
+                 <tbody *ngFor="let data of basicTable.data">
+                   <tr style="text-align: center">
+                     <td><nz-tag [nzColor]="'blue'">{{ data.nameMember }}</nz-tag></td>
+                     <td><nz-tag *ngIf="data.idUser == userLogin" [nzColor]="'red'">Leader</nz-tag></td>  
+                     <td>{{data.email}}</td>   
+                     <td>{{data.phoneNumber}}</td>  
+                     <td><nz-tag [nzColor]="'red'">{{ data.countIssue }} </nz-tag> Issue</td>
+                     <td>
+                       <a *ngIf="data.idUser != userLogin" (click)="RemoveMember(data.id)" nzTooltipTitle="delete" nz-tooltip nzType="default"
+                         ><i style="color: red;" class="iconDelete" nz-icon nzType="close"></i
+                       ></a>
+                     </td>
+                   </tr>
+                 </tbody>
+               </nz-table>
+             </div>
+             <div id="tableMember1">
+               <table>
+                 <thead>
+                   <tr>
+                     <th scope="col">Name</th>
+                     <th scope="col">Email</th>
+                     <th scope="col">Phone number</th>
+                     <th scope="col">Count issue</th>
+                     <th scope="col">Delete</th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   <tr *ngFor="let data of listMemberTeam">
+                     <td data-label="Name">
+                       <nz-tag [nzColor]="'blue'"><a>
+                           {{ data.nameMember }}</a></nz-tag>
+                     </td>
+                     <td data-label="Email">
+                       {{data.email}}
+                     </td>
+                     <td data-label="phone Number">
+                       {{data.phoneNumber}}
+                     </td>
+                     <td data-label="count Issue">
+                       <nz-tag [nzColor]="'red'">{{ data.countIssue }}</nz-tag>
+                     </td>
+                     <td data-label="Delete">
+                       <a *ngIf="data.idUser != userLogin" (click)="RemoveMember(data.id)" nzTooltipTitle="delete"
+                         nz-tooltip nzType="default"><i style="color: red;" class="iconDelete" nz-icon
+                           nzType="close"></i></a>
+                     </td>
+                   </tr>
+                 </tbody>
+               </table>
+             </div>
+           </div></div>
+       </div>
+      </div>
+     
+    </nz-tab>
+    <!-- list issue -->
+    <nz-tab [nzTitle]="titleTemplate1">
+        <ng-template #titleTemplate1>
+          <i nz-icon [nzType]="'bug'"></i>
+          Issues
+        </ng-template>
+        <div class="header-issue">
+            <div style="margin-top: 0.5vh; margin-left: 1.56vw;"><h3>Issues</h3></div>
+            <div style="margin: 1.2vh 0px 0px 0.52vw;">
+               <nz-tag [nzColor]="'red'">{{ listIssue?.length }}</nz-tag>
+            </div>
+            <div class="input"> 
+               <nz-input-group nzSearch nzSize="medium" >
+                   <input
+                     [(ngModel)]="searchIssue"
+                     (keyup.enter)="IssueChange(searchIssue)"
+                     type="text"
+                     nz-input
+                     placeholder="Select a name"
+                   />
+                 </nz-input-group>
+             </div>
+         </div>
+        
+         <div class="all-select">
+           
+           <div class="bt-list-name" >
+            <div style="margin-left: 2%;" *ngFor="let bt of button" >
+              <button class="bt-name" style="width: 100%" nz-button (click)="changeSearchIssue(bt.id)"
+              [ngClass]="{active2: isActive2(bt.id)}"
+               nzType="primary">{{bt.name}}</button>
+            </div>
+          </div>
+          <div  class="list-input" nz-row>
+            <div style="display: flex;">
+              <div class="endDiv" >
+                <label>User</label><br />
+                <nz-select
+                  nzShowSearch
+                  nzAllowClear
+                  (ngModelChange)="getUserNameIssue($event)"
+                  nzPlaceHolder="Select a Person"
+                  [(ngModel)]="idUserIssue"
+                >
+                  <nz-option
+                    *ngFor="let user of listUser"
+                    nzValue="{{ user.id }}"
+                    nzLabel="{{ user.name }}"
+                  ></nz-option>
+                </nz-select>
+              </div>
+              <div class="endDiv">
+                <label>Project</label><br />
+                <nz-select
+                  nzShowSearch
+                  nzAllowClear
+                  (ngModelChange)="getByProject($event)"
+                  nzPlaceHolder="Select a project"
+                  [(ngModel)]="idProjectIssue"
+                >
+                  <nz-option
+                    *ngFor="let project of listProject"
+                    nzValue="{{ project.id }}"
+                    nzLabel="{{ project.name }}"
+                  ></nz-option>
+                </nz-select>
+              </div>
+            </div>
+               <div style="display: flex;">
+                <div class="startDiv">
+                  <label>Status</label><br />
+                  <nz-select
+                    nzShowSearch
+                    nzAllowClear
+                    (ngModelChange)="getByStatus($event)"
+                    nzPlaceHolder="Select a status"
+                    [(ngModel)]="idStatus"
+                  >
+                    <nz-option
+                      *ngFor="let status of listStatus"
+                      nzValue="{{ status.id }}"
+                      nzLabel="{{ status.name }}"
+                    ></nz-option>
+                  </nz-select>
+                </div>
+                <div class="endDiv" >
+                  <label>Category</label><br />
+                  <nz-select
+                    nzShowSearch
+                    nzAllowClear
+                    (ngModelChange)="getByCategory($event)"
+                    nzPlaceHolder="Select a category"
+                    [(ngModel)]="idCategory"
+                  >
+                    <nz-option
+                      *ngFor="let category of listCategory"
+                      nzValue="{{ category.id }}"
+                      nzLabel="{{ category.name }}"
+                    ></nz-option>
+                  </nz-select>
+                </div>
+              </div> 
+           </div>
+           
+         </div>
+         <div class="table-issue" >
+           
+            <div style="margin-top: 2vh">
+             <nz-table class="tableAdmin" #basicTable1 [nzData]="listIssue" [nzPageSize]="10">
+               <thead>
+                 <tr>
+                   <th>Name</th>
+                   <th>User</th>
+                   <th>Project</th>
+                   <th>Status</th>
+                   <th>Category</th>
+                   <th>Creation Time</th>
+                   <th>DueDate</th>
+                   <th>finishDate</th>
+                 </tr>
+               </thead>
+               <tbody *ngFor="let data of basicTable1.data">
+                 <tr style="text-align: center">
+                   <td>
+                     <a
+                       nzTooltipTitle="Issue details"
+                       nzTooltipPlacement="bottom"
+                       nz-tooltip
+                       routerLink="/project/{{ data.projectID }}/issues/view/{{ data.id }}"
+                     >
+                       {{ data.name }}</a
+                     >
+                   </td>
+                   <td>{{ data.userName }}</td>
+                   <td>{{ data.projectName }}</td>
+                   <td>
+                     <nz-tag nzColor="{{ data.nzColor }}">{{ data.statusName }}</nz-tag>
+                   </td>
+                   <td>{{ data.categoryName }}</td>
+                   <td>{{ data.creationTime | date: 'medium' }}</td>
+                   <td>{{ data.dueDate | date: 'medium'}}</td>
+                   <td>{{ data.finishDate | date: 'medium' }}</td>
+        
+                 </tr>
+               </tbody>
+             </nz-table>
+             <div id="tableIssue">
+              <table>
+              <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">User</th>
+                  <th scope="col">Project</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Creation Time</th>
+                  <th scope="col">DueDate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of listIssue">
+                  <td data-label="Name">
+                    <nz-tag [nzColor]="'blue'"> <a
+                      nzTooltipTitle="Issue details"
+                      nzTooltipPlacement="bottom"
+                      nz-tooltip
+                      routerLink="/project/{{ data.projectID }}/issues/view/{{ data.id }}"
+                    >
+                      {{ data.name }}</a>
+                    ></nz-tag>
+                  </td>
+                  <td data-label="user">
+                    {{data.userName}}
+                  </td>
+                  <td data-label="project">
+                    {{data.projectName}}
+                  </td>
+                  <td data-label="status">
+                    <nz-tag nzColor="{{ data.nzColor }}">{{ data.statusName }}</nz-tag>
+                  </td>
+                  <td data-label="category">
+                    <span
+                    *ngIf="data.categoryName == 'Undefined'; else NotPriorityUndefined"
+                    class="badge badge-secondary"
+                    >{{ data.categoryName }}</span>
+                    <ng-template #NotPriorityUndefined>
+                      <nz-tag [nzColor]="'blue'">{{ data.categoryName }}</nz-tag>
+                    </ng-template>
+                  </td>
+                  <td data-label="creation time">
+                    {{ data.creationTime | date: 'medium' }}
+                  </td>
+                  <td data-label="due date">
+                    {{  data.dueDate | date: 'medium' }}
+                  </td>
+                </tr>
+              </tbody>
+              </table>
+             </div>
+           </div> 
+         
+         </div>
+        
+      </nz-tab>
+</nz-tabset>

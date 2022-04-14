@@ -1,0 +1,136 @@
+:host {
+    text-align: center;
+  }
+
+  nz-header{
+      color: #fff;
+  }
+  nz-footer {
+    background: #fff;
+    color: #fff;
+  }
+  .choosen{
+    border-radius: 15px 15px 15px;
+    font-size: 14px;
+    border: none;
+    background-color: #2db7f5;
+    color: #f0f0f0;
+}
+  nz-footer {
+    line-height: 1.5;
+  }
+
+  nz-sider {
+    background: #fff;
+    color: #fff;
+    line-height: 120px;
+  }
+
+  nz-content {
+    background: #fff;
+    color: #fff;
+    min-height: 120px;
+    line-height: 120px;
+  }
+  .status{
+    border-radius: 15px 15px 15px;
+    font-size: 13px;
+    margin-right: 10px;
+}
+  nz-layout {
+    margin-bottom: 48px;
+  }
+
+  nz-layout:last-child {
+    margin: 0;
+  
+  }
+  body {
+margin: 0;
+padding-top: 40px;
+color: #2e323c;
+background: #f5f6fa;
+position: relative;
+height: 100%;
+}
+.account-settings .user-profile {
+margin: 0 0 1rem 0;
+padding-bottom: 1rem;
+text-align: center;
+}
+.account-settings .user-profile .user-avatar {
+margin: 0 0 1rem 0;
+}
+.account-settings .user-profile .user-avatar img {
+width: 90px;
+height: 90px;
+-webkit-border-radius: 100px;
+-moz-border-radius: 100px;
+border-radius: 100px;
+}
+.account-settings .user-profile h5.user-name {
+margin: 0 0 0.5rem 0;
+}
+.account-settings .user-profile h6.user-email {
+margin: 0;
+font-size: 0.8rem;
+font-weight: 400;
+color: #9fa8b9;
+}
+.account-settings .about {
+margin: 2rem 0 0 0;
+text-align: center;
+}
+.account-settings .about h5 {
+margin: 0 0 15px 0;
+color: #4395d8;
+}
+.account-settings .about p {
+font-size: 0.825rem;
+}
+.container {
+padding: 0 30px 0 30px;
+width: 50%;
+.form-control {
+border: 1px solid #cfd1d8;
+-webkit-border-radius: 2px;
+-moz-border-radius: 2px;
+border-radius: 2px;
+font-size: .825rem;
+background: #ffffff;
+color: #2e323c;
+}
+.iconDelete{
+text-align: center;
+color: rgb(245, 11, 11);
+cursor: pointer;
+}
+.card {
+background: #ffffff;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
+border: 0;
+margin-bottom: 1rem;
+}
+.table{
+max-height: 550px;
+display: block;
+overflow-y: auto;
+margin: 0 5px 0 0;
+}
+.form-required{
+color: red;
+}
+.bt-name{
+background-color: rgb(30, 120, 161);
+margin: 0px 0px 0px 10px;
+border-radius: 5px;
+}
+.bt-list-name{
+display:inline-flex;
+}
+.active2{
+background-color: rgb(160, 101, 13);
+}
+}

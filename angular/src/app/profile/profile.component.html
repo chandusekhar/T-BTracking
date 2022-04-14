@@ -1,0 +1,144 @@
+<div [class.containerForm]="profileIdShowing == ''" style="text-align: left">
+  <div>
+    <img src="https://mail.tmtco.asia/custom/webmail/img/loginlogo_2edd6.PNG" />
+    <label style="font-size: 20px; color: #f50; font-weight: 500">User Profile</label>
+  </div>
+  <nz-spin
+    style="
+      display: block;
+      position: relative;
+      margin-left: 45%;
+      margin-top: 20%;
+      width: 50%;
+      z-index: 99;
+      color: #f50;
+    "
+    *ngIf="profileLoading; else doneLoad"
+    nzSimple
+    [nzSize]="'large'"
+    [nzIndicator]="indicatorTemplate"
+  >
+  </nz-spin>
+  <ng-template #indicatorTemplate
+    ><i nz-icon nzType="loading" style="font-size: 35px; color: rgba(255, 85, 0, 0.8)"></i> Checking
+    Access Token, please wait...</ng-template
+  >
+  <ng-template #doneLoad>
+    <div *ngIf="profileIdShowing == '' || profileIdShowing == shareService.getUserData.id">
+      <div>
+        <button
+          style="margin-bottom: 10px; float: right; color: rgba(255, 85, 0, 0.8); color: white"
+          (click)="updateProfile()"
+          nz-button
+          nzType="primary"
+          nzDanger
+        >
+          <i class="fas fa-save" style="margin-right: 10px; font-size: 16px"></i>
+          Update
+        </button>
+      </div>
+      <label for="website" style="margin-top: 5px">Id </label>
+      <input
+        style="border-radius: 5px"
+        disabled="true"
+        [(ngModel)]="id"
+        type="text"
+        class="form-control"
+        id="website"
+        placeholder="Id"
+      />
+    </div>
+    <div>
+      <label for="fullName" style="margin-top: 5px"
+        >Name <span class="form-required">*</span></label
+      >
+      <input
+        style="border-radius: 5px"
+        [(ngModel)]="fullName"
+        type="text"
+        class="form-control"
+        id="fullName"
+        placeholder="Enter full name"
+        [disabled]="profileIdShowing != '' && profileIdShowing != shareService.getUserData.id"
+      />
+    </div>
+    <div>
+      <label for="eMail" style="margin-top: 5px"
+        >Email Address <span class="form-required">*</span></label
+      >
+      <input
+        style="border-radius: 5px"
+        [(ngModel)]="eMail"
+        type="email"
+        class="form-control"
+        id="eMail"
+        placeholder="Enter email"
+        [disabled]="profileIdShowing != '' && profileIdShowing != shareService.getUserData.id"
+      />
+    </div>
+    <!-- <div>
+      <label for="eMail" style="margin-top: 5px">Avartar <span class="form-required">*</span></label>
+      <div class="avartar-url">
+        <input style="border-radius: 5px; border: none;" [(ngModel)]="eMail" type="email" class="form-control" id="eMail"
+          placeholder="Enter email" />
+        <div (click)="selectImages.click()" class="upload-avartar">
+          <span >Change</span>
+          <i  class="fas fa-upload"></i>
+          <input type="file" class="d-none" #selectImages (change)="createAvartar($event.target.files)"
+          multiple>
+        </div>
+      </div>
+    </div> -->
+    <div>
+      <label for="phone" style="margin-top: 5px">Phone <span class="form-required">*</span></label>
+      <input
+        style="border-radius: 5px"
+        [(ngModel)]="phone"
+        disabled="true"
+        type="text"
+        class="form-control"
+        id="phone"
+        placeholder="Phone number"
+      />
+    </div>
+    <nz-alert
+      style="margin: 10px 0 0 0"
+      *ngIf="uniqueName == '' || (!uniqueName.includes('SYSTMT') && profileIdShowing == '')"
+      nzType="warning"
+      nzMessage="Example: SYSTMT\tfs_lucpv"
+      nzShowIcon
+    ></nz-alert>
+    <div>
+      <label for="phone" style="margin-top: 5px"
+        >Unique Name <span class="form-required">*</span></label
+      >
+      <input
+        style="border-radius: 5px"
+        [(ngModel)]="uniqueName"
+        type="text"
+        class="form-control"
+        placeholder="Unique Name"
+        [disabled]="profileIdShowing != '' && profileIdShowing != shareService.getUserData.id"
+      />
+    </div>
+    <nz-alert
+      style="margin: 10px 0 0 0"
+      *ngIf="pAT == '' && profileIdShowing == ''"
+      nzType="warning"
+      nzMessage="https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=preview-page"
+      nzShowIcon
+    ></nz-alert>
+    <div *ngIf="profileIdShowing == '' || profileIdShowing == shareService.getUserData.id">
+      <label for="phone" style="margin-top: 5px"
+        >Personal Access Token <span class="form-required">*</span></label
+      >
+      <input
+        style="border-radius: 5px"
+        [(ngModel)]="pAT"
+        type="text"
+        class="form-control"
+        placeholder="Personal Access Token"
+      />
+    </div>
+  </ng-template>
+</div>

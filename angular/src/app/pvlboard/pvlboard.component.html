@@ -1,0 +1,987 @@
+<div id="pvlboard" class="container-fluid">
+  <div nz-row class="pvlboard1" id="filBoxPc">
+    <div style="margin-top: 5px" nz-col nzSpan="4">
+      <div class="font">
+        <i class="fas fa-calendar-day fontIcon" style="color: rgba(255, 85, 0, 0.8)"></i> Due Date
+      </div>
+      <div style="margin-top: 5px">
+        <nz-date-picker
+          style="width: 100%"
+          [(ngModel)]="dueDate"
+          (ngModelChange)="onChangeDueDate($event)"
+          nzPlaceHolder="Select Due Date"
+        ></nz-date-picker>
+      </div>
+    </div>
+    <div class="colAssignee" style="margin-top: 5px; padding-left: 10px" nz-col nzSpan="4">
+      <div class="font">
+        <i class="fas fa-user-tag" style="font-size: 15px; color: rgba(255, 85, 0, 0.8)"></i>
+        Assigned To
+      </div>
+      <div style="margin-top: 5px" nz-row id="colAssignee2">
+        <div nz-col nzSpan="21">
+          <nz-select
+            style="width: 100%"
+            (ngModelChange)="onChangeAssign($event)"
+            nzShowSearch
+            nzAllowClear
+            nzPlaceHolder="Select a user"
+            [(ngModel)]="idUser"
+          >
+            <nz-option
+              *ngFor="let user of listUser?.items"
+              nzValue="{{ user.id }}"
+              nzLabel="{{ user.name }}"
+            ></nz-option>
+          </nz-select>
+        </div>
+        <div nz-col nzSpan="3" class="iconTAg">
+          <i
+            class="fas fa-tag iconAssignMyself"
+            style="font-size: 20px; margin: 5px 0 0 5px; color: rgba(255, 85, 0, 0.8)"
+            (click)="AssignMyself()"
+            nzTooltipTitle="Assignee To Myself"
+            nz-tooltip
+          ></i>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 5px; padding-left: 10px" nz-col nzSpan="4" class="filterBug">
+      <div class="font">
+        <i class="{{ projectTfsDto?.icon }} fontIcon" style="color: rgba(255, 85, 0, 0.8)"></i>
+        Filter {{ projectTfsDto?.witType }}
+      </div>
+      <div style="margin-top: 5px">
+        <input
+          class="iputIssues"
+          [(ngModel)]="Filter"
+          (ngModelChange)="filterChange(Filter)"
+          type="text"
+          nz-input
+          placeholder="Input {{ projectTfsDto?.witType }} Name"
+        />
+      </div>
+      <nz-modal
+        [nzStyle]="{ top: '20px' }"
+        [nzWidth]="1200"
+        [(nzVisible)]="isVisibleAddIssue"
+        [nzFooter]="modalFooter"
+        (nzOnCancel)="handleCancelAddIssue()"
+      >
+        <ng-container *nzModalContent>
+          <app-add-issue [issueParentId]="currentIssueParentId"></app-add-issue>
+        </ng-container>
+        <ng-template #modalFooter></ng-template>
+      </nz-modal>
+      <nz-modal
+        [(nzVisible)]="isVisibleProfile"
+        (nzOnCancel)="handleCancelProfile()"
+        nzWidth="1000px"
+      >
+        <div *nzModalContent>
+          <app-profile [profileIdShowing]="idProfileShowing"></app-profile>
+        </div>
+        <div *nzModalFooter>
+          <button nz-button nzType="default" nzDanger [disabled]="idProfileShowing == shareService.getUserData.id" (click)="CreateConversition()">
+            <i
+              class="fas fa-comment-dots"
+              style="cursor: pointer; font-size: 18px; margin-right: 10px"
+            ></i
+            >Send Message
+          </button>
+        </div>
+      </nz-modal>
+    </div>
+    <div style="margin-top: 5px; padding-left: 10px" nz-col nzSpan="4" class="filCat">
+      <div class="font">
+        <i class="fas fa-bookmark fontIcon" style="color: rgba(255, 85, 0, 0.8)"></i>
+        {{ categoryText }}
+      </div>
+      <div style="margin-top: 5px">
+        <nz-select
+          class="seleCat"
+          style="width: 100%"
+          (ngModelChange)="CategoryChange($event)"
+          nzShowSearch
+          nzAllowClear
+          nzPlaceHolder="Select {{ categoryText }}"
+          [(ngModel)]="idCategory"
+        >
+          <nz-option
+            *ngFor="let category of listCategory"
+            nzValue="{{ category.id }}"
+            nzLabel="{{ category.name }}"
+          ></nz-option>
+        </nz-select>
+      </div>
+    </div>
+    <div style="margin-top: 30px; padding-left: 10px" nz-col nzSpan="8" class="viewByCat">
+      <button
+        nz-button
+        nzType="primary"
+        nzDanger
+        style="background-color: rgba(255, 85, 0, 0.8)"
+        (click)="viewCategoryBoard()"
+      >
+        <i class="far fa-eye" style="margin-right: 10px"></i> {{ categoryText }}
+      </button>
+    </div>
+  </div>
+  <div nz-row class="pvlboard1" id="filBoxMobile">
+    <div style="margin-top: 1vh; padding-left: 10px" nz-col nzSpan="8" class="viewByCat">
+      <button
+        nz-button
+        nzType="primary"
+        nzDanger
+        style="background-color: rgba(255, 85, 0, 0.8)"
+        (click)="viewCategoryBoard()"
+      >
+        <i class="fas fa-exchange-alt" style="margin-right: 10px"></i> View By {{ categoryText }}
+      </button>
+      <button
+        nz-button
+        nzType="primary"
+        nzDanger
+        style="background-color: rgba(255, 85, 0, 0.8); margin-left: 1vw"
+        (click)="showFilterInMobile()"
+      >
+        <i class="fas fa-filter" style="margin-right: 10px"></i> Show Filter
+        <i
+          *ngIf="isShowFilter"
+          nz-icon
+          nzType="caret-up"
+          nzTheme="outline"
+          style="margin-left: 3vw"
+        ></i>
+        <i
+          style="margin-left: 3vw"
+          *ngIf="!isShowFilter"
+          nz-icon
+          nzType="caret-down"
+          nzTheme="outline"
+        ></i>
+      </button>
+    </div>
+    <div *ngIf="isShowFilter">
+      <div style="margin-top: 5px" nz-col nzSpan="4">
+        <div class="font">
+          <i class="fas fa-calendar-day fontIcon" style="color: rgba(255, 85, 0, 0.8)"></i> Due Date
+        </div>
+        <div style="margin-top: 5px">
+          <nz-date-picker
+            style="width: 100%"
+            [(ngModel)]="dueDate"
+            (ngModelChange)="onChangeDueDate($event)"
+            nzPlaceHolder="Select Due Date"
+          ></nz-date-picker>
+        </div>
+      </div>
+      <div class="colAssignee" style="margin-top: 5px; padding-left: 10px" nz-col nzSpan="4">
+        <div class="font">
+          <i class="fas fa-user-tag" style="font-size: 15px; color: rgba(255, 85, 0, 0.8)"></i>
+          Assignee To
+        </div>
+        <div style="margin-top: 5px" nz-row id="colAssignee2">
+          <div nz-col nzSpan="21">
+            <nz-select
+              style="width: 100%"
+              (ngModelChange)="onChangeAssign($event)"
+              nzShowSearch
+              nzAllowClear
+              nzPlaceHolder="Select a user"
+              [(ngModel)]="idUser"
+            >
+              <nz-option
+                *ngFor="let user of listUser?.items"
+                nzValue="{{ user.id }}"
+                nzLabel="{{ user.name }}"
+              ></nz-option>
+            </nz-select>
+          </div>
+          <div nz-col nzSpan="3" class="iconTAg">
+            <i
+              class="fas fa-tag iconAssignMyself"
+              style="font-size: 20px; margin: 5px 0 0 5px; color: rgba(255, 85, 0, 0.8)"
+              (click)="AssignMyself()"
+              nzTooltipTitle="Assignee To Myself"
+              nz-tooltip
+            ></i>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 5px; padding-left: 10px" nz-col nzSpan="4" class="filterBug">
+        <div class="font">
+          <i class="{{ projectTfsDto?.icon }} fontIcon" style="color: rgba(255, 85, 0, 0.8)"></i>
+          Filter {{ projectTfsDto?.witType }}
+        </div>
+        <div style="margin-top: 5px">
+          <input
+            class="iputIssues"
+            [(ngModel)]="Filter"
+            (ngModelChange)="filterChange(Filter)"
+            type="text"
+            nz-input
+            placeholder="Input {{ projectTfsDto?.witType }} Name"
+          />
+        </div>
+        <nz-modal
+          [nzStyle]="{ top: '20px' }"
+          [nzWidth]="1200"
+          [(nzVisible)]="isVisibleAddIssue"
+          [nzFooter]="modalFooter"
+          (nzOnCancel)="handleCancelAddIssue()"
+        >
+          <ng-container *nzModalContent>
+            <app-add-issue [issueParentId]="currentIssueParentId"></app-add-issue>
+          </ng-container>
+          <ng-template #modalFooter></ng-template>
+        </nz-modal>
+      </div>
+      <div style="margin-top: 5px; padding-left: 10px" nz-col nzSpan="4" class="filCat">
+        <div class="font">
+          <i class="fas fa-bookmark fontIcon" style="color: rgba(255, 85, 0, 0.8)"></i>
+          {{ categoryText }}
+        </div>
+        <div style="margin-top: 5px">
+          <nz-select
+            class="seleCat"
+            style="width: 100%"
+            (ngModelChange)="CategoryChange($event)"
+            nzShowSearch
+            nzAllowClear
+            nzPlaceHolder="Select {{ categoryText }}"
+            [(ngModel)]="idCategory"
+          >
+            <nz-option
+              *ngFor="let category of listCategory"
+              nzValue="{{ category.id }}"
+              nzLabel="{{ category.name }}"
+            ></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <nz-divider (click)="showFilterInMobile()" [nzText]="text">
+        <ng-template #text>
+          <i nz-icon nzType="caret-up" nzTheme="outline"></i>
+        </ng-template>
+      </nz-divider>
+    </div>
+  </div>
+  <div style="max-width: 3000px;">
+    <div cdkDropListGroup style="margin-top: 5px; overflow-x: auto;" id="rowBoard">
+      <div nz-row>
+        <div *ngFor="let status of listStatus" nz-col nzSpan="6">
+          <div class="example-container">
+            <h6>
+              {{ status.name }}
+              <nz-badge nzColor="{{ status.nzColor }}"></nz-badge>
+              <nz-badge
+                nzStandalone
+                [nzCount]="status?.issueList.length"
+                [nzStyle]="{
+                  backgroundColor: 'rgba(255, 85,0, 0.5)',
+                  color: '#FFFFFF',
+                  boxShadow: '0 0 0 0'
+                }"
+              ></nz-badge>
+            </h6>
+            <div
+              id="dragPc"
+              cdkDropList
+              [cdkDropListData]="status?.issueList"
+              class="example-list"
+              (cdkDropListDropped)="drop($event)"
+              [cdkDropListConnectedTo]="[status?.id][0]"
+              #containerStatusPanel (scroll)="onScroll($event, status.id, status.issueList.length)"
+            >
+              <div class="example-box" *ngFor="let issue of status?.issueList" cdkDrag @fadeIn>
+                <div class="custom-Box" [style]="styeCustomBox()">
+                  <div
+                    nz-row
+                    class="custom-Box1"
+                    style="border-bottom: 1px solid rgba(255, 85, 0, 0.1)"
+                  >
+                    <div nz-col nzSpan="22">
+                      <i
+                        class="{{ projectTfsDto?.icon }} iconBug"
+                        routerLink="/project/{{ idProject }}/issues/view/{{ issue.id }}"
+                        [style]="styleIcon"
+                      ></i>
+
+                      <label
+                        style="font-size: 13px;word-break: break-all; font-weight: 450;cursor: pointer;"
+                        nz-tooltip nzTooltipTitle="View detail {{issue.name}}"
+                        routerLink="/project/{{ idProject }}/issues/view/{{ issue.id }}"
+                        >{{ issue?.name }}</label
+                      >
+                    </div>
+                    <!-- <div nz-col nzSpan="8">
+                      <div nz-row class="custom-Box2">
+                        <div nzTooltipTitle="Followers" nz-tooltip nz-col nzSpan="8">
+                          <i
+                            style="font-size: 16px; color: rgba(255, 85, 0, 0.8)"
+                            nz-icon
+                            nzType="star"
+                            nzTheme="outline"
+                          ></i>
+                          {{ issue.follows }}
+                        </div>
+                        <div nzTooltipTitle="Comments" nz-tooltip nz-col nzSpan="8">
+                          <i
+                            style="font-size: 16px; color: rgba(255, 85, 0, 0.8)"
+                            nz-icon
+                            nzType="comment"
+                            nzTheme="outline"
+                          ></i>
+                          {{ issue.comments }}
+                        </div>
+                        <div nzTooltipTitle="Attachments" nz-tooltip nz-col nzSpan="8">
+                          <i
+                            style="font-size: 16px; color: rgba(255, 85, 0, 0.8)"
+                            nz-icon
+                            nzType="paper-clip"
+                            nzTheme="outline"
+                          ></i>
+                          {{ issue.attachments }}
+                        </div>
+                      </div>
+                    </div> -->
+                    <div nz-col nzSpan="2" class="menuIteam">
+                      <a id="hoverItem" nzTrigger="click" nz-dropdown [nzDropdownMenu]="menu">
+                        <i
+                          class="fas fa-caret-down"
+                          style="font-size: 20px; color: rgba(255, 85, 0, 0.8)"
+                        ></i>
+                      </a>
+                    </div>
+                  </div>
+                  <nz-dropdown-menu #menu="nzDropdownMenu">
+                    <ul nz-menu nzSelectable style="font-weight: 500">
+                      <li
+                        nz-menu-item
+                        routerLink="/project/{{ idProject }}/issues/view/{{ issue.id }}"
+                      >
+                        <i
+                          nz-icon
+                          nzType="enter"
+                          nzTheme="outline"
+                          style="font-size: 18px; color: rgba(255, 85, 0, 0.8)"
+                        ></i>
+                        Open
+                      </li>
+                      <li>
+                        <nz-select
+                          style="padding: 5px"
+                          [(ngModel)]="status.id"
+                          (ngModelChange)="updateStatus(status.id, issue, issue.assigneesList)"
+                        >
+                          <nz-option
+                            *ngFor="let status of listStatus"
+                            nzValue="{{ status.id }}"
+                            nzLabel="{{ status.name }}"
+                          ></nz-option>
+                        </nz-select>
+                      </li>
+                      <li
+                        nz-menu-item
+                        (click)="showModalAddIssue(issue.id)"
+                        *ngIf="status.name != 'Closed'"
+                      >
+                        <i
+                          class="fas fa-plus"
+                          style="font-size: 16px; margin-right: 5px; color: rgba(255, 85, 0, 0.8)"
+                        ></i>
+                        New Task
+                      </li>
+                      <li
+                        nz-menu-item
+                        *ngIf="status.name != 'Closed'"
+                        (click)="showModal(issue.id)"
+                      >
+                        <i
+                          class="fas fa-user-tag"
+                          style="font-size: 16px; margin-right: 5px; color: rgba(255, 85, 0, 0.8)"
+                        ></i>
+                        Assignee To User
+                      </li>
+                      <li
+                        nz-menu-item
+                        nzDanger
+                        nz-popconfirm
+                        nzPopconfirmTitle="Are you sure delete {{ issue.name }}?"
+                        nzPopconfirmPlacement="bottom"
+                        (nzOnConfirm)="confirmDeleteIssue(issue)"
+                      >
+                        <i class="fas fa-trash" style="font-size: 16px; margin-right: 10px"></i>
+                        Delete
+                      </li>
+                    </ul>
+                  </nz-dropdown-menu>
+                  <div>
+                    <div nz-row class="custom-Box1">
+                      <div style="margin-top: 10px" nz-col nzSpan="12">
+                        <nz-avatar-group>
+                          <nz-avatar
+                            *ngFor="let user of issue.assigneesList"
+                            nzSize="small"
+                            nzTooltipTitle="{{ user.name }}"
+                            nz-tooltip
+                            nzText="{{ GetCharAt(user.name) }}"
+                            style="background-color: #f3dacd"
+                            (click)="showUserProfile(user.userID)"
+                          ></nz-avatar>
+                        </nz-avatar-group>
+                      </div>
+                      <!-- nz-popconfirm
+                      nzPopconfirmTitle="Are you sure delete {{ user.name }}?"
+                      nzPopconfirmPlacement="bottom"
+                      (nzOnConfirm)="confirm(user.id, user.userID, user.issueID)" -->
+                      <div
+                        id="date-picker"
+                        style="margin-top: 15px; border-bottom: solid 1px rgba(255, 85, 0, 0.1)"
+                        nz-col
+                        nzSpan="12"
+                        class="custom-Box1"
+                      >
+                        <nz-date-picker
+                          class="date-picker1"
+                          nzTooltipTitle="Due Date"
+                          nz-tooltip
+                          nzSize="small"
+                          [nzDisabled]="true"
+                          style="width: 85%"
+                          [(ngModel)]="issue.dueDate"
+                          (ngModelChange)="onDueDateChange(issue.id, issue.dueDate)"
+                          nzBorderless
+                          nzPlaceHolder="No Due Date"
+                        >
+                        </nz-date-picker>
+                        <i
+                          class="iconFire"
+                          style="font-size: 15px"
+                          nz-icon
+                          nzType="fire"
+                          *ngIf="
+                            getCountDate(convertToDate(issue?.dueDate)) <= totalCountToday &&
+                            status.name !== 'Closed' &&
+                            issue?.dueDate != null
+                          "
+                          nzTheme="fill"
+                          nzTooltipTitle="Deadline"
+                          nz-tooltip
+                          [nzTheme]="'twotone'"
+                          [nzTwotoneColor]="'red'"
+                        ></i>
+                      </div>
+                    </div>
+                    <div style="padding: 5px 0 0 5px; margin-top: 5px">
+                      <div
+                        style="font-size: 14px; font-weight: 450"
+                        *ngIf="issue.issuesChildDto?.items.length > 0"
+                        (click)="showTask(issue.id)"
+                      >
+                        {{ issue.issuesChildDto.totalCount }}/{{
+                          issue.issuesChildDto.items.length
+                        }}
+                        child Tasks
+                        <i
+                          style="text-align: center; color: rgba(255, 85, 0, 0.8)"
+                          nz-icon
+                          [nzType]="listShowTask.includes(issue.id) ? 'caret-up' : 'caret-down'"
+                          nzTheme="outline"
+                          nzTooltipTitle="Show Child Tasks"
+                          nz-tooltip
+                        ></i>
+                      </div>
+                      <div *ngIf="listShowTask.includes(issue.id)">
+                        <div
+                          nz-row
+                          *ngFor="let issueChild of issue.issuesChildDto.items"
+                          class="child"
+                        >
+                          <div
+                            routerLink="/project/{{ idProject }}/issues/view/{{ issueChild.id }}"
+                            nz-col
+                            nzSpan="17"
+                            style="font-weight: 500"
+                          >
+                            <i
+                              routerLink="/project/{{ idProject }}/issues/view/{{ issueChild.id }}"
+                              nz-icon
+                              [nzType]="'book'"
+                              nzTheme="outline"
+                              nzTooltipTitle="{{ issueChild.statusName }}"
+                              nz-tooltip
+                              style="color: rgba(255, 85, 0, 0.8)"
+                            ></i>
+                            {{ issueChild.name }}
+                            <label style="font-size: 11px; opacity: 0.5">{{
+                              issueChild.statusName
+                            }}</label>
+                          </div>
+                          <div nz-col nzSpan="6">
+                            <nz-avatar-group
+                              ><nz-avatar
+                                *ngFor="let user of issueChild.assigneesList"
+                                nzSize="small"
+                                nzTooltipTitle="{{ user.name }}"
+                                nz-tooltip
+                                nzText="{{ GetCharAt(user.name) }}"
+                                style="background-color: #f3dacd"
+                                (click)="showUserProfile(user.userID)"
+                              ></nz-avatar
+                            ></nz-avatar-group>
+                          </div>
+                          <div nz-col nzSpan="1">
+                            <a
+                              id="hoverItem"
+                              nzTrigger="click"
+                              nz-dropdown
+                              [nzDropdownMenu]="menuChild"
+                            >
+                              <i
+                                class="fas fa-caret-down"
+                                style="font-size: 20px; color: rgba(255, 85, 0, 0.8)"
+                              ></i>
+                            </a>
+                            <nz-dropdown-menu #menuChild="nzDropdownMenu">
+                              <ul nz-menu nzSelectable style="font-weight: 500">
+                                <li
+                                  nz-menu-item
+                                  routerLink="/project/{{ idProject }}/issues/view/{{
+                                    issueChild.id
+                                  }}"
+                                >
+                                  <i
+                                    nz-icon
+                                    nzType="enter"
+                                    nzTheme="outline"
+                                    style="font-size: 18px; color: rgba(255, 85, 0, 0.8)"
+                                  ></i>
+                                  Open
+                                </li>
+                                <li>
+                                  <nz-select
+                                    style="padding: 5px"
+                                    [(ngModel)]="issueChild.statusID"
+                                    (ngModelChange)="
+                                      updateStatus(
+                                        issueChild.statusID,
+                                        issueChild,
+                                        issueChild.assigneesList
+                                      )
+                                    "
+                                  >
+                                    <nz-option
+                                      *ngFor="let statusChild of listStatus"
+                                      nzValue="{{ statusChild.id }}"
+                                      nzLabel="{{ statusChild.name }}"
+                                    ></nz-option>
+                                  </nz-select>
+                                </li>
+                                <li
+                                  nz-menu-item
+                                  *ngIf="
+                                    issueChild.statusName != 'Closed' && status.name != 'Closed'
+                                  "
+                                  (click)="showModal(issueChild.id)"
+                                >
+                                  <i
+                                    class="fas fa-user-tag"
+                                    style="
+                                      font-size: 16px;
+                                      margin-right: 5px;
+                                      color: rgba(255, 85, 0, 0.8);
+                                    "
+                                  ></i>
+                                  Assignee To User
+                                </li>
+                                <li
+                                  nz-menu-item
+                                  nzDanger
+                                  nz-popconfirm
+                                  nzPopconfirmTitle="Are you sure delete {{ issueChild.name }}?"
+                                  nzPopconfirmPlacement="bottom"
+                                  (nzOnConfirm)="confirmDeleteIssue(issueChild)"
+                                >
+                                  <i
+                                    class="fas fa-trash"
+                                    style="font-size: 16px; margin-right: 10px"
+                                  ></i>
+                                  Delete
+                                </li>
+                              </ul>
+                            </nz-dropdown-menu>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              id="dragMobile"
+              cdkDropList
+              [cdkDropListData]="status?.issueList"
+              class="example-list"
+              (cdkDropListDropped)="drop($event)"
+              [cdkDropListConnectedTo]="[status?.id][0]"
+            >
+              <div
+                class="example-box"
+                *ngFor="let issue of status?.issueList"
+                cdkDrag
+                [cdkDragDisabled]="true"
+                @fadeIn
+              >
+                <div class="custom-Box" *ngIf="!issue.isHaveParent">
+                  <div
+                    nz-row
+                    class="custom-Box1"
+                    style="border-bottom: 1px solid rgba(255, 85, 0, 0.1)"
+                  >
+                    <div nz-col nzSpan="14">
+                      <i
+                        class="{{ projectTfsDto?.icon }} iconBug"
+                        routerLink="/project/{{ idProject }}/issues/view/{{ issue.id }}"
+                        [style]="styleIcon"
+                      ></i>
+
+                      <label
+                        style="font-size: 14px; font-weight: 500"
+                        routerLink="/project/{{ idProject }}/issues/view/{{ issue.id }}"
+                        >{{ issue?.name }}</label
+                      >
+                    </div>
+                    <div nz-col nzSpan="8">
+                      <div nz-row class="custom-Box2">
+                        <div nzTooltipTitle="Followers" nz-tooltip nz-col nzSpan="8">
+                          <i
+                            style="font-size: 16px; color: rgba(255, 85, 0, 0.8)"
+                            nz-icon
+                            nzType="star"
+                            nzTheme="outline"
+                          ></i>
+                          {{ issue.follows }}
+                        </div>
+                        <div nzTooltipTitle="Comments" nz-tooltip nz-col nzSpan="8">
+                          <i
+                            style="font-size: 16px; color: rgba(255, 85, 0, 0.8)"
+                            nz-icon
+                            nzType="comment"
+                            nzTheme="outline"
+                          ></i>
+                          {{ issue.comments }}
+                        </div>
+                        <div nzTooltipTitle="Attachments" nz-tooltip nz-col nzSpan="8">
+                          <i
+                            style="font-size: 16px; color: rgba(255, 85, 0, 0.8)"
+                            nz-icon
+                            nzType="paper-clip"
+                            nzTheme="outline"
+                          ></i>
+                          {{ issue.attachments }}
+                        </div>
+                      </div>
+                    </div>
+                    <div nz-col nzSpan="2" class="menuIteam">
+                      <a id="hoverItem" nzTrigger="click" nz-dropdown [nzDropdownMenu]="menu">
+                        <i
+                          class="fas fa-caret-down"
+                          style="font-size: 20px; color: rgba(255, 85, 0, 0.8)"
+                        ></i>
+                      </a>
+                    </div>
+                  </div>
+                  <nz-dropdown-menu #menu="nzDropdownMenu">
+                    <ul nz-menu nzSelectable style="font-weight: 500">
+                      <li
+                        nz-menu-item
+                        routerLink="/project/{{ idProject }}/issues/view/{{ issue.id }}"
+                      >
+                        <i
+                          nz-icon
+                          nzType="enter"
+                          nzTheme="outline"
+                          style="font-size: 18px; color: rgba(255, 85, 0, 0.8)"
+                        ></i>
+                        Open
+                      </li>
+                      <li>
+                        <nz-select
+                          style="padding: 5px"
+                          [(ngModel)]="status.id"
+                          (ngModelChange)="updateStatus(status.id, issue.id, issue.assigneesList)"
+                        >
+                          <nz-option
+                            *ngFor="let status of listStatus"
+                            nzValue="{{ status.id }}"
+                            nzLabel="{{ status.name }}"
+                          ></nz-option>
+                        </nz-select>
+                      </li>
+                      <li
+                        nz-menu-item
+                        (click)="showModalAddIssue(issue.id)"
+                        *ngIf="status.name != 'Closed'"
+                      >
+                        <i
+                          class="fas fa-plus"
+                          style="font-size: 16px; margin-right: 5px; color: rgba(255, 85, 0, 0.8)"
+                        ></i>
+                        New Task
+                      </li>
+                      <li
+                        nz-menu-item
+                        *ngIf="status.name != 'Closed'"
+                        (click)="showModal(issue.id)"
+                      >
+                        <i
+                          class="fas fa-user-tag"
+                          style="font-size: 16px; margin-right: 5px; color: rgba(255, 85, 0, 0.8)"
+                        ></i>
+                        Assignee To User
+                      </li>
+                      <li
+                        nz-menu-item
+                        nzDanger
+                        nz-popconfirm
+                        nzPopconfirmTitle="Are you sure delete {{ issue.name }}?"
+                        nzPopconfirmPlacement="bottom"
+                        (nzOnConfirm)="confirmDeleteIssue(issue)"
+                      >
+                        <i class="fas fa-trash" style="font-size: 16px; margin-right: 10px"></i>
+                        Delete
+                      </li>
+                    </ul>
+                  </nz-dropdown-menu>
+                  <div>
+                    <div nz-row class="custom-Box1">
+                      <div style="margin-top: 10px" nz-col nzSpan="12">
+                        <nz-avatar-group>
+                          <nz-avatar
+                            *ngFor="let user of issue.assigneesList"
+                            nzSize="small"
+                            nzTooltipTitle="{{ user.name }}"
+                            nz-tooltip
+                            nzText="{{ GetCharAt(user.name) }}"
+                            style="background-color: #f3dacd"
+                            (click)="showUserProfile(user.userID)"
+                          ></nz-avatar>
+                        </nz-avatar-group>
+                      </div>
+                      <!-- nz-popconfirm
+                      nzPopconfirmTitle="Are you sure delete {{ user.name }}?"
+                      nzPopconfirmPlacement="bottom"
+                      (nzOnConfirm)="confirm(user.id, user.userID, user.issueID)" -->
+                      <div
+                        id="date-picker"
+                        style="margin-top: 15px; border-bottom: solid 1px rgba(255, 85, 0, 0.1)"
+                        nz-col
+                        nzSpan="12"
+                        class="custom-Box1"
+                      >
+                        <nz-date-picker
+                          class="date-picker1"
+                          nzTooltipTitle="Due Date"
+                          nz-tooltip
+                          nzSize="small"
+                          [nzDisabled]="true"
+                          style="width: 85%"
+                          [(ngModel)]="issue.dueDate"
+                          (ngModelChange)="onDueDateChange(issue.id, issue.dueDate)"
+                          nzBorderless
+                          nzPlaceHolder="No Due Date"
+                        >
+                        </nz-date-picker>
+                        <i
+                          class="iconFire"
+                          style="font-size: 15px"
+                          nz-icon
+                          nzType="fire"
+                          *ngIf="
+                            getCountDate(convertToDate(issue?.dueDate)) <= totalCountToday &&
+                            status.name !== 'Closed' &&
+                            issue?.dueDate != null
+                          "
+                          nzTheme="fill"
+                          nzTooltipTitle="Deadline"
+                          nz-tooltip
+                          [nzTheme]="'twotone'"
+                          [nzTwotoneColor]="'red'"
+                        ></i>
+                      </div>
+                    </div>
+                    <div style="padding: 5px 0 0 5px; margin-top: 5px">
+                      <div
+                        style="font-size: 14px; font-weight: 450"
+                        *ngIf="issue.issuesChildDto?.items.length > 0"
+                        (click)="showTask(issue.id)"
+                      >
+                        {{ issue.issuesChildDto.totalCount }}/{{
+                          issue.issuesChildDto.items.length
+                        }}
+                        child Tasks
+                        <i
+                          style="text-align: center; color: rgba(255, 85, 0, 0.8)"
+                          nz-icon
+                          [nzType]="listShowTask.includes(issue.id) ? 'caret-up' : 'caret-down'"
+                          nzTheme="outline"
+                          nzTooltipTitle="Show Child Tasks"
+                          nz-tooltip
+                        ></i>
+                      </div>
+                      <div *ngIf="listShowTask.includes(issue.id)" id="rowChild">
+                        <div
+                          nz-row
+                          *ngFor="let issueChild of issue.issuesChildDto.items"
+                          class="child"
+                        >
+                          <div
+                            routerLink="/project/{{ idProject }}/issues/view/{{ issueChild.id }}"
+                            nz-col
+                            nzSpan="14"
+                            style="font-weight: 500"
+                          >
+                            <i
+                              routerLink="/project/{{ idProject }}/issues/view/{{ issueChild.id }}"
+                              nz-icon
+                              [nzType]="issueChild.statusName != 'Closed' ? 'bug' : 'check'"
+                              nzTheme="outline"
+                              nzTooltipTitle="{{ issueChild.statusName }}"
+                              nz-tooltip
+                              style="color: #f50"
+                            ></i>
+                            {{ issueChild.name }}
+                          </div>
+                          <div nz-col nzSpan="9">
+                            <nz-avatar
+                              *ngFor="let user of issueChild.assigneesList"
+                              nzSize="small"
+                              nzTooltipTitle="{{ user.name }}"
+                              nz-tooltip
+                              nzText="{{ GetCharAt(user.name) }}"
+                              style="background-color: #f3dacd"
+                              (click)="showUserProfile(user.userID)"
+                            ></nz-avatar>
+                          </div>
+                          <div nz-col nzSpan="1" class="menuChild">
+                            <a
+                              id="hoverItem"
+                              nzTrigger="click"
+                              nz-dropdown
+                              [nzDropdownMenu]="menuChild"
+                            >
+                              <i
+                                class="fas fa-caret-down"
+                                style="font-size: 20px; color: rgba(255, 85, 0, 0.8)"
+                              ></i>
+                            </a>
+                            <nz-dropdown-menu #menuChild="nzDropdownMenu">
+                              <ul nz-menu nzSelectable style="font-weight: 500">
+                                <li
+                                  nz-menu-item
+                                  routerLink="/project/{{ idProject }}/issues/view/{{
+                                    issueChild.id
+                                  }}"
+                                >
+                                  <i
+                                    nz-icon
+                                    nzType="enter"
+                                    nzTheme="outline"
+                                    style="font-size: 18px; color: rgba(255, 85, 0, 0.8)"
+                                  ></i>
+                                  Open
+                                </li>
+                                <li>
+                                  <nz-select
+                                    style="padding: 5px"
+                                    [(ngModel)]="issueChild.statusID"
+                                    (ngModelChange)="
+                                      updateStatus(
+                                        issueChild.statusID,
+                                        issueChild.id,
+                                        issueChild.assigneesList
+                                      )
+                                    "
+                                  >
+                                    <nz-option
+                                      *ngFor="let statusChild of listStatus"
+                                      nzValue="{{ statusChild.id }}"
+                                      nzLabel="{{ statusChild.name }}"
+                                    ></nz-option>
+                                  </nz-select>
+                                </li>
+                                <li
+                                  nz-menu-item
+                                  *ngIf="
+                                    issueChild.statusName != 'Closed' && status.name != 'Closed'
+                                  "
+                                  (click)="showModal(issueChild.id)"
+                                >
+                                  <i
+                                    class="fas fa-user-tag"
+                                    style="
+                                      font-size: 16px;
+                                      margin-right: 5px;
+                                      color: rgba(255, 85, 0, 0.8);
+                                    "
+                                  ></i>
+                                  Assignee To User
+                                </li>
+                                <li
+                                  nz-menu-item
+                                  nzDanger
+                                  nz-popconfirm
+                                  nzPopconfirmTitle="Are you sure delete {{ issueChild.name }}?"
+                                  nzPopconfirmPlacement="bottom"
+                                  (nzOnConfirm)="confirmDeleteIssue(issueChild)"
+                                >
+                                  <i
+                                    class="fas fa-trash"
+                                    style="font-size: 16px; margin-right: 10px"
+                                  ></i>
+                                  Delete
+                                </li>
+                              </ul>
+                            </nz-dropdown-menu>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="Choose User To Assignee This Issue!"
+  nzOkText="Ok"
+  nzCancelText="Cancel"
+  (nzOnOk)="CreateAssignee()"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-container *nzModalContent>
+    <nz-select
+      style="width: 100%"
+      nzMode="multiple"
+      nzShowSearch
+      nzAllowClear
+      nzPlaceHolder="Select a user"
+      [(ngModel)]="selectedUser"
+    >
+      <nz-option
+        *ngFor="let user of listAddAssign?.items"
+        nzValue="{{ user.id }}"
+        nzLabel="{{ user.name }}"
+      ></nz-option>
+    </nz-select>
+  </ng-container>
+</nz-modal>

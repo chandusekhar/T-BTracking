@@ -1,0 +1,8 @@
+<div style="display: flex; align-self: end;" *ngFor="let item of conversationList">
+  <app-scroll-mini 
+  [item] = "item"
+  (closeChat)="closeChat($event)"
+  [ShowUnread]="showUnread"
+   >
+</app-scroll-mini>
+</div>

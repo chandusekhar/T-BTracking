@@ -1,0 +1,27 @@
+.container{
+    padding: 20px;
+}
+@media only screen and (max-width: 740px) {
+  :host .form-control {
+    width: 80vw;
+  }
+  .container{
+    padding: 1vh;
+  }
+    #board{
+        .img{
+
+        }
+        .ant-row {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-around;
+        }
+        .form-group{
+            width: 320px;
+        }
+        .ant-col-16,.ant-col-8 {
+             max-width: 100%;
+        }
+    }
+}

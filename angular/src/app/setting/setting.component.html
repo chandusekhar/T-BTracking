@@ -1,0 +1,337 @@
+<div id="appSetting">
+  <nz-spin
+    style="
+      display: block;
+      position: relative;
+      margin-left: 50%;
+      margin-top: 25%;
+      width: 50%;
+      z-index: 99;
+    "
+    *ngIf="loaderService.isLoading | async; else doneLoad"
+    [nzIndicator]="indicatorTemplate"
+    nzSimple
+    [nzSize]="'large'"
+  >
+  </nz-spin>
+  <ng-template #indicatorTemplate
+    ><i nz-icon nzType="loading" style="font-size: 35px; color: #f50"></i
+  ></ng-template>
+  <ng-template #doneLoad>
+    <div class="container-fluid">
+      <div id="setting">
+        <nz-alert *ngIf="error" nzType="error" nzMessage="{{ error }}"></nz-alert>
+        <div
+          class="rowSetting1"
+          style="
+            margin-top: 10px;
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-between;
+          "
+          nz-row
+        >
+          <div nz-col nzSpan="8" style="margin-top: 10px" id="inputName">
+            <input nz-input placeholder="Name project..." [(ngModel)]="projectName" required />
+          </div>
+          <div nz-col nzSpan="4" style="margin-top: 10px" id="selectType">
+            <nz-select
+              [(ngModel)]="witType"
+              style="width: 100%; padding-left: 10px"
+            >
+              <nz-option
+                *ngFor="let type of witTypes"
+                [nzValue]="type"
+                [nzLabel]="type"
+              ></nz-option>
+            </nz-select>
+          </div>
+          <div nz-col nzSpan="8" style="margin-top: 10px" id="hidden"></div>
+          <div class="btn" nz-col nzSpan="4" style="display: flex; justify-content: flex-end">
+            <button style="width: 100%" nz-button (click)="submit()" nzType="primary">
+              <i nz-icon nzType="save" nzTheme="outline" style="font-size: 16px"></i> Save
+            </button>
+            <button
+              style="width: 100%; margin: 0 0 0 10px; background-color: #f50"
+              nz-button
+              nzType="primary"
+              (click)="RemoveProject()"
+              nzTooltipTitle="Delete Project"
+              nz-tooltip
+              nzDanger
+            >
+              <i class="fas fa-trash" style="cursor: pointer; margin-right: 10px"></i>
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="row2">
+        <div nz-row>
+          <div nz-col nzSpan="12" style="padding-right: 10px" id="desCrip">
+            <textarea rows="3" nz-input [(ngModel)]="description"></textarea>
+          </div>
+          <div nz-col nzSpan="12" id="sync">
+            <nz-card style="width: 100%" class="card">
+              <div id="row2Child">
+                <div nz-row>
+                  <div nz-col nzSpan="20" class="linkTfs">
+                    <i class="fas fa-globe" style="font-size: 25px; margin-right: 10px"></i>
+                    <a
+                      style="font-size: 16px"
+                      href="{{ projectTfs?._links.web.href }}/_workitems/recentlyupdated/"
+                      target="_blank"
+                      >{{ projectTfs?._links.web.href }}</a
+                    >
+                  </div>
+                  <div nz-col nzSpan="4" *ngIf="isSync; else unSync" id="btnDelSync">
+                    <button
+                      nzSize="small"
+                      nz-button
+                      (click)="showModal()"
+                      nzType="primary"
+                      nzDanger
+                    >
+                      <i class="fas fa-trash" style="cursor: pointer; margin-right: 10px"></i>
+                      Delete Sync
+                    </button>
+                  </div>
+                  <ng-template #unSync>
+                    <button nzSize="small" nz-button (click)="showModal()" nzType="primary">
+                      <i
+                        class="fas fa-cloud-upload-alt"
+                        style="cursor: pointer; margin-right: 10px"
+                      ></i>
+                      Sync To TFS
+                    </button>
+                  </ng-template>
+                </div>
+              </div>
+            </nz-card>
+            <nz-modal
+              nzWidth="1000px"
+              [(nzVisible)]="isVisible"
+              (nzOnCancel)="handleCancel()"
+              (nzOnOk)="handleOk()"
+            >
+              <ng-container *nzModalContent>
+                <div style="margin-top: 10px; padding-left: 10px">
+                  <label style="font-size: 14px; font-weight: 500">Project Description</label>
+                </div>
+                <div style="padding-left: 10px">
+                  <textarea rows="4" nz-input [(ngModel)]="description"></textarea>
+                </div>
+                <div style="padding-left: 10px; margin-top: 10px" *ngIf="issues?.items.length > 0">
+                  <label style="font-size: 14px; font-weight: 500"
+                    >Choose items to sync to TFS (item = work item)</label
+                  >
+                </div>
+                <div style="margin-top: 10px" *ngIf="issues?.items.length > 0">
+                  <nz-table id="tableWITs" #middleTable nzSize="middle" [nzData]="issues?.items" [nzShowPagination]="false">
+                    <thead>
+                      <tr>
+                        <th>
+                          <nz-switch
+                            (click)="onChangeCheckedAll()"
+                            [ngModel]="checked"
+                            nzCheckedChildren="Keep"
+                            nzUnCheckedChildren="Don't keep"
+                            >Keep All Bug</nz-switch
+                          >
+                        </th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Created By</th>
+                      </tr>
+                    </thead>
+                    <tbody style="text-align: center">
+                      <tr *ngFor="let data of issues?.items">
+                        <td>
+                          <nz-switch
+                            (click)="onChangeChecked(data)"
+                            [ngModel]="listIssueSync.includes(data)"
+                            nzCheckedChildren="Keep"
+                            nzUnCheckedChildren="Don't keep"
+                          ></nz-switch>
+                        </td>
+                        <td>
+                          <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'">{{ data.name }}</nz-tag>
+                        </td>
+                        <td>
+                          <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'">{{ data.statusName }}</nz-tag>
+                        </td>
+                        <td>
+                          <nz-tag>{{ data.userName }}</nz-tag>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </nz-table>
+                </div>
+              </ng-container>
+            </nz-modal>
+          </div>
+        </div>
+      </div>
+      <div nz-row style="margin-top: 10px" id="row3">
+        <div nz-col nzSpan="6">
+          <input
+            class="inputName"
+            nz-input
+            placeholder="Input Bug Name"
+            [(ngModel)]="Filter"
+            (keyup.enter)="onChangeFilter(Filter)"
+          />
+        </div>
+        <div nz-col nzSpan="3" style="margin: 0 5px 0 10px;" class="selectType">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select WIT Type" [(ngModel)]="type" (ngModelChange)="typeChange(type)" style="width: 100%">
+            <nz-option
+              *ngFor="let type of types"
+              nzLabel="{{ type }}"
+              nzValue="{{ type }}"
+            ></nz-option>
+          </nz-select>
+        </div>
+        <div nz-col nzSpan="14" style="margin: 5px 0 0 5px" id="btnSearch">
+          <button
+            nzSize="small"
+            class="status"
+            [class.choosen]="state == 'null'"
+            (click)="onChangeStatus('null')"
+            nz-button
+          >
+            <span>All</span>
+          </button>
+          <ng-container *ngFor="let item of states">
+            <button
+              nzSize="small"
+              class="status"
+              [class.choosen]="state == item"
+              (click)="onChangeStatus(item)"
+              nz-button
+            >
+              {{ item }}
+            </button>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 10px" id="result">
+      <nz-card style="width: 100%" nzSize="small" style="padding: 5px; margin: 10px 10px 0 10px;border-left: solid 2px rgba(255, 85, 0, 0.8);">
+        <div nz-row style="font-weight: 500">
+          <div nz-col nzSpan="3">Name</div>
+          <div nz-col nzSpan="3">Area Path</div>
+          <div nz-col nzSpan="3">Iteration Path</div>
+          <div nz-col nzSpan="3">Team Project</div>
+          <div nz-col nzSpan="2">Type</div>
+          <div nz-col nzSpan="2">State</div>
+          <div nz-col nzSpan="5">Reason</div>
+          <div nz-col nzSpan="3">Created Date</div>
+        </div>
+      </nz-card>
+      <ng-container *ngIf="wITs?.count > 0; else noData">
+        <div id="containerCard">
+          <nz-card
+          nzSize="small"
+          style="padding: 5px; margin: 5px 10px 0 10px;border-left: solid 2px rgba(255, 85, 0, 0.8);"
+          *ngFor="let data of wITs?.value"
+          @fadeIn
+        >
+          <div nz-row>
+            <div nz-col nzSpan="3" style="font-weight: 500" (click)="routerIssue(data.name)">
+              {{ data.name }}
+            </div>
+            <div nz-col nzSpan="3">{{ data.areaPath }}</div>
+            <div nz-col nzSpan="3">{{ data.iterationPath }}</div>
+            <div nz-col nzSpan="3">{{ data.teamProject }}</div>
+            <div nz-col nzSpan="2">
+              <nz-tag>{{ data.type }}</nz-tag>
+            </div>
+            <div nz-col nzSpan="2"> 
+              <nz-badge  *ngIf="data.state == 'Closed'" nzColor="#87d068" nzText="Closed"></nz-badge>
+              <nz-badge  *ngIf="data.state == 'Active'" nzColor="#87CEFA" nzText="Active"></nz-badge>
+              <nz-badge  *ngIf="data.state == 'Design'" nzColor="#FFFAF0" nzText="Design"></nz-badge>
+              <nz-badge  *ngIf="data.state == 'Ready'" nzColor="#00FFFF" nzText="Ready"></nz-badge>
+              <nz-badge  *ngIf="data.state == 'Resolved'" nzColor="#7FFFD4" nzText="Resolved"></nz-badge>
+              <nz-badge  *ngIf="data.state == 'Removed'" nzColor="#DCDCDC" nzText="Removed"></nz-badge>
+              <nz-badge  *ngIf="data.state == 'New'" nzColor="#FF7F50" nzText="New"></nz-badge>
+            </div>
+            <div nz-col nzSpan="5">{{ data.reason }}</div>
+            <div nz-col nzSpan="3">
+              {{ data.createdDate }}
+            </div>
+          </div>
+        </nz-card>
+        </div>
+      </ng-container>
+      <ng-template #noData><nz-empty nzNotFoundImage="simple"></nz-empty></ng-template>
+      <!-- <div style="float: right; margin-top: 10px;margin-bottom: 10px;">
+        <nz-pagination
+          [nzTotal]="wITs?.count"
+          [nzPageSize]="pageSize"
+          [nzPageIndex]="pageIndex"
+          (nzPageIndexChange)="nzPageIndexChange($event)"
+          nzShowSizeChanger
+          [nzPageSize]="pageSize"
+          nzSimple
+        ></nz-pagination>
+      </div> -->
+    </div>
+    <div *ngFor="let data of wITs?.value" id="mobile-card">
+      <nz-card
+        nzSize="small"
+        style="width: 100%; padding: 5px; border: 1px solid #f8895191; margin-top: 5px;"
+        [nzBordered]="false"
+      >
+      <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+        <div nz-col nzSpan="4" style="font-weight: 500">Name:</div>
+        <div nz-col nzSpan="20" (click)="routerIssue(data.name)"><span style="float: right;font-weight: 500;">{{ data.name }}</span></div>
+      </div>
+        <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+          <div nz-col nzSpan="6" style="font-weight: 500">Area Path:</div>
+          <div nz-col nzSpan="18"><span class="span" style="float: right;">{{ data.areaPath }}</span></div>
+        </div>
+        <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+          <div nz-col nzSpan="8" style="font-weight: 500">Iteration Path:</div>
+          <div nz-col nzSpan="16"><span class="span" style="float: right;">{{ data.iterationPath }}</span>
+          </div>
+        </div>
+        <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+          <div nz-col nzSpan="8" style="font-weight: 500">Team Project:</div>
+          <div nz-col nzSpan="16">
+            <span class="span" style="float: right;">{{ data.teamProject }}</span>
+          </div>
+        </div>
+        <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+          <div nz-col nzSpan="4" style="font-weight: 500">Type:</div>
+          <div nz-col nzSpan="20">
+            <span class="span" style="float: right;"><nz-tag>{{ data.type }}</nz-tag></span>
+          </div>
+        </div>
+        <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+          <div nz-col nzSpan="4" style="font-weight: 500">State:</div>
+          <div nz-col nzSpan="20">
+            <span class="span" style="float: right;"> <nz-badge  *ngIf="data.state == 'Closed'" nzColor="#87d068" nzText="Closed"></nz-badge>
+              <nz-badge  *ngIf="data.state == 'Active'" nzColor="#87CEFA" nzText="Active"></nz-badge>
+              <nz-badge  *ngIf="data.state == 'Design'" nzColor="#FFFAF0" nzText="Design"></nz-badge>
+              <nz-badge  *ngIf="data.state == 'Ready'" nzColor="#00FFFF" nzText="Ready"></nz-badge>
+              <nz-badge  *ngIf="data.state == 'Resolved'" nzColor="#7FFFD4" nzText="Resolved"></nz-badge>
+              <nz-badge  *ngIf="data.state == 'Removed'" nzColor="#DCDCDC" nzText="Removed"></nz-badge>
+              <nz-badge  *ngIf="data.state == 'New'" nzColor="#FF7F50" nzText="New"></nz-badge></span>
+          </div>
+        </div>
+        <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+          <div nz-col nzSpan="4" style="font-weight: 500">Reason:</div>
+          <div nz-col nzSpan="20">
+            <span class="span" style="float: right;">{{ data.reason }}</span>
+          </div>
+        </div>
+        <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+          <div nz-col nzSpan="8" style="font-weight: 500">Created Date:</div>
+          <div nz-col nzSpan="16">
+            <span class="span" style="float: right;">{{ data.createdDate }}</span>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+  </ng-template>
+</div>

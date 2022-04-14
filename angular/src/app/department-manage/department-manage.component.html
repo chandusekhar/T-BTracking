@@ -1,0 +1,104 @@
+<nz-layout id="layout" style="width: 100%">
+  <nz-content class="outer-content">
+    <nz-layout class="inner-layout">
+      <nz-sider class="menu" nzWidth="230px" nzTheme="light"
+      [(nzCollapsed)]="isCollapsed"
+      nzCollapsible>
+        <ul nz-menu nzMode="inline" class="sider-menu" >
+          <li class="child-sidebar"  nz-menu-item
+          [routerLink]="'dashboard'"
+          nzSelected = {{dashboard}}
+          >
+            <i
+              class="fab fa-windows"
+              style="font-size: 18px; margin-right: 10px; color: #f50; font-weight: 500"
+            ></i>
+            <span  [class.sideBarTest] = "isCollapsed">Dashboard</span>
+          </li>
+          <li
+            *ngIf="shareService.admin"
+            class="child-sidebar"
+            [routerLink]="'admin'"
+            nzSelected = {{admin}}
+            nz-menu-item
+          >
+            <i
+              class="fas fa-user-shield"
+              style="font-size: 18px; margin-right: 10px; color: #f50"
+            ></i>
+            <span [class.sideBarTest] = "isCollapsed">Admin Page</span>
+          </li>
+          <li
+            *ngIf="shareService.admin"
+            class="child-sidebar"
+            [routerLink]="'workflow'"
+            nzSelected = {{workflow}}
+            nz-menu-item
+          >
+            <i
+              class="fas fa-code-branch"
+              style="font-size: 18px; margin-right: 10px; color: #f50"
+            ></i>
+            <span [class.sideBarTest] = "isCollapsed">Workflow</span>
+          </li>
+          <nz-divider
+            nzPlain
+            nzText="Manager"
+            nzOrientation="left"
+            id="dividerManager"
+          ></nz-divider>
+          <li
+            *ngIf="shareService.admin"
+            class="child-sidebar"
+            [routerLink]="'department'"
+            nzSelected = {{department}}
+            nz-menu-item
+          >
+            <i class="fas fa-building" style="font-size: 18px; margin-right: 10px; color: #f50"></i>
+            <span [class.sideBarTest] = "isCollapsed">Departments</span>
+          </li>
+          <li
+            *ngIf="shareService.admin || shareService.manager || shareService.leader"
+            class="child-sidebar"
+            [routerLink]="'team'"
+            nzSelected = {{team}}
+            nz-menu-item
+          >
+            <i
+              class="fas fa-user-friends"
+              style="font-size: 18px; margin-right: 10px; color: #f50"
+            ></i>
+            <span [class.sideBarTest] = "isCollapsed">Teams</span>
+          </li>
+          <li
+            *ngIf="shareService.admin || shareService.manager || shareService.leader"
+            class="child-sidebar"
+            [routerLink]="'issue-department'"
+            nzSelected = {{issuedepartment}}
+            nz-menu-item
+          >
+            <i class="fas fa-bug" style="font-size: 18px; margin-right: 10px; color: #f50"></i>
+            <span [class.sideBarTest] = "isCollapsed">Bugs</span>
+          </li>
+          <nz-divider style="pointer-events: none !important;" nzPlain nzText="My" nzOrientation="left"></nz-divider>
+          <li class="child-sidebar" [routerLink]="'my-issue'"
+          nzSelected = {{myissue}} nz-menu-item>
+            <i class="fas fa-bug" style="font-size: 18px; margin-right: 10px; color: #f50"></i>
+            <span [class.sideBarTest] = "isCollapsed">Bugs</span>
+          </li>
+          <li class="child-sidebar" [routerLink]="'myFollow'"
+          nzSelected = {{myFollow}} nz-menu-item>
+            <i
+              class="fas fa-thumbtack"
+              style="font-size: 18px; margin-right: 10px; color: #f50"
+            ></i>
+            <span [class.sideBarTest] = "isCollapsed">Follows</span>
+          </li>
+        </ul>
+      </nz-sider>
+      <nz-content>
+          <router-outlet></router-outlet>
+      </nz-content>
+    </nz-layout>
+  </nz-content>
+</nz-layout>

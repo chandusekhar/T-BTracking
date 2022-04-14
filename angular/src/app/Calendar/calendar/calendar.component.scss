@@ -1,0 +1,116 @@
+.FullCalendar {
+  margin-left: 10px;
+}
+::ng-deep.fc .fc-view-harness-active > .fc-view {
+  height: 84vh;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-bottom: solid 1px #e5e5e5;
+}
+::ng-deep.fc .fc-scrollgrid-section-body table,
+.fc .fc-scrollgrid-section-footer table {
+  height: 81vh;
+  width: 100%;
+}
+.row {
+  margin-right: 1vw;
+  margin-left: 0.2vw;
+}
+.row > * {
+  padding-right: 0;
+  padding-left: 0;
+}
+.side-bar {
+  height: 90.6vh;
+
+  .header-bar {
+    margin-bottom: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .filter-name {
+      padding: 0.4em 0.65em;
+      color: white;
+      background: #2c3e50;
+      border-radius: 0.25em;
+      line-height: 1.5;
+      font-size: 1em;
+    }
+  }
+}
+
+.filter-value {
+  height: 92.5%;
+}
+.select-draw {
+  width: 94%;
+  margin: 3%;
+}
+@media only screen and (min-width: 741px) {
+  #mobile {
+    display: none;
+  }
+}
+@media only screen and (max-width: 740px) {
+  ::ng-deep.fc .fc-view-harness-active > .fc-view {
+    height: 80vh;
+  }
+  ::ng-deep.fc .fc-scrollgrid-section-body table,
+  .fc .fc-scrollgrid-section-footer table {
+    height: 77vh !important;
+    width: 100%;
+  }
+  ::ng-deep.fc .fc-toolbar {
+    flex-direction: column;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 60%;
+  }
+  #pc {
+    display: none;
+  }
+  .side-bar {
+    height: 25% !important;
+    .filter-name {
+      font-size: 0.8em !important;
+    }
+  }
+}
+.filter-moblie {
+  font-size: 60%;
+  position: absolute;
+  button {
+    border: 1px solid transparent;
+    padding: 0.4em 0.65em;
+    font-size: 1em;
+    line-height: 1.5;
+    border-radius: 0.25em;
+    padding: -3px;
+    background: #2c3e50;
+    color: white;
+  }
+}
+#calendar ::ng-deep .btn-primary {
+  color: #fff;
+  background-color: rgba(255, 85, 0, 0.8);
+  border-color: rgb(245 178 145);
+  &:hover {
+    background-color: #f50;
+  }
+  &:focus {
+    box-shadow: 0 0 0 0.25rem #f50;
+    border-color: #f50;
+  }
+}
+#calendar ::ng-deep h2 {
+  color: #d94901 !important;
+  font-size: 1.75em;
+  margin: 0;
+}
+#FullCalendar::ng-deep.ant-modal {
+    top: 15px !important;    
+}

@@ -1,0 +1,433 @@
+.bt-add{
+    float: right;
+    margin-right: 0.52vw;
+  }
+  nz-tab{
+    height: 100%;
+  }
+ ::ng-deep .ant-tabs-content {
+    height: 100%;
+}
+.table{
+//  background: #ECECEC;
+  height: 100%;
+  margin-top: -2vh;
+}
+.list-issue{
+  height: 100%;
+  margin-top: -2vh;
+  flex-direction: column;
+}
+.content{
+  margin-top: -1.5vh;
+}
+  .member-team{
+  //  background: #ECECEC;
+    margin-top: 0.5vh;
+    height: 100%;
+  }
+  .group-department{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .bt-dp{
+    margin: 0.5vh 0.52vw 0px 0.52vw;
+    border-radius: 5px;
+    background-color: darkcyan;
+  }
+  .header-team{
+    margin-top: 4vh;
+    height: 5vh;
+    display :flex;
+    width: 100%;
+  //  background-color: #ECECEC;
+    input{
+      width: 26.04vw;
+    }
+  }
+  .input{
+    margin-left: 60%;
+    margin-top: 1vh;
+  }
+  .container-left {
+    float: left;
+    width: 30%;
+    height: 69vh;
+    max-height: 69vh;
+    overflow-y: auto;
+  //  background: #ECECEC;
+  }
+  .container-right {
+    float: right;
+    width: 70%;
+    height: 69vh;
+    max-height: 69vh;
+    overflow-y: auto;
+   // background: #ECECEC;
+  }
+  .list-team{
+    width: 70%; 
+    text-align: center;
+      margin-top: 3vh;
+      margin-left: 10%;
+     // background: #ECECEC;
+  }
+  .bt-list-department{
+    display:inline-flex;
+    margin-top: 3vh;
+  }
+  .active{
+    background-color: rgb(177, 212, 233);
+  }
+  .header-issue{
+    margin-top: 1vh;
+    height: 5vh;
+    display :flex;
+  //  background-color: #ECECEC;
+  }
+
+  [nz-tabset] {
+   // background: #ECECEC;
+  }
+  .bt-list-department{
+    display:inline-flex;
+    margin-top: 3vh;
+  }
+  .bt-dpisue{
+    margin: 0.5vh 0.52vw 0px 0px;
+    border-radius: 5px;
+    background-color: darkcyan;
+  }
+  .bt-Tisue{
+    margin: 0.5vh 0px 0px 0px;
+   // height: 70%;
+    border-radius: 5px;
+    background-color: rgb(30, 120, 161);
+  }
+  .bt-name{
+    background-color: rgb(30, 120, 161);
+    margin: 0.5vh 0px 0px 10px;
+    border-radius: 5px;
+  }
+  .bt-list-name{
+    display:inline-flex;
+    margin-top: 3vh;
+  }
+  .bt-list-team{
+    display: inline-flex;
+    margin-left: 0.52vw;
+    margin-top: 3vh;
+  }
+  .active1{
+    background-color: rgb(76, 211, 87);
+  }
+  .active2{
+    background-color: rgb(76, 211, 87);
+  }
+  .activeTeam{
+    background-color: rgb(76, 211, 87);
+  }
+  .label{
+    margin-top: 0.5vh;
+    margin-left: 1.04vw;
+  }
+ .inputIs{
+  margin-left: 57%;
+  margin-top: 1vh;
+  input{
+    width: 26.04vw;
+  }
+ }
+ .select-input{
+  margin-top: 0.5vh;
+   display: inline-flex;
+   .endDiv{
+    margin-left: 1.56vw
+   }
+   .startDiv{
+    margin-left: 1.56vw
+   }
+   nz-select{
+     width:  9.38vw;
+   }
+ }
+ .list-teamIS{
+  display: flex;
+ }
+ .list-bt{
+   display: flex;
+ }
+  @media only screen and (min-width: 741px) {
+    #mobile{
+      display: none;
+    }
+    #tableMember1{
+      display: none;
+    }
+    .modelMember1{
+      ::ng-deep .cdk-global-scrollblock { 
+        display: none !important;
+      }
+    }
+    #tableIssue{
+      display: none;
+    }
+  }
+  @media only screen and (max-width: 740px){
+    .list-issue{
+      overflow: auto;
+    }
+    .content{
+      margin-top: -1.5vh;
+    }
+    .tableAdmin{
+      display: none;
+    }
+    .bt-list-name{
+      margin-top: 0vh;
+    }
+    .bt-list-team{
+      margin-top: 1vh;
+      z-index: 100;
+    }
+    .select-issue{
+      display: flex;
+      flex-direction: column;
+    }
+    .list-bt{
+      button{
+        size: 10vh !important;
+      }
+    }
+    .list-teamIS{
+     margin-left: 2vw;
+      p{
+        display: none;
+      }
+     }
+    .select-input{
+      label{
+        display: none;
+      }
+      .endDiv {
+        margin-top: -2.5vh !important;
+      }
+      .startDiv{
+        margin-top: -2.5vh !important;
+      }
+      nz-select{
+        width: 38vw !important;
+
+      }
+     }
+    .inputIs{
+      margin-left: 5% !important;
+      input{
+        width: 46vw;
+      }
+     }
+    #pc{
+      display: none;
+    }
+    .list-dp{
+      display: block !important;
+
+      p{
+        display: none;
+      }
+    }
+    .input{
+      margin-left: 5% !important;
+      input{
+        width: 53.38vw !important;
+        margin-top: -0.5vh !important;
+        margin-left: 0px !important;
+      }
+    }
+    .container-right {
+     display: none;
+    }
+    .container-left {
+      float: none !important;
+      margin-top: -2vh;
+      width: 114% !important;
+    }
+     .body {
+      margin-top: -0.6vh !important;
+    }
+   ::ng-deep .ant-tabs > .ant-tabs-nav .ant-tabs-nav-list, .ant-tabs > div > .ant-tabs-nav .ant-tabs-nav-list {
+      justify-content: center;
+  }
+  }
+  #tableMember1{
+    width: 79vw;
+    max-height: 60vh;
+  overflow-y: auto;
+  border: 1px solid #2db7f5;
+  table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+    overflow-x: hidden;
+  }
+  
+  table caption {
+    font-size: 1.5em;
+    margin: .5em 0 .75em;
+  }
+  
+  table tr {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: .55em;
+  }
+  
+  table th,
+  table td {
+    padding: .625em;
+    text-align: center;
+  }
+  
+  table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  @media screen and (max-width: 600px) {
+    table {
+      border: 0;
+    }
+  
+    table caption {
+      font-size: 1.3em;
+    }
+    
+    table thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+    
+    table tr {
+      display: block;
+      margin-bottom: .625em;
+      overflow-x: hidden;
+    }
+    
+    table td {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      font-size: .8em;
+      text-align: right;
+      word-wrap: break-word;
+    }
+    
+    table td::before {
+      /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    
+    table td:last-child {
+      border-bottom: 0;
+    }
+  }
+  }
+  #tableIssue{
+    width: 79vw;
+  border: 1px solid #2db7f5;
+  table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+    overflow-x: hidden;
+  }
+  
+  table caption {
+    font-size: 1.5em;
+    margin: .5em 0 .75em;
+  }
+  
+  table tr {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: .55em;
+  }
+  
+  table th,
+  table td {
+    padding: .625em;
+    text-align: center;
+  }
+  
+  table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  @media screen and (max-width: 600px) {
+    table {
+      border: 0;
+    }
+  
+    table caption {
+      font-size: 1.3em;
+    }
+    
+    table thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+    
+    table tr {
+      display: block;
+      margin-bottom: .625em;
+      overflow-x: hidden;
+    }
+    
+    table td {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      font-size: .8em;
+      text-align: right;
+    }
+    
+    table td::before {
+      /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    
+    table td:last-child {
+      border-bottom: 0;
+    }
+  }
+  }

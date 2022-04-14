@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BugTracking.HttpApi</name>
+    </assembly>
+    <members>
+        <member name="P:BugTracking.BugTrackingHttpApiModule.CustomODataConvention.Order">
+            <summary>
+            Order value.
+            </summary>
+        </member>
+        <member name="M:BugTracking.BugTrackingHttpApiModule.CustomODataConvention.AppliesToAction(Microsoft.AspNetCore.OData.Routing.Conventions.ODataControllerActionContext)">
+            <summary>
+            Apply to action,.
+            </summary>
+            <param name="context">Http context.</param>
+            <returns>true/false</returns>
+        </member>
+        <member name="M:BugTracking.BugTrackingHttpApiModule.CustomODataConvention.AppliesToController(Microsoft.AspNetCore.OData.Routing.Conventions.ODataControllerActionContext)">
+            <summary>
+            Apply to controller
+            </summary>
+            <param name="context">Http context.</param>
+            <returns>true/false</returns>
+        </member>
+        <member name="M:BugTracking.Controllers.AdminODataController.Get">
+            <summary>
+            Danh sách user form admin
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BugTracking.Controllers.AdminODataController.getListProject">
+            <summary>
+            Danh sách project form admin
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BugTracking.Controllers.AdminODataController.GetListIssue(System.String)">
+            <summary>
+            Danh sách issue cho form admin
+            </summary>
+            <param name="UserId">User assign</param>
+            <returns></returns>
+        </member>
+        <member name="M:BugTracking.Controllers.DepartmentController.GetListIssueAll(BugTracking.IShareDto.GetListDto,System.String,System.String,System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Lấy danh sách issue 
+            </summary>
+            <param name="input">-HHHHHH</param>
+            <param name="IdProject">sadsadsad</param>
+            <param name="IdStatus">aaaaaaaa</param>
+            <param name="IdCate"></param>
+            <param name="IdUser"></param>
+            <param name="IdDepartment"></param>
+            <param name="IdTeam"></param>
+            <param name="IsAss">assign</param>
+            <returns></returns>
+        </member>
+        <member name="M:BugTracking.Controllers.DepartmentODataController.Get">
+            <summary>
+            Danh sách department
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BugTracking.Controllers.DepartmentODataController.GetListTeam">
+            <summary>
+            Danh sách team
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BugTracking.Controllers.DepartmentODataController.GetListMemberByTeam">
+            <summary>
+            Danh sách thành viên của team
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BugTracking.Controllers.ProjectController.GetWitsByWiql(System.String,System.String,System.String,System.String,System.String,System.String,BugTracking.ConditionTypeWit.ConditionType)">
+            <summary>
+            Get Work Items Assigned To Me Or Follows By Me (Work Item = WIT)
+            </summary>
+            <param name="url"> Url Collection. Ex: https://tfs.tpos.dev/TMTInternship </param>
+            <param name="pAT"> Personal Access Token</param>
+            <param name="project"> Project Name. Default : Get All Project </param>
+            <param name="title"> WIT Title (Name) </param>
+            <param name="types"> WIT Types. Ex: Task,Bug, ...</param>
+            <param name="states"> WIT States. Ex: New,Closed, ...</param>
+            <param name="conditionType">0: Assigned To Me, 1: Follows By Me</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,275 @@
+#myIssues{
+  height: 74vh;
+ // display: flex;
+ //overflow: auto;
+  flex-direction: column;
+}
+:host {
+  text-align: center;
+}
+.list-bt{
+  display: flex;
+}
+nz-header {
+  color: #fff;
+  nz-select{
+    width: 15.63vw;
+  }
+}
+nz-footer {
+  background: #fff;
+  color: #fff;
+}
+.choosen {
+  border-radius: 15px 15px 15px;
+  font-size: 14px;
+  border: none;
+  background-color: rgba(255, 85, 0, 0.8);
+  color: #f0f0f0
+}
+nz-footer {
+  line-height: 1.5;
+}
+.iconChoice{
+  color: white;
+}
+.iconBtn {
+  font-size: 16px;
+  margin-right: 0.52vw;
+}
+nz-content {
+  background: #fff;
+  color: #fff;
+  min-height: 12.4vh;
+  line-height: 12.4vh;
+}
+.status {
+  border-radius: 15px 15px 15px;
+  font-size: 13px;
+  margin-right: 0.52vw;
+}
+body {
+  margin: 0;
+  //padding-top: 40px;
+  color: #2e323c;
+  background: #f5f6fa;
+  position: relative;
+  height: 100%;
+}
+.container-fluid {
+  nz-select {
+    width: 7.81vw;
+  }
+}
+.table-issue {
+  margin-top: 1vh;
+  height: 100%;
+}
+.form-control {
+  border: 1px solid #cfd1d8;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  font-size: 0.825rem;
+  background: #ffffff;
+  color: #2e323c;
+}
+.iconDelete {
+  text-align: center;
+  color: rgb(245, 11, 11);
+  cursor: pointer;
+}
+.card {
+  background: #ffffff;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border: 0;
+  margin-bottom: 1rem;
+}
+// .table {
+//   max-height: 550px;
+//   display: block;
+//   overflow-y: auto;
+//   margin: 0 5px 0 0;
+// }
+.form-required {
+  color: red;
+}
+.bt-name {
+  background-color: white;
+  margin: 0px 0px 0px 10px;
+  border-radius: 0px;
+}
+.ant-btn-dangerous {
+  border-color: #fccaa9;
+}
+.bt-list-name {
+  display: inline-flex;
+}
+.active2 {
+  background-color: rgba(255, 85, 0, 0.8);
+  color: #f0f0f0;
+}
+.list-input {
+  margin-top: 0.5vh;
+  display: flex;
+  margin-left: 0.52vw;
+}
+.header {
+  display: flex;
+}
+@media only screen and (min-width: 741px) {
+  #tableIssue,#mobile-card {
+    display: none;
+  }
+}
+@media only screen and (max-width: 740px){
+  #mobile-card{
+    .ant-tag {
+      margin-right:0;
+    }
+    ::ng-deep .ant-card-small > .ant-card-body {
+      padding: 0 12px;
+    }
+  }
+  .ant-btn-dangerous {
+    border-color: #fccaa9;
+  }
+  .list-bt{
+    justify-content: space-between;
+    .ant-btn {
+      padding: 4px 17px;
+  }
+  }
+  .bt-name {
+    border-radius: 0px;
+    margin: 0;
+  }
+  .list-input {
+    margin-left: 0 !important;
+    margin-top: 1vh;
+    display: flex;
+    margin-left: 0.52vw;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  #selectProject{
+    ::ng-deep .anticon svg {
+      margin: 0px 0px 3px 2px !important;
+    }
+  }
+  #myIssues{
+    height: 100%;
+    padding: 0 2vw !important;
+  }
+  .list-input{
+    margin-left: -2vw;
+  }
+  #myIssues{
+   overflow: auto;
+  }
+  .list-bt{
+    // margin-left: -4vw;
+    margin-top: 1vh;
+  }
+  // .status{
+  //   margin-right: 2vw;
+  // }
+  .header {
+    display: block;
+    nz-select {
+      width: 100% !important;
+    }
+  }
+  .table-issue {
+    display: none;
+  }
+  .container-fluid {
+    nz-select {
+      width: 110%;
+    }
+  }
+}
+#tableIssue {
+  width: 77vw;
+  margin-top: 1vh;
+  height: auto;
+  border: 1px solid #2db7f5;
+  table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+    overflow-x: hidden;
+  }
+
+  table caption {
+    font-size: 1.5em;
+    margin: 0.5em 0 0.75em;
+  }
+
+  table tr {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 0.55em;
+  }
+
+  table th,
+  table td {
+    padding: 0.625em;
+    text-align: center;
+  }
+
+  table th {
+    font-size: 0.85em;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  @media screen and (max-width: 600px) {
+    table {
+      border: 0;
+    }
+
+    table caption {
+      font-size: 1.3em;
+    }
+
+    table thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+
+    table tr {
+      display: block;
+      margin-bottom: 0.625em;
+      overflow-x: hidden;
+    }
+
+    table td {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      font-size: 0.8em;
+      text-align: right;
+    }
+
+    table td::before {
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    table td:last-child {
+      border-bottom: 0;
+    }
+  }
+  }

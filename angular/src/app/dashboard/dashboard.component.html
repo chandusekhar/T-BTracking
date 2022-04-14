@@ -1,0 +1,994 @@
+<ng-container *ngIf="isAddLoad">
+  <div class="container">
+    <nz-spin
+      style="margin: 25% 25% 0 50%"
+      nzSimple
+      [nzSize]="'large'"
+      [nzIndicator]="indicatorTemplate"
+    ></nz-spin>
+  </div>
+  <ng-template #indicatorTemplate
+    ><i nz-icon nzType="loading" style="font-size: 35px; color: #f50"></i
+  ></ng-template>
+</ng-container>
+<div *ngIf="!isAddLoad" class="container-fluid" id="layoutDashboard">
+  <div id="headerDashboard">
+    <div nz-row>
+      <div nz-col nzSpan="24">
+        <div nz-row [nzGutter]="8">
+          <div nz-col [nzSpan]="4">
+            <div nz-row>
+              <div nz-col nzSpan="0"></div>
+              <div nz-col nzSpan="24">
+                <nz-card nzSize="small" (click)="showModalInformation('Projects')" style="cursor: pointer;">
+                  <div nz-row>
+                    <div nz-col nzSpan="20">
+                      <div style="font-size: 14px; font-weight: 500; padding-left: 10px">
+                        <i
+                          class="fas fa-desktop"
+                          style="color: rgba(255, 85, 0, 0.8); font-size: 20px; margin-right: 10px"
+                        ></i
+                        >Projects
+                      </div>
+                    </div>
+                    <div nz-col nzSpan="4">
+                      <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'">{{
+                        projectStatistic?.project
+                      }}</nz-tag>
+                    </div>
+                  </div>
+                </nz-card>
+              </div>
+            </div>
+          </div>
+          <div nz-col [nzSpan]="4">
+            <div nz-row>
+              <div nz-col nzSpan="0"></div>
+              <div nz-col nzSpan="24">
+                <nz-card nzSize="small" (click)="showModalInformation('Bugs')">
+                  <div nz-row>
+                    <div nz-col nzSpan="20">
+                      <div style="font-size: 14px; font-weight: 500; padding-left: 10px">
+                        <i
+                          class="fas fa-bug"
+                          style="color: rgba(255, 85, 0, 0.8); font-size: 20px; margin-right: 10px"
+                        ></i
+                        >Bugs
+                      </div>
+                    </div>
+                    <div nz-col nzSpan="4">
+                      <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'">{{
+                        projectStatistic?.bugs
+                      }}</nz-tag>
+                    </div>
+                  </div>
+                </nz-card>
+              </div>
+            </div>
+          </div>
+          <div nz-col [nzSpan]="4">
+            <div nz-row>
+              <div nz-col nzSpan="0"></div>
+              <div nz-col nzSpan="24">
+                <nz-card nzSize="small" (click)="showModalInformation('Created By Me')" style="cursor: pointer;">
+                  <div nz-row>
+                    <div nz-col nzSpan="20">
+                      <div style="font-size: 14px; font-weight: 500; padding-left: 10px">
+                        <i
+                          class="fas fa-user-plus"
+                          style="color: rgba(255, 85, 0, 0.8); font-size: 20px; margin-right: 10px"
+                        ></i
+                        >Created By Me
+                      </div>
+                    </div>
+                    <div nz-col nzSpan="4">
+                      <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'">{{
+                        projectStatistic?.create
+                      }}</nz-tag>
+                    </div>
+                  </div>
+                </nz-card>
+              </div>
+            </div>
+          </div>
+          <div nz-col [nzSpan]="4">
+            <div nz-row>
+              <div nz-col nzSpan="0"></div>
+              <div nz-col nzSpan="24">
+                <nz-card nzSize="small" (click)="showModalInformation('Assigned To Me')" style="cursor: pointer;">
+                  <div nz-row>
+                    <div nz-col nzSpan="20">
+                      <div style="font-size: 14px; font-weight: 500; padding-left: 10px">
+                        <i
+                          class="fas fa-user-tag"
+                          style="color: rgba(255, 85, 0, 0.8); font-size: 20px; margin-right: 10px"
+                        ></i
+                        >Assigned To Me
+                      </div>
+                    </div>
+                    <div nz-col nzSpan="4">
+                      <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'">{{
+                        projectStatistic?.tag
+                      }}</nz-tag>
+                    </div>
+                  </div>
+                </nz-card>
+              </div>
+            </div>
+          </div>
+          <div nz-col [nzSpan]="4">
+            <div nz-row>
+              <div nz-col nzSpan="0"></div>
+              <div nz-col nzSpan="24">
+                <nz-card nzSize="small" (click)="showModalInformation('Total User Processing')" style="cursor: pointer;">
+                  <div nz-row>
+                    <div nz-col nzSpan="20">
+                      <div style="font-size: 14px; font-weight: 500; padding-left: 10px">
+                        <i
+                          class="fas fa-users-cog"
+                          style="color: rgba(255, 85, 0, 0.8); font-size: 20px; margin-right: 10px"
+                        ></i
+                        >Total User Processing
+                      </div>
+                    </div>
+                    <div nz-col nzSpan="4">
+                      <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'">{{
+                        projectStatistic?.user
+                      }}</nz-tag>
+                    </div>
+                  </div>
+                </nz-card>
+              </div>
+            </div>
+          </div>
+          <div nz-col [nzSpan]="4">
+            <div nz-row>
+              <div nz-col nzSpan="0"></div>
+              <div nz-col nzSpan="24">
+                <nz-card nzSize="small" (click)="showModalInformation('Comments On Project')">
+                  <div nz-row>
+                    <div nz-col nzSpan="20">
+                      <div style="font-size: 14px; font-weight: 500; padding-left: 10px">
+                        <i
+                          class="fas fa-comments"
+                          style="color: rgba(255, 85, 0, 0.8); font-size: 20px; margin-right: 10px"
+                        ></i
+                        >Comments On Project
+                      </div>
+                    </div>
+                    <div nz-col nzSpan="3">
+                      <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'">{{
+                        projectStatistic?.comment
+                      }}</nz-tag>
+                    </div>
+                  </div>
+                </nz-card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <nz-modal
+      [(nzVisible)]="isVisibleInformationModal"
+      (nzOnCancel)="handleCancelInformation()"
+      (nzOnOk)="handleOkInformation()"
+      [nzFooter]="modalFooter"
+      [nzWidth]="2000"
+    >
+      <ng-container *nzModalContent>
+        <nz-spin
+          style="
+            display: block;
+            position: relative;
+            margin-left: 45%;
+            margin-top: 5%;
+            width: 50%;
+            z-index: 99;
+            color: #f50;
+          "
+          *ngIf="modalLoading; else doneLoad"
+          nzSimple
+          [nzSize]="'large'"
+          [nzIndicator]="indicatorTemplate"
+        >
+        </nz-spin>
+        <ng-template #indicatorTemplate
+          ><i nz-icon nzType="loading" style="font-size: 35px; color: rgba(255, 85, 0, 0.8)"></i
+        ></ng-template>
+        <ng-template #doneLoad>
+          <div class="modalInformation">
+            <div *ngIf="valueModalInformation == 'Projects'" class="dashboardModelPc">
+              <nz-card style="width: 100%; height: 50px" nzSize="small">
+                <div nz-row style="font-weight: 500">
+                  <div nz-col nzSpan="3">Name</div>
+                  <div nz-col nzSpan="6">Members</div>
+                  <div nz-col nzSpan="2">Bugs</div>
+                  <div nz-col nzSpan="2">Synchronized</div>
+                  <div nz-col nzSpan="2">Wit Type</div>
+                  <div nz-col nzSpan="3">Creation Time</div>
+                  <div nz-col nzSpan="3">Created By</div>
+                  <div nz-col nzSpan="3">Last Modification Time</div>
+                </div>
+              </nz-card>
+              <nz-card
+                style="width: 100%; margin-top: 5px; height: 50px"
+                nzSize="small"
+                *ngFor="let project of projects"
+              >
+                <div nz-row>
+                  <div nz-col nzSpan="3">{{ project.name }}</div>
+                  <div nz-col nzSpan="6">
+                    <nz-avatar-group>
+                      <nz-avatar
+                        nzSize="small"
+                        *ngFor="let member of project.memberList"
+                        nzText="{{ GetCharAt(member.userName) }}"
+                        nz-tooltip
+                        nzTooltipTitle="{{ member.userName }}"
+                        style="background-color: #f3dacd"
+                        (click)="showUserProfile(member.userID)"
+                      ></nz-avatar>
+                    </nz-avatar-group>
+                  </div>
+                  <div nz-col nzSpan="2">
+                    <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'">{{ project.countIssue }}</nz-tag>
+                  </div>
+                  <div nz-col nzSpan="2">{{ project.isSynced }}</div>
+                  <div nz-col nzSpan="2">{{ project.witType }}</div>
+                  <div nz-col nzSpan="3">{{ project.creationTime | date }}</div>
+                  <div nz-col nzSpan="3">{{ project.userName }}</div>
+                  <div *ngIf="project?.lastModificationTime" nz-col nzSpan="3">
+                    <span>{{ project.lastModificationTime | date }}</span>
+                  </div>
+                  <div *ngIf="project?.lastModificationTime == null" nz-col nzSpan="3">
+                    <span>{{ project.creationTime | date }}</span>
+                  </div>
+                </div>
+              </nz-card>
+            </div>
+            <div id="mobile-card" *ngIf="valueModalInformation == 'Projects'">
+              <div *ngFor="let project of projects">
+                <nz-card
+                  nzSize="small"
+                  style="width: 100%; padding: 5px; border: 1px solid #f8895191; margin-top: 5px"
+                  [nzBordered]="false"
+                >
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                    <div nz-col nzSpan="4" style="font-weight: 500">Name:</div>
+                    <div nz-col nzSpan="20">
+                      <span style="float: right">{{ project.name }}</span>
+                    </div>
+                  </div>
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                    <div nz-col nzSpan="6" style="font-weight: 500">Members:</div>
+                    <div nz-col nzSpan="18">
+                      <span class="span" style="float: right"
+                        ><nz-avatar-group>
+                          <nz-avatar
+                            nzSize="small"
+                            *ngFor="let member of project?.memberList"
+                            nzText="{{ GetCharAt(member.userName) }}"
+                            nz-tooltip
+                            nzTooltipTitle="{{ member.userName }}"
+                            style="background-color: #f3dacd"
+                          ></nz-avatar> </nz-avatar-group
+                      ></span>
+                    </div>
+                  </div>
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                    <div nz-col nzSpan="8" style="font-weight: 500">Bugs:</div>
+                    <div nz-col nzSpan="16">
+                      <span class="span" style="float: right"
+                        ><nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'">{{
+                          project.countIssue
+                        }}</nz-tag></span
+                      >
+                    </div>
+                  </div>
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                    <div nz-col nzSpan="8" style="font-weight: 500">Synchronized:</div>
+                    <div nz-col nzSpan="16">
+                      <span class="span" style="float: right">{{ project.isSynced }}</span>
+                    </div>
+                  </div>
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                    <div nz-col nzSpan="6" style="font-weight: 500">Wit Type:</div>
+                    <div nz-col nzSpan="18">
+                      <span class="span" style="float: right">{{ project.witType }}</span>
+                    </div>
+                  </div>
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                    <div nz-col nzSpan="10" style="font-weight: 500">Creation Time:</div>
+                    <div nz-col nzSpan="14">
+                      <span class="span" style="float: right">{{
+                        project.creationTime | date
+                      }}</span>
+                    </div>
+                  </div>
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                    <div nz-col nzSpan="8" style="font-weight: 500">Created By:</div>
+                    <div nz-col nzSpan="16">
+                      <span class="span" style="float: right">{{ project.userName }}</span>
+                    </div>
+                  </div>
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                    <div nz-col nzSpan="14" style="font-weight: 500">Last Modification Time:</div>
+                    <div nz-col nzSpan="10">
+                      <span
+                        *ngIf="project.lastModificationTime"
+                        class="span"
+                        style="float: right"
+                        >{{ project.lastModificationTime | date }}</span
+                      >
+                      <span
+                        *ngIf="!project.lastModificationTime"
+                        class="span"
+                        style="float: right"
+                        >{{ project.creationTime | date }}</span
+                      >
+                    </div>
+                  </div>
+                </nz-card>
+              </div>
+            </div>
+
+            <div
+              *ngIf="
+                valueModalInformation == 'Created By Me' ||
+                valueModalInformation == 'Assigned To Me'
+              "
+            >
+              <app-my-issues [isModalShowing]="valueModalInformation"></app-my-issues>
+            </div>
+            <div *ngIf="valueModalInformation == 'Total User Processing'" id="processingModelPc">
+              <nz-card style="width: 100%" nzSize="small">
+                <div nz-row style="font-weight: 500">
+                  <div nz-col nzSpan="3">Name</div>
+                  <div nz-col nzSpan="2">Bugs</div>
+                  <div nz-col nzSpan="18">Projects</div>
+                  <div nz-col nzSpan="1"></div>
+                </div>
+              </nz-card>
+              <nz-card
+                style="width: 100%; margin-top: 5px"
+                nzSize="small"
+                *ngFor="let user of usersProcessing"
+              >
+                <div nz-row>
+                  <div nz-col nzSpan="3">{{ user.name }}</div>
+                  <div nz-col nzSpan="2">
+                    {{ user.bugs }}
+                  </div>
+                  <div nz-col nzSpan="18">{{ user.projects }}</div>
+                  <div nz-col nzSpan="1" (click)="getUserDetailsProcessing(user.id)">
+                    <button
+                      nz-button
+                      nzType="primary"
+                      nzDanger
+                      nzSize="small"
+                      style="background-color: rgba(255, 85, 0, 0.8)"
+                    >
+                      <i
+                        *ngIf="!user?.userProcessingDetailDtos"
+                        class="fas fa-caret-down"
+                        style="margin-right: 5px"
+                      ></i>
+                      <i
+                        *ngIf="user?.userProcessingDetailDtos"
+                        class="fas fa-caret-up"
+                        style="margin-right: 5px"
+                      ></i>
+                      Details
+                    </button>
+                  </div>
+                </div>
+                <nz-card
+                  style="width: 100%; margin-top: 5px; height: 50px"
+                  nzSize="small"
+                  *ngIf="user?.userProcessingDetailDtos != null"
+                >
+                  <div nz-row style="font-weight: 500">
+                    <div nz-col nzSpan="3">Project</div>
+                    <div nz-col nzSpan="2">Bugs Count</div>
+                    <div nz-col nzSpan="18">Bugs</div>
+                    <div nz-col nzSpan="1"></div>
+                  </div>
+                </nz-card>
+                <nz-card
+                  style="width: 100%; margin-top: 5px; height: 50px"
+                  nzSize="small"
+                  *ngFor="let project of user?.userProcessingDetailDtos"
+                >
+                  <div nz-row>
+                    <div nz-col nzSpan="3">{{ project.name }}</div>
+                    <div nz-col nzSpan="2">
+                      {{ project.bugs }}
+                    </div>
+                    <div nz-col nzSpan="19">{{ project.bugsName }}</div>
+                  </div>
+                </nz-card>
+              </nz-card>
+            </div>
+
+            <div
+              id="processingModelMobile"
+              *ngIf="valueModalInformation == 'Total User Processing'"
+            >
+            <div>
+              <label>Total User Processing</label>
+            </div>
+              <div *ngFor="let user of usersProcessing">
+                <nz-card
+                  nzSize="small"
+                  style="width: 100%; padding: 5px; border: 1px solid #f8895191; margin-top: 5px"
+                  [nzBordered]="false"
+                >
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                    <div nz-col nzSpan="4" style="font-weight: 500">Name:</div>
+                    <div nz-col nzSpan="20">
+                      <span style="float: right">{{ user.name }}</span>
+                    </div>
+                  </div>
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                    <div nz-col nzSpan="4" style="font-weight: 500">Bugs:</div>
+                    <div nz-col nzSpan="20">
+                      <span style="float: right; font-weight: 500; color: #f50">{{
+                        user.bugs
+                      }}</span>
+                    </div>
+                  </div>
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                    <div nz-col nzSpan="6" style="font-weight: 500">Projects:</div>
+                    <div nz-col nzSpan="18">
+                      <span style="float: right; word-break: break-all">{{ user.projects }}</span>
+                    </div>
+                  </div>
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                    <div nz-col nzSpan="4" style="font-weight: 500"></div>
+                    <div nz-col nzSpan="20">
+                      <span style="float: right">
+                        <div nz-col nzSpan="1" (click)="getUserDetailsProcessing(user.id)">
+                          <button
+                            nz-button
+                            nzType="primary"
+                            nzDanger
+                            nzSize="small"
+                            style="background-color: rgba(255, 85, 0, 0.8)"
+                          >
+                            <i
+                              *ngIf="!user?.userProcessingDetailDtos"
+                              class="fas fa-caret-down"
+                              style="margin-right: 5px"
+                            ></i>
+                            <i
+                              *ngIf="user?.userProcessingDetailDtos"
+                              class="fas fa-caret-up"
+                              style="margin-right: 5px"
+                            ></i>
+                            Details
+                          </button>
+                        </div>
+                      </span>
+                    </div>
+                  </div>
+                  <div *ngFor="let project of user?.userProcessingDetailDtos">
+                    <nz-card
+                      nzSize="small"
+                      style="
+                        width: 100%;
+                        padding: 5px;
+                        border: 1px solid #f8895191;
+                        margin-top: 5px;
+                      "
+                      [nzBordered]="false"
+                    >
+                      <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                        <div nz-col nzSpan="6" style="font-weight: 500">Project:</div>
+                        <div nz-col nzSpan="18">
+                          <span style="float: right">{{ project.name }}</span>
+                        </div>
+                      </div>
+                      <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                        <div nz-col nzSpan="12" style="font-weight: 500">Bugs Count:</div>
+                        <div nz-col nzSpan="12">
+                          <span style="float: right; font-weight: 500; color: #f50">{{
+                            project.bugs
+                          }}</span>
+                        </div>
+                      </div>
+                      <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                        <div nz-col nzSpan="4" style="font-weight: 500">Bugs:</div>
+                        <div nz-col nzSpan="20">
+                          <span style="float: right; word-break: break-all">{{
+                            project.bugsName
+                          }}</span>
+                        </div>
+                      </div>
+                    </nz-card>
+                  </div>
+                </nz-card>
+              </div>
+            </div>
+
+            <div *ngIf="valueModalInformation == 'Comments On Project'">
+              <div nz-row>
+                <div nz-col nzSpan="8">col-8</div>
+                <div nz-col nzSpan="8">col-8</div>
+                <div nz-col nzSpan="8">col-8</div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </ng-container>
+      <ng-template #modalFooter></ng-template>
+    </nz-modal>
+  </div>
+  <div style="margin-top: 10px">
+    <div nz-row>
+      <div nz-col nzSpan="8">
+        <div class="project-board">
+          <div class="container-header">
+            <a data-toggle="collapse" data-target="#project"
+              ><i class="fa"></i><span>Projects</span>
+              <div style="float: right" id="btnAddProject">
+                <button
+                  style="background-color: rgba(255, 85, 0, 0.8)"
+                  (click)="showModalAddProject($event)"
+                  nzSize="medium"
+                  nz-button
+                  nzType="primary"
+                  nzDanger
+                >
+                  <i class="fas fa-plus" style="margin-right: 10px"></i>New Project
+                </button>
+              </div>
+            </a>
+            <nz-modal
+              [(nzVisible)]="isVisibleAddProject"
+              nzTitle="New Project"
+              (nzOnCancel)="handleCancelAddProject()"
+              (nzOnOk)="handleOkAddProject()"
+              [nzOkLoading]="isOkLoadingAddProject"
+            >
+              <ng-template nzModalContent>
+                <div *ngIf="checktext != ''" style="margin-bottom: 10px">
+                  <nz-alert nzType="error" nzMessage="{{ checktext }}" nzShowIcon></nz-alert>
+                </div>
+                <div>
+                  <input
+                    nz-input
+                    placeholder="Project Name"
+                    [(ngModel)]="valueAddProject"
+                    (ngModelChange)="checkNameExist(valueAddProject)"
+                    required
+                  />
+                </div>
+                <div style="margin-top: 10px">
+                  <label>If you want to sync the project from existing TFS project (Input link below) <i class="fas fa-level-down-alt" style="font-size: 18px;"></i></label>
+                  <input
+                    nz-input
+                    placeholder="Link TFS Project. Ex: https://tfs.tpos.dev/TMTInternship/T-BugTracking"
+                    [(ngModel)]="linkTfsProject"
+                  />
+                </div>
+                <div style="margin-top: 10px">
+                  <label> ( Existing items ) :</label>
+                </div>
+                <div>
+                  <label *ngFor="let project of projects"> {{ project.name }} /</label>
+                </div></ng-template
+              >
+            </nz-modal>
+          </div>
+
+          <div>
+            <nz-input-group nzSearch nzSize="medium">
+              <input
+                [(ngModel)]="filter"
+                (keyup.enter)="filterChange(filter)"
+                type="text"
+                nz-input
+                placeholder="Search in Name Project"
+              />
+            </nz-input-group>
+            <ng-template #suffixButton>
+              <!-- <button
+                (click)="filterChange(filter)"
+                nz-button
+                nzType="primary"
+                nzSize="medium"
+                nzSearch
+              >
+                Search
+              </button> -->
+            </ng-template>
+          </div>
+          <div id="project" class="collapse show">
+            <ul class="list-group" style="margin-top: 2px" *ngFor="let project of projects">
+              <li class="list-group-item" @fadeIn>
+                <nz-content>
+                  <a (click)="Redirect(project?.id)">
+                    <div nz-row>
+                      <div class="make-it-center">
+                        <div class="group">
+                          <div nz-row class="groupName">
+                            {{ project.name }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <span class="devider"
+                      ><a (click)="clickBoard(project?.id)">Board</a> |
+                      <a (click)="clickAddIssue(project?.id)">Add Bug</a></span
+                    >
+
+                    <span
+                      style="
+                        position: absolute;
+                        top: 5px;
+                        right: 20px;
+                        font-size: 10px;
+                        font-weight: normal;
+                        color: #909090;
+                      "
+                      >{{ project.creationTime.split('T')[0] }}</span
+                    >
+                  </a>
+                  <nz-avatar-group style="float: right">
+                    <nz-avatar
+                      *ngFor="let member of project.memberList"
+                      nzSize="small"
+                      nzTooltipTitle="{{ member.userName }}"
+                      nz-tooltip
+                      nzText="{{ GetCharAt(member.userName) }}"
+                      style="background-color: #f3dacd; cursor: pointer"
+                      (click)="showUserProfile(member.userID)"
+                    >
+                    </nz-avatar>
+                    <nz-avatar
+                      *ngIf="project.countAdd > 0"
+                      nzTooltipTitle="{{ project.countAdd }} members"
+                      nz-tooltip
+                      nzSize="small"
+                      nzText="+{{ project?.countAdd }}"
+                    >
+                    </nz-avatar>
+                    <div class="iconTAGMAIL">
+                      <i
+                        (click)="showModalAddMember(project?.id)"
+                        nzTooltipTitle="Add Member"
+                        nz-tooltip
+                        class="fas fa-user-plus"
+                      ></i>
+                      <i
+                        class="fas fa-envelope"
+                        (click)="showModalInvite(project?.id)"
+                        nzTooltipTitle="Invite User To Project"
+                        nz-tooltip
+                      ></i>
+                    </div>
+                  </nz-avatar-group>
+                </nz-content>
+              </li>
+            </ul>
+            <nz-modal
+              [(nzVisible)]="isVisibleProfile"
+              (nzOnCancel)="handleCancelProfile()"
+              nzWidth="1000px"
+            >
+              <div *nzModalContent>
+                <app-profile [profileIdShowing]="idProfileShowing"></app-profile>
+              </div>
+              <div *nzModalFooter>
+                <button
+                  nz-button
+                  nzType="default"
+                  nzDanger
+                  [disabled]="idProfileShowing == shareService.getUserData.id"
+                  (click)="CreateConversition()"
+                >
+                  <i
+                    class="fas fa-comment-dots"
+                    style="cursor: pointer; font-size: 18px; margin-right: 10px"
+                  ></i
+                  >Send Message
+                </button>
+              </div>
+            </nz-modal>
+            <nz-modal
+              [(nzVisible)]="isVisibleAddMember"
+              nzTitle="Add Member"
+              (nzOnCancel)="handleCancelAddMember()"
+              (nzOnOk)="CreateMember()"
+              [nzOkLoading]="isOkLoadingAddMember"
+            >
+              <ng-template nzModalContent>
+                <nz-select
+                  nzMode="multiple"
+                  nzShowSearch
+                  nzAllowClear
+                  nzPlaceHolder="Select a person"
+                  [(ngModel)]="selectedUserAssign"
+                >
+                  <nz-option
+                    *ngFor="let user of listUser"
+                    nzLabel="{{ user.name }}"
+                    nzValue="{{ user.id }}"
+                  >
+                  </nz-option> </nz-select
+              ></ng-template>
+            </nz-modal>
+            <nz-modal
+              [(nzVisible)]="isVisibleInvite"
+              nzTitle="Invite User To Project By Mail"
+              (nzOnCancel)="handleCancelInvite()"
+              (nzOnOk)="handleOkInvite()"
+            >
+              <ng-container *nzModalContent>
+                <input
+                  nz-input
+                  type="email"
+                  placeholder="Email User"
+                  [(ngModel)]="email"
+                  (input)="onInput($event)"
+                  [nzAutocomplete]="auto"
+                />
+                <nz-autocomplete [nzDataSource]="options" nzBackfill #auto></nz-autocomplete>
+              </ng-container>
+            </nz-modal>
+          </div>
+        </div>
+      </div>
+      <div nz-col nzSpan="8" id="col2">
+        <div>
+          <canvas
+            #line
+            width="99%"
+            height="90%"
+            style="padding-right: 10px; padding-left: 10px; margin-bottom: 10px;"
+            id="canvasMobile"
+          ></canvas>
+        </div>
+        <div style="width: 100%; padding-left: 20px; padding-right: 20px" id="statisticMobile">
+          <nz-card style="width: 100%; margin-bottom: 8px;" nzSize="small">
+            <div nz-row>
+              <div nz-col nzSpan="8">
+                <label style="font-weight: 500; margin-top: 5px">Pending</label>
+                <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'" style="margin-left: 10px">{{
+                  projectStatistic?.open
+                }}</nz-tag>
+              </div>
+              <div nz-col nzSpan="16">
+                <nz-progress
+                  [nzPercent]="
+                    (projectStatistic?.open / projectStatistic?.bugs) * 100 | formatNumber
+                  "
+                  [nzStrokeColor]="'rgba(255, 85, 0, 0.8)'"
+                  nzStatus="active"
+                ></nz-progress>
+              </div>
+            </div>
+          </nz-card>
+          <nz-card style="width: 100%; margin-bottom: 8px; margin-top: 5px" nzSize="small">
+            <div nz-row>
+              <div nz-col nzSpan="8">
+                <label style="font-weight: 500; margin-top: 5px">Processing</label>
+                <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'" style="margin-left: 10px">{{
+                  projectStatistic?.notClose
+                }}</nz-tag>
+              </div>
+              <div nz-col nzSpan="16">
+                <nz-progress
+                  [nzPercent]="
+                    (projectStatistic?.notClose / projectStatistic?.bugs) * 100 | formatNumber
+                  "
+                  nzStatus="active"
+                  [nzStrokeColor]="'#e89802'"
+                ></nz-progress>
+              </div>
+            </div>
+          </nz-card>
+          <nz-card style="width: 100%; margin-bottom: 8px; margin-top: 5px" nzSize="small">
+            <div nz-row>
+              <div nz-col nzSpan="8">
+                <label style="font-weight: 500; margin-top: 5px">Closed</label>
+                <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'" style="margin-left: 10px">{{
+                  projectStatistic?.close
+                }}</nz-tag>
+              </div>
+              <div nz-col nzSpan="16">
+                <nz-progress
+                  [nzPercent]="
+                    (projectStatistic?.close / projectStatistic?.bugs) * 100 | formatNumber
+                  "
+                  nzStatus="active"
+                  [nzStrokeColor]="'#87d068'"
+                ></nz-progress>
+              </div>
+            </div>
+          </nz-card>
+          <nz-card style="width: 100%; margin-bottom: 8px; margin-top: 5px" nzSize="small">
+            <div nz-row>
+              <div nz-col nzSpan="8">
+                <label style="font-weight: 500; margin-top: 5px">Over Due Date</label>
+                <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'" style="margin-left: 10px">{{
+                  projectStatistic?.dueDate
+                }}</nz-tag>
+              </div>
+              <div nz-col nzSpan="16">
+                <nz-progress
+                  [nzPercent]="
+                    (projectStatistic?.dueDate /
+                      (projectStatistic?.notClose + projectStatistic?.open)) *
+                      100 | formatNumber
+                  "
+                  nzStatus="active"
+                  [nzStrokeColor]="'rgba(255, 85, 0, 0.8)'"
+                ></nz-progress>
+              </div>
+            </div>
+          </nz-card>
+        </div>
+      </div>
+      <div nz-col nzSpan="8" class="update-container-full">
+        <div class="update">
+          <div class="container-header">
+            <a data-toggle="collapse" data-target="#update"
+              ><i class="fa"></i><span>Updates</span>
+            </a>
+          </div>
+          <nz-spin
+            style="
+              display: block;
+              position: relative;
+              margin-left: 45%;
+              margin-top: 25%;
+              width: 50%;
+              z-index: 99;
+              color: #f50;
+            "
+            *ngIf="updatesLoading; else doneLoad"
+            nzSimple
+            [nzSize]="'large'"
+            [nzIndicator]="indicatorTemplate"
+          >
+          </nz-spin>
+          <ng-template #indicatorTemplate
+            ><i nz-icon nzType="loading" style="font-size: 35px; color: rgba(255, 85, 0, 0.8)"></i
+          ></ng-template>
+          <ng-template #doneLoad>
+            <div class="update-container collapse show" id="update">
+              <section class="updates-list">
+                <div class="title-section" *ngFor="let element of groupBy">
+                  <nz-collapse style="margin-bottom: 10px" id="update">
+                    <nz-collapse-panel
+                      #p
+                      nzHeader="{{
+                        element['date'] == today
+                          ? 'Today'
+                          : element['date'].split('-')[2] == date.getDate() - 1 &&
+                            element['date'].split('-')[1] == mm &&
+                            element['date'].split('-')[0] == yyyy
+                          ? 'Yesterday'
+                          : element['date']
+                      }}"
+                      [nzActive]="element['date'] == today ? true : false"
+                    >
+                      <!-- ||
+                      (element['date'].split('-')[2] == date.getDate() - 1 &&
+                        element['date'].split('-')[1] == mm &&
+                        element['date'].split('-')[0] == yyyy) -->
+                      <div style="padding-top: 10px"></div>
+                      <nz-timeline>
+                        <nz-timeline-item
+                          *ngFor="let update of showUpdates(element['data'], element['count'])"
+                          nzColor="{{ update.action.color }}"
+                        >
+                          <div>
+                            <div nz-row class="make-it-align" style="font-size: 13px">
+                              <div>
+                                <span style="margin-right: 5px"
+                                  ><nz-tag id="userName">{{ update.userName }}</nz-tag></span
+                                >
+                                <span>
+                                  <nz-tag nzColor="{{ update.action.color }}">{{
+                                    update.action.value == 'POST'
+                                      ? 'CREATED'
+                                      : update.action.value == 'PUT'
+                                      ? 'UPDATED'
+                                      : 'DELETED'
+                                  }}</nz-tag>
+                                </span>
+                                <span
+                                *ngIf="update.action.value == 'PUT'"
+                                style="font-size: 13px; font-weight: 500;"
+                                >{{ update.oldValue }}
+                                <i nz-icon nzType="swap-right" nzTheme="outline"></i>
+                                {{ update.newValue }}</span
+                              >
+                              </div>
+                              <div id="timePipe">
+                                <span
+                                  style="
+                                    right: 5px;
+                                    font-size: 10px;
+                                    font-weight: normal;
+                                    color: #909090;
+                                  "
+                                  ><nz-tag>{{ update.excutitonTime | fomatTimePipe }}</nz-tag></span
+                                >
+                              </div>
+                            </div>
+                            <div nz-row style="font-size: 13px">
+                              <br>
+                               <span
+                                  class="badge"
+                                  style="font-size: 12px; margin-top: 5px; background-color: rgba(255, 85, 0, 0.8)"
+                                  >{{ update.entity | formatMaxstring: [70, '...']}}</span
+                                >
+                              <div *ngIf="update.action.value !== 'PUT'"></div>
+                              <div id="timePipe2">
+                                <span
+                                  style="
+                                    right: 5px;
+                                    font-size: 10px;
+                                    font-weight: normal;
+                                    color: #909090;
+                                  "
+                                  ><nz-tag>{{ update.excutitonTime | fomatTimePipe }}</nz-tag></span
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </nz-timeline-item>
+                      </nz-timeline>
+                      <div
+                        class="loadmore"
+                        style="margin-top: -12px !important"
+                        nz-list-load-more
+                        *ngIf="element['showMore']"
+                      >
+                        <i
+                          style="font-size: 20px"
+                          (click)="showMore(element)"
+                          nz-icon
+                          nzType="caret-down"
+                          nz-tooltip
+                          nzTooltipTitle="Show More"
+                          nzTheme="outline"
+                        ></i>
+                      </div>
+                    </nz-collapse-panel>
+                  </nz-collapse>
+                </div>
+                <div *ngIf="listUpdate.length > 0 && load != null">
+                  <label
+                    style="
+                      font-size: 13px;
+                      color: #f50;
+                      text-decoration: underline;
+                      float: right;
+                      margin-right: 10px;
+                      cursor: pointer;
+                      margin-bottom: 10px;
+                    "
+                    (click)="onScroll()"
+                    ><i
+                      nz-icon
+                      nzType="loading"
+                      nzTheme="outline"
+                      style="color: #f50"
+                      *ngIf="isShowMoreLoading"
+                    ></i
+                    >Show More Details</label
+                  >
+                </div>
+              </section>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

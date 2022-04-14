@@ -1,0 +1,341 @@
+<nz-spin
+  style="
+    display: block;
+    position: relative;
+    margin-left: 50%;
+    margin-top: 25%;
+    width: 50%;
+    z-index: 99;
+  "
+  *ngIf="loaderService.isLoading | async; else doneLoad"
+  [nzIndicator]="indicatorTemplate"
+  nzSimple
+  [nzSize]="'large'"
+>
+</nz-spin>
+<ng-template #indicatorTemplate><i nz-icon nzType="loading" style="font-size:35px;color:#f50"></i></ng-template>
+<!-- <ng-container *ngTemplateOutlet="content">
+</ng-container> -->
+<ng-template #doneLoad>
+  <div nz-row>
+    <div nz-col nzSpan="24">
+      <i (click)="showModal()" nz-icon nzType="filter" nzTheme="twotone"></i>
+      <nz-tag (click)="showModal()" style="font-size: 12px; margin-left: 5px" [nzColor]="'#f50'"
+        >#Filter</nz-tag
+      >
+      <nz-switch
+        [(ngModel)]="fullCalendar"
+        nzCheckedChildren="Full"
+        nzUnCheckedChildren="Small"
+      ></nz-switch>
+      <nz-modal
+        [(nzVisible)]="isVisible"
+        nzTitle="#Filter"
+        (nzOnCancel)="handleCancel()"
+        (nzOnOk)="handleOk()"
+      >
+        <ng-container *nzModalContent>
+          <div class="container-fluid">
+            <div style="margin: 5px 0 5px 0">
+              <nz-tag style="font-size: 12px; margin-bottom: 5px" [nzColor]="'#f50'"
+                >#SelectStartDate</nz-tag
+              ><nz-date-picker
+                [(ngModel)]="date"
+                (ngModelChange)="onChange($event)"
+              ></nz-date-picker>
+            </div>
+            <div style="margin: 5px 0 5px 0">
+              <nz-tag style="font-size: 12px; margin-bottom: 5px" [nzColor]="'#f50'"
+                >#SelectIssue</nz-tag
+              >
+              <nz-select
+                nzShowSearch
+                nzAllowClear
+                nzPlaceHolder="Select a issue"
+                [(ngModel)]="issueID"
+              >
+                <nz-option
+                  *ngFor="let item of listIssueFollow?.items"
+                  nzLabel="{{ item.issueName }}"
+                  nzValue="{{ item.issueID }}"
+                ></nz-option>
+              </nz-select>
+            </div>
+            <div style="margin: 5px 0 5px 0">
+              <nz-tag style="font-size: 12px; margin-bottom: 5px" [nzColor]="'#f50'"
+                >#SelectIUser</nz-tag
+              >
+              <nz-select
+                nzShowSearch
+                nzAllowClear
+                nzPlaceHolder="Select a user"
+                [(ngModel)]="userFilterId"
+              >
+                <nz-option
+                  *ngFor="let item of listUser?.items"
+                  nzLabel="{{ item.userName }}"
+                  nzValue="{{ item.userID }}"
+                ></nz-option>
+              </nz-select>
+            </div>
+          </div>
+        </ng-container>
+      </nz-modal>
+    </div>
+  </div>
+  <div nz-row>
+    <div nz-col nzSpan="24">
+      <nz-calendar
+        (nzPanelChange)="yearEvents($event)"
+        (nzSelectChange)="selectChange($event)"
+        [nzFullscreen]="fullCalendar"
+      >
+        <ul
+          nzTooltipTitle="Double click to view details"
+          nzTooltipPlacement="rightTop"
+          nz-tooltip
+          *nzDateCell="let date"
+          class="events"
+        >
+        
+          <ng-container [ngSwitch]="date.getDate()">
+            <ng-container *ngFor="let item of listViewCalendar; let index = index">
+              <ng-container
+                *ngIf="
+                  getDateResult(item[0], 3, 2) == date.getDate() &&
+                  getDateResult(item[0], 0, 2) == customMonth(date.getMonth()) &&
+                  getDateResult(item[0], 6, 4) == date.getFullYear()
+                "
+              >
+
+              <nz-modal
+                  [nzStyle]="{ top: '20px' }"
+                  nzWidth="1500px"
+                  [(nzVisible)]="isVisibleDetail"
+                  (nzOnCancel)="handleCancelDetail()"
+                  (nzOnOk)="handleOkDetail()"
+                  [nzFooter]="modalFooter"
+                >
+                  <ng-container *nzModalContent>
+                    <div class="container" *ngIf="viewDetailByHour; else viewDetail">
+                      <nz-layout>
+                        <nz-header>Header</nz-header>
+                        <nz-content style="color:black">
+                          <div *ngFor="let item of listHour">
+                            {{item}}
+                          </div>
+                        </nz-content>
+                      </nz-layout>
+                    </div>
+                    <ng-template #viewDetail>
+                      <div class="container-fluid">
+                        <nz-layout>
+                          <div nz-row class="row">
+                            <div class="divRow" nz-col nzSpan="5">
+                              <nz-tag style="font-size: 12px; margin-bottom: 5px" [nzColor]="'#f50'"
+                                >#SelectStartDate</nz-tag
+                              >
+                              <nz-date-picker
+                                [nzDisabled]="true"
+                                [(ngModel)]="dateFilter"
+                              ></nz-date-picker>
+                            </div>
+                            <div class="divRow" nz-col nzSpan="5">
+                              <nz-tag style="font-size: 12px; margin-bottom: 5px" [nzColor]="'#f50'"
+                                >#SelectIssue</nz-tag
+                              >
+                              <nz-select
+                                nzShowSearch
+                                nzAllowClear
+                                nzPlaceHolder="Select a issue"
+                                [(ngModel)]="issueID"
+                              >
+                                <nz-option
+                                  *ngFor="let item of listIssueFollow?.items"
+                                  nzLabel="{{ item.issueName }}"
+                                  nzValue="{{ item.issueID }}"
+                                ></nz-option>
+                              </nz-select>
+                            </div>
+                            <div class="divRow" nz-col nzSpan="5">
+                              <nz-tag style="font-size: 12px; margin-bottom: 5px" [nzColor]="'#f50'"
+                                >#SelectIUser</nz-tag
+                              >
+                              <nz-select
+                                nzShowSearch
+                                nzAllowClear
+                                nzPlaceHolder="Select a user"
+                                [(ngModel)]="userFilterId"
+                              >
+                                <nz-option
+                                  *ngFor="let item of listUser?.items"
+                                  nzLabel="{{ item.userName }}"
+                                  nzValue="{{ item.userID }}"
+                                ></nz-option>
+                              </nz-select>
+                            </div>
+                            <div class="btnRow" nz-col nzSpan="5">
+                              <button
+                                (click)="getListFilterDetail()"
+                                nz-button
+                                nzSize="small"
+                                nzType="primary"
+                              >
+                                Search
+                              </button>
+                            </div>
+                          </div>
+                          <nz-layout>
+                            <nz-content
+                              ><nz-table #basicTable [nzData]="listViewCalendar[0][1]">
+                                <thead>
+                                  <tr>
+                                    <th>Name</th>
+                                    <th>Action Detail</th>
+                                    <th>
+                                      Execution Time
+                                      <i
+                                        nzTooltipTitle="View details by hour"
+                                        nz-tooltip
+                                        style="cursor: pointer; font-size: 18px"
+                                        nz-icon
+                                        nzType="interaction"
+                                        nzTheme="outline"
+                                        (click)="showModalDetailByHour(item[1])"
+                                      ></i>
+                                    </th>
+                                    <th>User Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody style="text-align: center">
+                                  <tr *ngFor="let data of basicTable.data">
+                                    <td>
+                                      <i
+                                        style="margin-right: 5px"
+                                        nz-icon
+                                        nzType="bug"
+                                        nzTheme="outline"
+                                      ></i>
+                                      <nz-tag style="font-size: 12px" [nzColor]="'#f50'">{{
+                                        data.issueName
+                                      }}</nz-tag>
+                                    </td>
+                                    <td
+                                      style="text-align: left; margin-left: 20px"
+                                      *ngIf="data.oldValue; else nullOldValue"
+                                    >
+                                      <nz-tag
+                                        style="font-size: 12px"
+                                        nzColor="{{ data.colorOld }}"
+                                        >{{ data.oldValue }}</nz-tag
+                                      >
+                                      <i
+                                        style="margin: 0 15px 0 5px"
+                                        nz-icon
+                                        nzType="swap-right"
+                                        nzTheme="outline"
+                                      ></i>
+                                      <nz-tag
+                                        style="font-size: 12px"
+                                        nzColor="{{ data.colorNew }}"
+                                        >{{ data.newValue }}</nz-tag
+                                      >
+                                    </td>
+                                    <ng-template #nullOldValue>
+                                      <td style="text-align: left; margin-left: 20px">
+                                        <nz-tag style="font-size: 12px" [nzColor]="'#f50'"
+                                          >Create</nz-tag
+                                        >
+                                      </td>
+                                    </ng-template>
+                                    <td>
+                                      <i nz-icon nzType="clock-circle" nzTheme="outline"></i>
+                                      {{ data.excutitonTime | date: 'mediumTime' }}
+                                    </td>
+                                    <td>
+                                      <i nz-icon nzType="user" nzTheme="outline"></i>
+                                      <a style="margin-left: 10px">{{ data.userName }}</a>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </nz-table></nz-content
+                            >
+                          </nz-layout>
+                        </nz-layout>
+                      </div>
+                    </ng-template>
+                  </ng-container>
+                </nz-modal>
+                <ng-template #modalFooter> </ng-template>
+              <ng-container #outlet >
+              </ng-container>
+              <ng-template #content>
+                <time-line *ngIf="data.length>0" [(listIssueFollow)]="data" ></time-line>
+              </ng-template>
+                <li (dblclick)="showModalDetail()" *ngFor="let value of item[1]">
+                  <span *ngIf="value.oldValue; else nullOldValue">
+                    <nz-tag nzTooltipTitle="{{ value.issueName }}" nz-tooltip [nzColor]="'#f50'">{{
+                      value.issueName
+                    }}</nz-tag>
+                    <nz-badge
+                      nzTooltipTitle="{{ value.oldValue }}"
+                      nz-tooltip
+                      nzColor="{{ value.colorOld }}"
+                    ></nz-badge>
+                    <i style="margin-right: 5px" nz-icon nzType="swap-right" nzTheme="outline"></i>
+                    <nz-badge
+                      nzTooltipTitle="{{ value.newValue }}"
+                      nz-tooltip
+                      nzColor="{{ value.colorNew }}"
+                    ></nz-badge>
+                    <nz-avatar
+                      nzTooltipTitle="{{ value.userName }}"
+                      nz-tooltip
+                      nzSize="small"
+                      nzText="{{ GetCharAt(value.userName) }}"
+                    ></nz-avatar>
+                  </span>
+                  <ng-template #nullOldValue>
+                    <span>
+                      <nz-tag
+                        nzTooltipTitle="{{ value.issueName }}"
+                        nz-tooltip
+                        [nzColor]="'#f50'"
+                        >{{ value.issueName }}</nz-tag
+                      >
+                      <nz-badge
+                        nzTooltipTitle="Created"
+                        nz-tooltip
+                        nzColor="{{ value.colorNew }}"
+                      ></nz-badge>
+                      <nz-avatar
+                        nzTooltipTitle="{{ value.userName }}"
+                        nz-tooltip
+                        nzSize="small"
+                        nzText="{{ GetCharAt(value.userName) }}"
+                      ></nz-avatar>
+                    </span>
+                  </ng-template>
+                </li>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ul>
+        <ul *nzMonthCell="let month">
+          <ng-container *ngFor="let item of listViewCalendar">
+            <ng-container
+              *ngIf="
+                getDateResult(item[0], 0, 2) == customMonth(month.getMonth()) &&
+                getDateResult(item[0], 6, 4) == month.getFullYear()
+              "
+            >
+              <li *ngFor="let item of item[1]">
+                <a [style.background-color]="item.colorNew"></a>
+              </li>
+            </ng-container>
+          </ng-container>
+        </ul>
+      </nz-calendar>
+    </div>
+  </div>
+</ng-template>

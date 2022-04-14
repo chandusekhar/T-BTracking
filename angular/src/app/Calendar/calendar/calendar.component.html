@@ -1,0 +1,133 @@
+<div id="pc" style="margin-top:10px">
+  <div class="calendar row">
+    <div class="FullCalendar col-12" id="FullCalendar">
+      <full-calendar id="calendar" deepChangeDetection="true" *ngIf="calendarOptions" #fullcalendar
+        [options]="calendarOptions">
+      </full-calendar>
+      <nz-modal [nzWidth]="1200" [(nzVisible)]="isVisibleCalendarModal" (nzOnCancel)="handleCancelCalendatModal()"
+        (nzOnOk)="handleOkCalendarModal()" [nzFooter]=null >
+        <ng-container *nzModalContent>
+          <app-view></app-view>
+        </ng-container>
+      </nz-modal>
+      <nz-modal [(nzVisible)]="isVisible" nzTitle="Choose project" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()"
+        [nzOkLoading]="isOkLoading">
+        <ng-container *nzModalContent>
+          <nz-select class="select-draw" (ngModelChange)="getIdProject($event)" nzShowSearch nzAllowClear
+          nzPlaceHolder="Select a Project" [(ngModel)]="idProjectSelect">
+          <nz-option *ngFor="let item of listProject" nzValue="{{ item.id }}" nzLabel="{{ item.name }}"></nz-option>
+        </nz-select>
+        </ng-container>
+      </nz-modal>
+      <nz-modal [nzStyle]="{ top: '20px' }" [nzWidth]="1200" [(nzVisible)]="isVisibleAddIssue" [nzFooter]="modalFooter"
+        (nzOnCancel)="handleCancelAddIssue()">
+        <ng-container *nzModalContent>
+          <app-add-issue [idProjectCalendar]="idProjectSelect"></app-add-issue>
+        </ng-container>
+        <ng-template #modalFooter></ng-template>
+      </nz-modal>
+      <nz-modal [(nzVisible)]="isVisibleFilter" nzTitle="Filter follow calendar" (nzOnCancel)="handleCancelFilter()"
+        (nzOnOk)="handleOkFilter()">
+        <ng-container *nzModalContent>
+          <div class="filter-value">
+            <div>
+              <nz-select class="select-draw" (ngModelChange)="GetIdProject($event)" nzShowSearch nzAllowClear
+                nzPlaceHolder="Select a Project" [(ngModel)]="idProject">
+                <nz-option *ngFor="let item of listProject" nzValue="{{ item.id }}" nzLabel="{{ item.name }}">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div>
+              <nz-select class="select-draw" (ngModelChange)="GetIssueName($event)" nzShowSearch nzAllowClear
+                nzPlaceHolder="Select a Issue" [(ngModel)]="issueName">
+                <nz-option *ngFor="let item of listIssue" nzValue="{{ item.issueName }}" nzLabel="{{ item.issueName }}">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div>
+              <nz-select class="select-draw" (ngModelChange)="getIdStatus($event)" nzShowSearch nzAllowClear
+                nzPlaceHolder="Select a Status" [(ngModel)]="idStatus">
+                <nz-option *ngFor="let item of listStatus" nzValue="{{ item.id }}" nzLabel="{{ item.name }}">
+                </nz-option>
+              </nz-select>
+            </div>
+          </div>
+        </ng-container>
+      </nz-modal>
+      <nz-dropdown-menu #menuSetting="nzDropdownMenu">
+        <ul nz-menu>
+          <div class="sub-Menu">
+            <button
+              nz-button
+              nzType="text"
+              class="btn-header-menu"
+            >
+              <i class="fas fa-id-card icon-sub-menu"></i>
+              My Profile
+            </button>
+          </div>
+          <div class="sub-Menu">
+            <button nz-button nzType="text" class="btn-header-menu">
+              <i class="fas fa-sign-out-alt icon-sub-menu"></i>
+              Sign Out
+            </button>
+          </div>
+        </ul>
+      </nz-dropdown-menu>
+    </div>
+  </div>
+  <div>
+  </div>
+</div>
+<!-- mobile///////////////////// -->
+<div id="mobile">
+  <div class="calendar">
+    <!-- <div class="filter-moblie">
+      <button (click)="showFilterInMobile()">Filter</button>
+    </div> -->
+    <!-- <div *ngIf="isShowFilter" class="side-bar">
+      <div class="header-bar">
+        <button (click)="showFilterInMobile()" class="filter-name">Filter Calendar</button>
+      </div>
+      <div class="filter-value">
+        <div>
+          <nz-select class="select-draw" (ngModelChange)="GetIdProject($event)" nzShowSearch nzAllowClear
+            nzPlaceHolder="Select a Project" [(ngModel)]="idProject">
+            <nz-option *ngFor="let item of listProject" nzValue="{{ item.id }}" nzLabel="{{ item.name }}"></nz-option>
+          </nz-select>
+        </div>
+        <div>
+          <nz-select class="select-draw" (ngModelChange)="GetIssueName($event)" nzShowSearch nzAllowClear
+            nzPlaceHolder="Select a Issue" [(ngModel)]="issueName">
+            <nz-option *ngFor="let item of listIssue" nzValue="{{ item.issueName }}" nzLabel="{{ item.issueName }}">
+            </nz-option>
+          </nz-select>
+        </div>
+        <div>
+          <nz-select class="select-draw" (ngModelChange)="getIdStatus($event)" nzShowSearch nzAllowClear
+            nzPlaceHolder="Select a Status" [(ngModel)]="idStatus">
+            <nz-option *ngFor="let item of listStatus" nzValue="{{ item.id }}" nzLabel="{{ item.name }}"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div> -->
+    <div class="FullCalendar">
+      <full-calendar deepChangeDetection="true" *ngIf="calendarOptions" #fullcalendarMobile [options]="calendarOptions">
+      </full-calendar>
+      <nz-modal  nzTitle="Chosse project" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()"
+        [nzOkLoading]="isOkLoading">
+        <nz-select class="select-draw" (ngModelChange)="getIdProject($event)" nzShowSearch nzAllowClear
+          nzPlaceHolder="Select a Project" [(ngModel)]="idProjectSelect">
+          <nz-option *ngFor="let item of listProject" nzValue="{{ item.id }}" nzLabel="{{ item.name }}"></nz-option>
+        </nz-select>
+      </nz-modal>
+      <nz-modal [nzStyle]="{ top: '20px' }" [nzWidth]="1200"  [nzFooter]="modalFooter"
+        (nzOnCancel)="handleCancelAddIssue()">
+        <ng-container *nzModalContent>
+          <app-add-issue [childMessage]="idProjectSelect"></app-add-issue>
+        </ng-container>
+        <ng-template #modalFooter></ng-template>
+      </nz-modal>
+    </div>
+  </div>
+</div>

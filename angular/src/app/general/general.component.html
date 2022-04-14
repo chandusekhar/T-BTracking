@@ -1,0 +1,231 @@
+<div id="garenal">
+  <div id="headerSetting" style="padding: 20px">
+    <div class="row1" nz-row [nzGutter]="16">
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <nz-card nzSize="small" style="width: 100%">
+            <div class="row1child" nz-row style="padding: 10px">
+              <div nz-col [nzSpan]="18" [nzPush]="6">
+                <div>
+                  <nz-tag [nzColor]="'#FF7F50'">{{ countIssueProject }}</nz-tag>
+                </div>
+                <div style="font-size: 15px; font-weight: 500">Bugs In Project</div>
+              </div>
+              <div
+                id="iconBug"
+                style="margin-top: 10px; text-align: center"
+                nz-col
+                [nzSpan]="6"
+                [nzPull]="18"
+              >
+                <i class="fas fa-bug" style="color: 'rgba(255, 85, 0, 0.8)'; font-size: 30px"></i>
+              </div>
+            </div>
+          </nz-card>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <nz-card nzSize="small" style="width: 100%">
+            <div class="row1child" nz-row style="padding: 10px">
+              <div nz-col [nzSpan]="18" [nzPush]="6">
+                <div>
+                  <nz-tag [nzColor]="'#FF7F50'">{{ notClosed }}</nz-tag>
+                </div>
+                <div style="font-size: 15px; font-weight: 500">Not Closed</div>
+              </div>
+              <div style="margin-top: 10px; text-align: center" nz-col [nzSpan]="6" [nzPull]="18">
+                <i
+                  class="fas fa-exclamation-triangle"
+                  style="color: 'rgba(255, 85, 0, 0.8)'; font-size: 30px"
+                ></i>
+              </div>
+            </div>
+          </nz-card>
+        </div>
+      </div>
+      <div id="row3" nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <nz-card nzSize="small" style="width: 100%">
+            <nz-statistic
+              [nzValue]="(percentAdd | number: '1.0-2')!"
+              [nzTitle]="'Percent Bugs Added Last week'"
+              [nzPrefix]="prefixTplOne"
+              [nzSuffix]="'%'"
+              [nzValueStyle]="{ color: '#CF1322' }"
+            >
+            </nz-statistic>
+            <ng-template #prefixTplOne><i nz-icon nzType="arrow-up"></i></ng-template>
+          </nz-card>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="inner-box">
+          <nz-card nzSize="small" style="width: 100%">
+            <nz-statistic
+              [nzValue]="(percenNotClosed | number: '1.0-2')!"
+              [nzTitle]="'Bugs Completed Last week'"
+              [nzPrefix]="prefixTplTwo"
+              [nzSuffix]="'%'"
+              [nzValueStyle]="{ color: '#3F8600' }"
+            >
+            </nz-statistic>
+            <ng-template #prefixTplTwo><i nz-icon nzType="arrow-down"></i></ng-template>
+          </nz-card>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top: 10px; padding: 0 20px 0 20px" id="progress">
+    <div nz-row>
+      <div nz-col nzSpan="8" style="padding: 5px">
+        <nz-card style="width: 100%">
+          <canvas #doughnut width="100%"></canvas>
+        </nz-card>
+      </div>
+      <div nz-col nzSpan="8" style="padding: 5px">
+        <nz-card style="width: 100%">
+          <canvas #radar width="100%"></canvas>
+        </nz-card>
+      </div>
+      <div nz-col nzSpan="8" style="padding: 5px">
+        <nz-card style="width: 100%; height: 100%" id="card">
+          <ng-container *ngIf="memberStatistics?.memberStatisticsDtos.length > 0; else noUserData">
+            <div
+              nz-row
+              *ngFor="let member of memberStatistics?.memberStatisticsDtos"
+              style="border-bottom: 1px solid #f0f2f5; padding: 5px"
+            >
+              <div nz-col nzSpan="8" style="font-weight: 500">
+                <nz-avatar
+                  nzText="{{ getChartAt(member?.name) }}"
+                  [nzSize]="'small'"
+                  style="margin-right: 5px"
+                ></nz-avatar
+                >{{ member.name }}
+              </div>
+              <div nz-col nzSpan="16">
+                <nz-progress
+                  [nzPercent]="member.pCreate"
+                  nzStatus="active"
+                  [nzStrokeColor]="'rgba(255, 85, 0, 0.8)'"
+                  nz-tooltip
+                  nzTooltipTitle="Created In Project ({{ member.create }})"
+                ></nz-progress>
+                <nz-progress
+                  [nzPercent]="member.pTag"
+                  nzStatus="active"
+                  [nzStrokeColor]="'#e89802'"
+                  nz-tooltip
+                  nzTooltipTitle="Assigned In Project ({{ member.tag }})"
+                ></nz-progress>
+                <nz-progress
+                  [nzPercent]="member.pClose"
+                  nzStatus="active"
+                  [nzStrokeColor]="'#32CD32'"
+                  nz-tooltip
+                  nzTooltipTitle="Closed In Project ({{ member.close }})"
+                ></nz-progress>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #noUserData><nz-empty nzNotFoundImage="simple"></nz-empty></ng-template>
+        </nz-card>
+      </div>
+    </div>
+    <!-- <div id="settingChart" nz-row>
+      <div nz-col nzSpan="12"></div>
+      <div nz-col nzSpan="12"><canvas #radar width="100%" height="50%"></canvas></div>
+    </div> -->
+  </div>
+  <div style="margin-top: 10px; padding: 0 20px 0 20px" id="chart">
+    <div nz-row>
+      <div nz-col nzSpan="12" style="padding: 5px">
+        <nz-card style="width: 100%">
+          <nz-tabset>
+            <nz-tab nzTitle="Day">
+              <canvas #lineCanvas></canvas>
+              <hr color="red" />
+            </nz-tab>
+
+            <nz-tab nzTitle="Month">
+              <canvas #monthChart></canvas>
+              <hr color="red" />
+            </nz-tab>
+
+            <nz-tab nzTitle="Year">
+              <canvas #yearChart></canvas>
+              <hr color="red" />
+            </nz-tab>
+          </nz-tabset>
+        </nz-card>
+      </div>
+      <div nz-col nzSpan="12" style="padding: 5px">
+        <nz-card style="width: 100%; height: 100%" id="tablePc">
+          <div style="padding: 5px">
+            <nz-card nzSize="small" style="width: 100%">
+              <div nz-row>
+                <div nz-col nzSpan="6">Type</div>
+                <div nz-col nzSpan="6">Name</div>
+                <div nz-col nzSpan="5">Last Modifier</div>
+                <div nz-col nzSpan="7">Value</div>
+              </div>
+            </nz-card>
+          </div>
+          <ng-container *ngIf="memberStatistics?.entityStatisticsDto.length > 0; else noData">
+            <div style="padding: 5px" *ngFor="let entity of memberStatistics?.entityStatisticsDto">
+              <nz-card nzSize="small" style="width: 100%">
+                <div nz-row>
+                  <div nz-col nzSpan="6" style="text-decoration: underline">{{ entity.type }}</div>
+                  <div
+                    nz-col
+                    nzSpan="6"
+                    routerLink="/project/{{ shareService.getIdProject() }}/issues/view/{{
+                      entity.id
+                    }}"
+                    style="font-weight: 500;word-break: break-all; cursor: pointer;"
+                  >
+                    {{ entity.entity }}
+                  </div>
+                  <div nz-col nzSpan="5">{{ entity.by }}</div>
+                  <div nz-col nzSpan="7">{{ entity.time }}</div>
+                </div>
+              </nz-card>
+            </div>
+          </ng-container>
+          <ng-template #noData><nz-empty nzNotFoundImage="simple"></nz-empty></ng-template>
+        </nz-card>
+
+      </div>
+    </div>
+  </div>
+  <div *ngFor="let data of memberStatistics?.entityStatisticsDto" id="mobile-card">
+    <nz-card
+      nzSize="small"
+      style="width: 100%; padding: 5px; border: 1px solid #f8895191; margin-top: 5px;"
+      [nzBordered]="false"
+    >
+    <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+      <div nz-col nzSpan="4" style="font-weight: 500">Type:</div>
+      <div nz-col nzSpan="20" ><span style="float: right; text-decoration: underline;" >{{ data.type }}</span></div>
+    </div>
+      <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+        <div nz-col nzSpan="6" style="font-weight: 500">Name:</div>
+        <div nz-col nzSpan="18" routerLink="/project/{{ shareService.getIdProject() }}/issues/view/{{
+          data.id
+        }}"><span class="span" style="font-weight: 500; float: right; color: #f50;">{{ data.entity }}</span></div>
+      </div>
+      <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+        <div nz-col nzSpan="8" style="font-weight: 500">Last Modifier:</div>
+        <div nz-col nzSpan="16"><span class="span" style="float: right;">{{ data.by }}</span>
+        </div>
+      </div>
+      <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+        <div nz-col nzSpan="4" style="font-weight: 500">Value:</div>
+        <div nz-col nzSpan="20">
+          <span class="span" style="float: right;">{{ data.time }}</span>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+</div>

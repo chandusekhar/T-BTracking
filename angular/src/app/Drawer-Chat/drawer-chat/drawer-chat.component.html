@@ -1,0 +1,150 @@
+<div class="drawer-app">
+  <!-- <div>
+        123456413213
+    </div> -->
+  <div class="projectMess">
+    <div class="project-chat" *ngIf="shareService.getIdProject()">
+      <p>Current Project</p>
+      <div class="msg row" (click)="getConversationProject()">
+        <div class="msg-detail">
+          <div class="msg-username">{{ nameProject }}</div>
+        </div>
+      </div>
+      <nz-divider></nz-divider>
+    </div>
+    <div>
+      <div class="input-group md-form form-sm form-1 pl-0">
+        <div class="input-group-prepend">
+          <span class="input-group-text lighten-3" id="basic-text1"
+            ><i class="fas fa-search text-white" aria-hidden="true"></i
+          ></span>
+        </div>
+        <input
+          [(ngModel)]="search"
+          (ngModelChange)="seachUser($event)"
+          class="my-0 py-1"
+          type="text"
+          placeholder="Search"
+          aria-label="Search"
+        />
+      </div>
+      <div class="searchConver" (scroll)="onScroll($event)">
+        <nz-spin
+          style="
+            display: block;
+            position: relative;
+            margin-left: 45%;
+            margin-top: 40%;
+            width: 50%;
+            z-index: 99;
+            color: #f50;
+          "
+          *ngIf="messagesLoading; else doneLoad"
+          nzSimple
+          [nzSize]="'large'"
+          [nzIndicator]="indicatorTemplate"
+        >
+        </nz-spin>
+        <ng-template #indicatorTemplate
+          ><i nz-icon nzType="loading" style="font-size: 35px; color: rgba(255, 85, 0, 0.8)"></i
+        ></ng-template>
+        <ng-template #doneLoad>
+          <div *ngIf="search == ''; else searchUser">
+            <div class="ListMember">
+              <div *ngFor="let item of listUserAll">
+                <div class="msg row" (click)="getConversation(item.conversationId)"*ngIf="item.conversationType != 2" >
+                  <div class="imgAvartar col-2">
+                    <div *ngIf="item.avatarUrl; else noAvatar">
+                      <img
+                        *ngIf="item.conversationType == 0"
+                        nz-image
+                        [nzSrc]="item.avatarUrl"
+                        alt=""
+                        nzDisablePreview="true"
+                      />
+                    </div>
+                    <div *ngIf="item.extraProperties.avatarUrl; else noAvatarGroup">
+                      <img
+                        *ngIf="item.conversationType == 1"
+                        nz-image
+                        [nzSrc]="item.extraProperties.avatarUrl"
+                        alt=""
+                        nzDisablePreview="true"
+                      />
+                    </div>
+                    <ng-template #noAvatar>
+                      <img
+                        *ngIf="!item.avatarUrl && item.conversationType == 0"
+                        src="https://i.imgur.com/b08hxPY.png"
+                      />
+                    </ng-template>
+                    <ng-template #noAvatarGroup>
+                      <img
+                        *ngIf="!item.avatarUrl && item.conversationType == 1"
+                        src="https://lh3.googleusercontent.com/proxy/dwJvaACP3NHjt_KOC66QG4d1fj_q5sXNqMUznlp5jB8SLHLip3B6x24C8-fgGBFtrA8qZDJrBbXcOxSCzVAErLCWgwqFp56VGOL4fLhl7qox"
+                      />
+                    </ng-template>
+                  </div>
+                  <div class="msg-detail col-7">
+                    <div *ngIf="item.conversationType == 1; else convertType1" class="msg-username">
+                      {{ item.nameConversation }}
+                    </div>
+                    <ng-template #convertType1>
+                      <div *ngFor="let message of item?.listMembers">
+                        <div
+                          *ngIf="
+                            message.userId != shareService.getUserData?.id && message.name == null
+                          "
+                          class="msg-username"
+                        >
+                          {{ getNameUserInGroup(message?.userId) | formatMaxstring: [20, '...'] }}
+                        </div>
+                        <div
+                          *ngIf="
+                            message.userId != shareService.getUserData?.id && message.name != null
+                          "
+                          class="msg-username"
+                        >
+                          {{ message?.name | formatMaxstring: [20, '...'] }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </div>
+                  <div class="col-2">
+                    <div *ngFor="let message of item?.listMembers" style="margin-left: 170%">
+                      <span
+                        *ngIf="
+                          message.userId == shareService.getUserData?.id &&
+                          message.unReadMessage > 0
+                        "
+                        style="background: #f50"
+                        class="badge badge-pill"
+                        >{{ message.unReadMessage }}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #searchUser>
+          <div>
+            <div *ngFor="let item of listUserAll">
+              <div class="msg row" (click)="CreateConversition(item.id)">
+                <div class="msg-detail">
+                  <div class="msg-username">
+                    {{ item.name }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+  <div class="GotoMess" routerLink="/messenger">
+    <a>Go to Messenger</a>
+  </div>
+</div>

@@ -1,0 +1,177 @@
+import { Component, OnInit, AfterViewInit, ViewChild, ViewContainerRef, TemplateRef } from '@angular/core';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { FollowService } from '../Service/Follow/follow.service';
+import { LoaderService } from '../Service/Loader/loader.service';
+import { MemberService } from '../Service/Member/member.service';
+import { ShareServiceService } from '../Service/share-service.service';
+import { UserService } from '../Service/User/user.service';
+import {TimeLineComponent} from "./time-line/time-line.component"
+@Component({
+  selector: 'app-follow-issue',
+  templateUrl: './follow-issue.component.html',
+  styleUrls: ['./follow-issue.component.scss'],
+})
+export class FollowIssueComponent implements OnInit, AfterViewInit {
+  @ViewChild("outlet", {read: ViewContainerRef}) outletRef: ViewContainerRef;
+  @ViewChild("content", {read: TemplateRef}) contentRef: TemplateRef<any>;
+  data:any
+  isVisible = false;
+  date = null;
+  issue: any;
+  projectID;
+  userID;
+  issueID;
+  userFilterId = null;
+  listIssueFollow;
+  listViewCalendar;
+  listUser;
+  index = 0;
+  fullCalendar: boolean = true;
+  isVisibleDetail: boolean = false;
+  listDetailHistory;
+  dateFilter;
+  viewDetailByHour:boolean=false;
+  eventsMonth = [];
+  listHour=[];
+  constructor(
+    public msg: NzMessageService,
+    public shareService: ShareServiceService,
+    private followService: FollowService,
+    private userService: UserService,
+    public loaderService: LoaderService,
+    private memberService: MemberService
+  ) {}
+  ngAfterViewInit(): void {
+    this.GetListUser();
+    this.getIssueFollow();
+    this.outletRef.createEmbeddedView(this.contentRef);
+  }
+
+  ngOnInit(): void {
+    this.projectID = this.shareService.getIdProject();
+    this.userID = this.shareService.getUserData.id;
+    this.getFullFollow();
+  }
+  showModal(): void {
+    this.isVisible = true;
+  }
+  GetListUser() {
+    this.memberService.getListMemberByIdProject(this.projectID).subscribe(data => {
+      if (data) {
+        this.listUser = data;
+      }
+    });
+  }
+  handleOk(): void {
+    if (!this.userFilterId) {
+      this.userFilterId = null;
+    }
+    this.getListFollowByIssueId(this.issueID, this.userFilterId, this.date);
+
+    this.isVisible = false;
+  }
+viewDetailHour(){
+  this.viewDetailByHour=!this.viewDetailByHour;
+}
+  handleCancel(): void {
+    this.isVisible = false;
+  }
+  getIssueFollow() {
+    this.followService
+      .GetListFollowByUserIdProjectId(this.userID, this.projectID)
+      .subscribe(data => {
+        if (data) {
+          this.listIssueFollow = data;
+          
+        }
+      });
+  }
+  selectChange(event: Date) {
+    this.dateFilter = this.convertToDate(event);
+  }
+  showModalDetail(): void {
+    this.getListFollowByIssueId(this.issueID, this.userFilterId, this.dateFilter);
+    for(let i=1;i<24;i++){
+      this.listHour.push(i);
+    }
+    this.isVisibleDetail = true;
+  }
+  showModalDetailByHour(item): void {
+    this.data = item;
+    this.outletRef.clear();
+    this.outletRef.createEmbeddedView(this.contentRef);
+  }
+  getFullFollow() {
+    this.followService.getListFollow(this.projectID).subscribe(data => {
+      if (data) {
+        this.listViewCalendar = Object.keys(data).map(key => [key, data[key]]);
+      }
+    });
+  }
+  getListFollowByIssueId(issueID, userID, date) {
+    this.followService
+      .getListFollowByIssueIdWithDate(date, userID, issueID, this.projectID)
+      .subscribe(data => {
+        if (data) {
+          this.listViewCalendar = Object.keys(data).map(key => [key, data[key]]);
+        }
+      });
+  }
+  yearEvents(event){
+    if(event=='year'){
+      this.listViewCalendar=this.listViewCalendar[1]
+    }
+  }
+Background(color): any {
+    return { 'background-color': color };
+}
+  getListFilterDetail() {
+    this.isVisibleDetail
+      ? this.getListFollowByIssueId(this.issueID, this.userFilterId, this.dateFilter)
+      : this.getListFollowByIssueId(this.issueID, this.userFilterId, this.date);
+  }
+  customMonth(value: string) {
+    value = (Number(value) + 1).toString();
+    if (Number(value) < 10) {
+      return '0' + value;
+    }
+  }
+  GetCharAt(name) {
+    return name.charAt(0);
+  }
+  getDateResult(date: string, start: number, end: number) {
+    return date.substr(start, end);
+  }
+  convertToDate(date) {
+    var newMonth;
+    var newDate;
+
+    var resultMonth = date.getMonth() + 1;
+    if (resultMonth < 10) {
+      newMonth = '0' + resultMonth.toString();
+    } else newMonth = resultMonth.toString();
+    var resultDate = date.getDate();
+    if (resultDate < 10) {
+      newDate = '0' + resultDate.toString();
+    } else newDate = resultDate.toString();
+    date = newMonth + '-' + newDate + '-' + date.getFullYear();
+    return date;
+  }
+  onChange(result: Date): void {
+    if (this.date == null) {
+      this.date = null;
+    } else {
+      this.date = this.convertToDate(result);
+    }
+  }
+  closeTimeLine(isVisibleDetail) {
+    return this.isVisibleDetail = isVisibleDetail;
+  }
+  handleOkDetail(): void {
+    this.isVisibleDetail = false;
+  }
+  handleCancelDetail(): void {
+    this.getListFollowByIssueId(this.issueID, this.userFilterId, this.date);
+    this.isVisibleDetail = false;
+  }
+}

@@ -1,0 +1,959 @@
+<nz-tabset style="padding: 0 0px 0px 10px; color: #f50" id="admin" class="group-admin">
+  <nz-tab class="header" [nzTitle]="titleTemplate">
+    <ng-template #titleTemplate>
+      <i nz-icon [nzType]="'user'"></i>
+      Users
+    </ng-template>
+    <div id="rowHeader" style="padding-left: 10px">
+      <div nz-row>
+        <div nz-col nzSpan="24">
+          <div nz-row [nzGutter]="8">
+            <div nz-col [nzSpan]="4">
+              <div nz-row>
+                <div nz-col nzSpan="24">
+                  <nz-card nzSize="small">
+                    <div nz-row>
+                      <div nz-col nzSpan="21">
+                        <div style="font-size: 14px; font-weight: 500; padding-left: 10px">
+                          <i
+                            style="color: #ff7f50; font-size: 25px; margin-right: 10px"
+                            nz-icon
+                            nzType="team"
+                            nzTheme="outline"
+                          ></i
+                          >User
+                        </div>
+                      </div>
+                      <div nz-col nzSpan="3">
+                        <nz-tag [nzColor]="'#f50'">{{ listUser?.length }}</nz-tag>
+                      </div>
+                    </div>
+                  </nz-card>
+                </div>
+              </div>
+            </div>
+            <div nz-col [nzSpan]="4">
+              <div nz-row>
+                <div nz-col nzSpan="0"></div>
+                <div nz-col nzSpan="24">
+                  <nz-card nzSize="small">
+                    <div nz-row>
+                      <div nz-col nzSpan="21">
+                        <div style="font-size: 14px; font-weight: 500; padding-left: 10px">
+                          <i
+                            style="color: #ff7f50; font-size: 25px; margin-right: 10px"
+                            nz-icon
+                            nzType="fund-projection-screen"
+                            nzTheme="outline"
+                          ></i
+                          >Total projects
+                        </div>
+                      </div>
+                      <div nz-col nzSpan="3">
+                        <nz-tag [nzColor]="'#f50'">{{ listProjectOData?.length }}</nz-tag>
+                      </div>
+                    </div>
+                  </nz-card>
+                </div>
+              </div>
+            </div>
+            <div nz-col [nzSpan]="4">
+              <div nz-row>
+                <div nz-col nzSpan="0"></div>
+                <div nz-col nzSpan="24">
+                  <nz-card nzSize="small">
+                    <div nz-row>
+                      <div nz-col nzSpan="21">
+                        <div style="font-size: 14px; font-weight: 500; padding-left: 10px">
+                          <i
+                            style="color: #ff7f50; font-size: 25px; margin-right: 10px"
+                            nz-icon
+                            nzType="bug"
+                            nzTheme="outline"
+                          ></i
+                          >Total Bug
+                        </div>
+                      </div>
+                      <div nz-col nzSpan="3">
+                        <nz-tag [nzColor]="'#f50'">{{ listIssue?.length }}</nz-tag>
+                      </div>
+                    </div>
+                  </nz-card>
+                </div>
+              </div>
+            </div>
+            <div nz-col [nzSpan]="4">
+              <div nz-row>
+                <div nz-col nzSpan="0"></div>
+                <div nz-col nzSpan="24">
+                  <nz-card nzSize="small">
+                    <div nz-row>
+                      <div nz-col nzSpan="21">
+                        <div style="font-size: 14px; font-weight: 500; padding-left: 10px">
+                          <i
+                            style="color: #ff7f50; font-size: 25px; margin-right: 10px"
+                            nz-icon
+                            nzType="tags"
+                            nzTheme="outline"
+                          ></i
+                          >Total Assign
+                        </div>
+                      </div>
+                      <div nz-col nzSpan="3">
+                        <nz-tag [nzColor]="'#f50'">{{ countAssgin }}</nz-tag>
+                      </div>
+                    </div>
+                  </nz-card>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="users collapse show" style="margin-top: 10px" id="user">
+      <div class="container-fluid">
+        <div>
+          <nz-input-group nzSearch nzSize="medium" [nzAddOnAfter]="suffixButton">
+            <input
+              [(ngModel)]="search"
+              (keyup.enter)="filterChange(search)"
+              type="text"
+              nz-input
+              placeholder="Search in Name, Phone Number"
+            />
+          </nz-input-group>
+          <ng-template #suffixButton>
+            <button
+              (click)="filterChange(search)"
+              nz-button
+              nzType="primary"
+              nzSize="medium"
+              nzSearch
+              nzDanger
+              style="background-color: #f50"
+            >
+              Search
+            </button>
+          </ng-template>
+        </div>
+        <div style="margin-top: 1vh">
+          <nz-card
+            style="width: 100%; font-weight: 500; margin-top: 10px"
+            nzSize="small"
+            class="tableAdmin"
+          >
+            <div nz-row>
+              <div nz-col nzSpan="3">Name</div>
+              <div nz-col nzSpan="6">Email</div>
+              <div nz-col nzSpan="3">Phone</div>
+              <div nz-col nzSpan="2">Project Created</div>
+              <div nz-col nzSpan="2">Bugs Created</div>
+              <div nz-col nzSpan="2">Bugs Assigned</div>
+              <div nz-col nzSpan="3">Bugs Out Of Date</div>
+              <div nz-col nzSpan="3">Bugs Finish</div>
+            </div>
+          </nz-card>
+          <div class="containerCard">
+            <nz-card
+            style="width: 100%; margin-top: 5px"
+            nzSize="small"
+            class="tableAdmin"
+            *ngFor="let data of listUser"
+            @fadeIn
+          >
+            <div nz-row>
+              <div nz-col nzSpan="3">
+                  <a style="text-decoration: none; color: black;" 
+                  >{{ data.Name }}</a>
+              </div>
+              <div nz-col nzSpan="6">{{ data.Email }}</div>
+              <div nz-col nzSpan="3">{{ data?.PhoneNumber }}</div>
+              <div nz-col nzSpan="2">
+                <nz-tag>{{ data.ProjectCreate }}</nz-tag>
+              </div>
+              <div nz-col nzSpan="2">
+                <nz-tag>{{ data.IssueCreated }}</nz-tag>
+              </div>
+              <div nz-col nzSpan="2">
+                <nz-tag>{{ data.CountIssueAssign }}</nz-tag>
+              </div>
+              <div nz-col nzSpan="3">
+                <nz-progress
+                  nzTooltipTitle="{{ data.IssueDueDate }}  Bug"
+                  nz-tooltip
+                  nzStatus="active"
+                  [nzPercent]="(data.IssueDueDate / data.TotalIssue) * 100 | formatNumber"
+                  [nzStrokeColor]="'red'"
+                >
+                </nz-progress>
+              </div>
+              <div nz-col nzSpan="3">
+                <nz-progress
+                  nzTooltipTitle="{{ data.IssueFinish }}  Bug"
+                  nz-tooltip
+                  nzStatus="active"
+                  [nzPercent]="(data.IssueFinish / data.TotalIssue) * 100 | formatNumber"
+                  [nzStrokeColor]="'green'"
+                >
+                </nz-progress>
+              </div>
+            </div>
+          </nz-card>
+          </div>
+        </div>
+
+        <div id="mobile-card">
+          <div *ngFor="let data of listUser">
+            <nz-card
+              nzSize="small"
+              style="width: 100%; padding: 5px; border: 1px solid #f8895191; margin-top: 5px;"
+              [nzBordered]="false"
+            >
+              <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                <div nz-col nzSpan="4" style="font-weight: 500"><span style="float: left;">Name:</span></div>
+                <div nz-col nzSpan="20" ><span style="float: right;" >
+                  <a style="text-decoration: none; color: black;" 
+                  >{{ data.Name }}</a>
+                  </span></div>
+              </div>
+              <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                <div nz-col nzSpan="4" style="font-weight: 500"><span style="float: left;">Email:</span></div>
+                <div nz-col nzSpan="20" ><span style="float: right;word-break: break-all;" >{{ data.Email }}</span></div>
+              </div>
+              <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                <div nz-col nzSpan="6" style="font-weight: 500"><span style="float: left;">Phone:</span></div>
+                <div nz-col nzSpan="18" ><span style="float: right;" >{{ data?.PhoneNumber }}</span></div>
+              </div>
+              <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Project Created:</span></div>
+                <div nz-col nzSpan="12" ><span style="float: right;" ><nz-tag>{{ data.ProjectCreate }}</nz-tag></span></div>
+              </div>
+              <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Bugs Created:</span></div>
+                <div nz-col nzSpan="12" ><span style="float: right;" ><nz-tag>{{ data.IssueCreated }}</nz-tag></span></div>
+              </div>
+              <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Bugs Assigned:</span></div>
+                <div nz-col nzSpan="12" ><span style="float: right;" ><nz-tag>{{ data.CountIssueAssign }}</nz-tag></span></div>
+              </div>
+              <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Bugs Out Of Date:</span></div>
+                <div nz-col nzSpan="12" ><nz-progress
+                  nzTooltipTitle="{{ data.IssueDueDate }}  Bug"
+                  nz-tooltip
+                  nzStatus="active"
+                  [nzPercent]="(data.IssueDueDate / data.TotalIssue) * 100 | formatNumber"
+                  [nzStrokeColor]="'red'"
+                >
+                </nz-progress></div>
+              </div>
+              <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Bugs Finish:</span></div>
+                <div nz-col nzSpan="12" ><nz-progress
+                  nzTooltipTitle="{{ data.IssueFinish }}  Bug"
+                  nz-tooltip
+                  nzStatus="active"
+                  [nzPercent]="(data.IssueFinish / data.TotalIssue) * 100 | formatNumber"
+                  [nzStrokeColor]="'green'"
+                >
+                </nz-progress></div>
+              </div>
+
+            </nz-card>
+          </div>
+        </div>
+
+        <div style="margin-top: 10px">
+          <label
+            >Total: <nz-tag [nzColor]="'#f50'">USERS--{{ listUser?.length }}</nz-tag></label>
+        </div>
+      </div>
+    </div>
+  </nz-tab>
+  <nz-tab [nzTitle]="titleTemplate1">
+    <ng-template #titleTemplate1>
+      <i nz-icon [nzType]="'fund-projection-screen'"></i>
+      Projects
+    </ng-template>
+    <div id="list-project" class="list-project">
+      <div class="projects collapse show">
+        <div class="container-fluid">
+          <div>
+            <nz-input-group nzSearch nzSize="medium" [nzAddOnAfter]="suffixButton1">
+              <input
+                [(ngModel)]="input"
+                (keyup.enter)="filterChangeShow(input)"
+                type="text"
+                nz-input
+                placeholder="Search in Name Project">
+            </nz-input-group>
+            <ng-template #suffixButton1>
+              <button
+                  (click)="filterChangeShow(input)"
+                  nz-button
+                  nzType="primary"
+                  nzSize="medium"
+                  nzDanger
+                  style="background-color: #f50"
+                  nzSearch>
+                  Search
+                </button>
+            </ng-template>
+            <div class="dueUser" nz-row style="margin-top: 5px">
+              <div class="dueUser1" id="dueUser2" style="margin-left: 0.32vw; font-weight: 500">
+                <label>Created By</label>
+                <nz-select
+                  style="width: 200px; margin-left: 10px;"
+                  nzShowSearch
+                  nzAllowClear
+                  (ngModelChange)="getUserName($event)"
+                  nzPlaceHolder="Select a Person"
+                  [(ngModel)]="userId"
+                >
+                  <nz-option
+                    *ngFor="let user of listUser"
+                    nzValue="{{ user.Name }}"
+                    nzLabel="{{ user.Name }}"
+                  ></nz-option>
+                </nz-select>
+              </div>
+            </div>
+          </div>
+          <div class="table-project" style="margin-top: 20px">
+            <nz-table
+              class="tableProject"
+              #basicTable1
+              [nzData]="listProjectOData"
+              [nzPageSize]="5"
+            >
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Created By</th>
+                  <th>Members</th>
+                  <th>Bugs</th>
+                  <th>Bugs Over Due Date</th>
+                  <th>Percent Bugs Finish</th>
+                  <th>Creation Time</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody *ngFor="let data of basicTable1.data">
+                <tr style="text-align: center">
+                  <td>
+                      <a
+                      style="text-decoration: none; color: black;"
+                        nzTooltipTitle="Project details"
+                        nzTooltipPlacement="bottom"
+                        nz-tooltip
+                        routerLink="/project/{{ data.Id }}/home"
+                      >
+                        {{ data.Name }}</a>
+                  </td>
+                  <td>{{ data.userName }}</td>
+                  <td>
+                    <nz-tag>{{ data.CountMember }}</nz-tag>
+                  </td>
+                  <td>
+                    <nz-tag>{{ data.countIssue }}</nz-tag>
+                  </td>
+                  <td>
+                    <nz-progress
+                      nzTooltipTitle="{{ data.countIssueDueDate }}  Bug"
+                      nz-tooltip
+                      nzStatus="active"
+                      [nzPercent]="(data.countIssueDueDate / data.countIssue) * 100 | formatNumber"
+                      [nzStrokeColor]="'red'"
+                    >
+                    </nz-progress>
+                  </td>
+                  <td>
+                    <nz-progress
+                      nzTooltipTitle="{{ data.countIssueClose }}  Bug"
+                      nz-tooltip
+                      nzStatus="active"
+                      [nzPercent]="(data.countIssueClose / data.countIssue) * 100 | formatNumber"
+                      [nzStrokeColor]="'green'"
+                    >
+                    </nz-progress>
+                  </td>
+                  <td>{{ data.CreationTime | date }}</td>
+                  <td>
+                    <a (click)="RemoveProject(data.Id)" nzType="default"
+                      ><i
+                        class="iconDelete"
+                        nz-icon
+                        nzType="delete"
+                        style="cursor: pointer; color: red"
+                      ></i
+                    ></a>
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+
+          <div id="mobile-card2">
+            <div *ngFor="let data of listProjectOData">
+              <nz-card
+                nzSize="small"
+                style="width: 100%; padding: 5px; border: 1px solid #f8895191; margin-top: 5px;"
+                [nzBordered]="false"
+              >
+                <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                  <div nz-col nzSpan="4" style="font-weight: 500"><span style="float: left;">Name:</span></div>
+                  <div nz-col nzSpan="20" ><span style="float: right;" >
+                    <a
+                    style="text-decoration: none; color: black;"
+                      nzTooltipTitle="Project details"
+                      nzTooltipPlacement="bottom"
+                      nz-tooltip
+                      routerLink="/project/{{ data.Id }}/home"
+                    >
+                      {{ data.Name }}</a>
+                    </span></div>
+                </div>
+                <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                  <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Created By:</span></div>
+                  <div nz-col nzSpan="12" ><span style="float: right;" >{{ data.userName }}</span></div>
+                </div>
+                <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                  <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Members:</span></div>
+                  <div nz-col nzSpan="12" ><span style="float: right;" ><nz-tag>{{ data.CountMember }}</nz-tag></span></div>
+                </div>
+                <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                  <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Bugs:</span></div>
+                  <div nz-col nzSpan="12" ><span style="float: right;" ><nz-tag>{{ data.countIssue }}</nz-tag></span></div>
+                </div>
+                <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                  <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Over Due Date:</span></div>
+                  <div nz-col nzSpan="12" ><nz-progress
+                    nzTooltipTitle="{{ data.countIssueDueDate }}  Bug"
+                    nz-tooltip
+                    nzStatus="active"
+                    [nzPercent]="(data.countIssueDueDate / data.countIssue) * 100 | formatNumber"
+                    [nzStrokeColor]="'red'"
+                  >
+                  </nz-progress></div>
+                </div>
+                <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                  <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Percent Bugs Finish:</span></div>
+                  <div nz-col nzSpan="12" ><nz-progress
+                    nzTooltipTitle="{{ data.countIssueClose }}  Bug"
+                    nz-tooltip
+                    nzStatus="active"
+                    [nzPercent]="(data.countIssueClose / data.countIssue) * 100 | formatNumber"
+                    [nzStrokeColor]="'green'"
+                  >
+                  </nz-progress></div>
+                </div>
+                <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                  <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Creation Time:</span></div>
+                  <div nz-col nzSpan="12" ><span style="float: right;" >{{ data.CreationTime | date }}</span></div>
+                </div>
+                <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                  <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Action:</span></div>
+                  <div nz-col nzSpan="12" ><span style="float: right;" ><a (click)="RemoveProject(data.Id)" nzType="default"
+                    ><i
+                      class="iconDelete"
+                      nz-icon
+                      nzType="close"
+                      style="cursor: pointer; color: red"
+                    ></i
+                  ></a></span></div>
+                </div>
+              </nz-card>
+            </div>
+          </div>
+
+          <div class="lableTotal" style="margin-top: 10px">
+            <label
+              >Total: <nz-tag [nzColor]="'#f50'">PROJECTS--{{ listProjectOData?.length }}</nz-tag></label
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-left: 30px; text-align: center">
+      <label>Choose Project</label><br />
+      <nz-select
+        id="AllProject"
+        style="width: 400px"
+        nzShowSearch
+        nzAllowClear
+        (ngModelChange)="getCharIssue($event)"
+        nzPlaceHolder="Select a Project"
+        [(ngModel)]="idProject"
+      >
+        <nz-option nzValue="" nzLabel="All project"></nz-option>
+        <nz-option
+          *ngFor="let project of listProjectOData"
+          nzValue="{{ project?.Id }}"
+          nzLabel="{{ project?.Name }}"
+        ></nz-option>
+      </nz-select>
+    </div>
+    <div style="margin-top: 1vh">
+      <div nz-row>
+        <div class="chartLine" nz-col [nzSpan]="11">
+          <div style="margin: 1vh 0px 1vh 0px">
+            <nz-tabset nzCentered style="padding-left: 10px; max-height: 100%">
+              <nz-tab nzTitle="Month">
+                <canvas #monthChart></canvas>
+                <hr color="red" /> </nz-tab
+              >
+              <nz-tab nzTitle="Year">
+                <canvas #yearChart></canvas>
+                <hr color="red" />
+              </nz-tab>
+            </nz-tabset>
+          </div>
+        </div>
+        <div nz-col [nzSpan]="1"></div>
+        <div class="pieChart" nz-col [nzSpan]="11">
+          <div style="margin: 1vh 0px 1vh 0px">
+            <canvas #pie> 123</canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nz-tab>
+  <nz-tab [nzTitle]="titleTemplate3">
+    <ng-template #titleTemplate3>
+      <i nz-icon [nzType]="'bug'"></i>
+      Bugs
+    </ng-template>
+      <div id="adminIssues">
+        <div class="row1" nz-row style="font-weight: 500">
+          <div nz-col nzSpan="24">
+            <div nz-row [nzGutter]="8" style="padding: 0 10px 0 10px" id="adminIssuesRow1">
+              <div nz-col [nzSpan]="6">
+                <nz-card nzSize="small">
+                  <div nz-row>
+                    <div nz-col nzSpan="20">
+                      <i
+                        nz-icon
+                        nzType="bug"
+                        nzTheme="outline"
+                        style="font-size: 25px; color: #f50"
+                      ></i>
+                      Total Bugs
+                    </div>
+                    <div nz-col nzSpan="4">
+                      <nz-tag [nzColor]="'#FF7F50'">{{ listIssue?.length }}</nz-tag>
+                    </div>
+                  </div>
+                </nz-card>
+              </div>
+              <div nz-col [nzSpan]="6">
+                <nz-card nzSize="small">
+                  <div nz-row>
+                    <div nz-col nzSpan="20">
+                      <i
+                        nz-icon
+                        nzType="warning"
+                        nzTheme="outline"
+                        style="font-size: 25px; color: #f50"
+                      ></i>
+                      Pending
+                    </div>
+                    <div nz-col nzSpan="4">
+                      <nz-tag [nzColor]="'#FF7F50'">{{ countOpen }}</nz-tag>
+                    </div>
+                  </div>
+                </nz-card>
+              </div>
+              <div nz-col [nzSpan]="6">
+                <nz-card nzSize="small">
+                  <div nz-row>
+                    <div nz-col nzSpan="20">
+                      <i
+                        nz-icon
+                        nzType="fire"
+                        nzTheme="outline"
+                        style="font-size: 25px; color: #f50"
+                      ></i>
+                      Bugs Over Due date
+                    </div>
+                    <div nz-col nzSpan="4">
+                      <nz-tag [nzColor]="'#FF7F50'">{{ countDuedate }}</nz-tag>
+                    </div>
+                  </div>
+                </nz-card>
+              </div>
+              <div nz-col [nzSpan]="6">
+                <nz-card nzSize="small">
+                  <div nz-row>
+                    <div nz-col nzSpan="20">
+                      <i
+                        nz-icon
+                        nzType="check"
+                        nzTheme="outline"
+                        style="font-size: 25px; color: #f50"
+                      ></i>
+                      Bugs Finished
+                    </div>
+                    <div nz-col nzSpan="4">
+                      <nz-tag [nzColor]="'#FF7F50'">{{ countFinish }}</nz-tag>
+                    </div>
+                  </div>
+                </nz-card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="list-issue" style="margin-top: 20px" class="list-issue">
+        <div class="issues collapse show">
+          <div class="container-fluid">
+            <div>
+              <nz-input-group nzSearch nzSize="medium" [nzAddOnAfter]="suffixButton2">
+                <input
+                  [(ngModel)]="inputIssue"
+                  (keyup.enter)="filterChangeIssue(inputIssue)"
+                  type="text"
+                  nz-input
+                  placeholder="Search in Name Bug"
+                />
+              </nz-input-group>
+              <ng-template #suffixButton2>
+                <button
+                  (click)="filterChangeIssue(inputIssue)"
+                  nz-button
+                  nzType="primary"
+                  nzSize="medium"
+                  nzDanger
+                  style="background-color: #f50"
+                  nzSearch>
+                  Search
+                </button>
+              </ng-template>
+
+              <div nz-row style="margin-top: 5px; font-weight: 500">
+                <div style="display: flex">
+                  <div class="endDiv">
+                    <label>Created By</label><br />
+                    <nz-select
+                      style="width: 180px"
+                      nzShowSearch
+                      nzAllowClear
+                      (ngModelChange)="getUserNameIssue($event)"
+                      nzPlaceHolder="Select a Person"
+                      [(ngModel)]="idUserIssue"
+                    >
+                      <nz-option
+                        *ngFor="let user of listUser"
+                        nzValue="{{ user.Name }}"
+                        nzLabel="{{ user.Name }}"
+                      ></nz-option>
+                    </nz-select>
+                  </div>
+                  <div class="startDiv" style="margin-left: 30px">
+                    <label>Assigned To</label><br />
+                    <nz-select
+                      style="width: 180px"
+                      nzShowSearch
+                      nzAllowClear
+                      (ngModelChange)="getUserAssign($event)"
+                      nzPlaceHolder="Select a Person"
+                      [(ngModel)]="idUserAssign"
+                    >
+                      <nz-option
+                        *ngFor="let user of listUser"
+                        nzValue="{{ user.Id }}"
+                        nzLabel="{{ user.Name }}"
+                      ></nz-option>
+                    </nz-select>
+                  </div>
+                </div>
+                <div style="display: flex">
+                  <div class="endDiv" style="margin-left: 30px">
+                    <label>Project</label><br />
+                    <nz-select
+                      style="width: 180px"
+                      nzShowSearch
+                      nzAllowClear
+                      (ngModelChange)="getByProject($event)"
+                      nzPlaceHolder="Select a project"
+                      [(ngModel)]="idProjectIssue"
+                    >
+                      <nz-option
+                        *ngFor="let project of listProjectOData"
+                        nzValue="{{ project.Name }}"
+                        nzLabel="{{ project.Name }}"
+                      ></nz-option>
+                    </nz-select>
+                  </div>
+                  <div class="startDiv" style="margin-left: 30px">
+                    <label>Status</label><br />
+                    <nz-select
+                      style="width: 180px"
+                      nzShowSearch
+                      nzAllowClear
+                      (ngModelChange)="getByStatus($event)"
+                      nzPlaceHolder="Select a status"
+                      [(ngModel)]="idStatus"
+                    >
+                      <nz-option
+                        *ngFor="let status of listStatus"
+                        nzValue="{{ status.name }}"
+                        nzLabel="{{ status.name }}"
+                      ></nz-option>
+                    </nz-select>
+                  </div>
+                </div>
+                <div style="display: flex">
+                  <div class="endDiv" style="margin-left: 30px">
+                    <label>Category</label><br />
+                    <nz-select
+                      style="width: 180px"
+                      nzShowSearch
+                      nzAllowClear
+                      (ngModelChange)="getByCategory($event)"
+                      nzPlaceHolder="Select a category"
+                      [(ngModel)]="idCategory"
+                    >
+                      <nz-option
+                        *ngFor="let category of listCategory"
+                        nzValue="{{ category.name }}"
+                        nzLabel="{{ category.name }}"
+                      ></nz-option>
+                    </nz-select>
+                  </div>
+                  <div id="export" style="margin-left: 10px">
+                    <button
+                      class="exportChild"
+                      style="margin-top: 30px; background-color: rgba(255, 85, 0, 0.8)"
+                      (click)="exportModal()"
+                      nz-button
+                      nzType="primary"
+                      nzDanger
+                    >
+                      <i class="fas fa-file-export" style="margin-right: 10px"></i> Export Sheet
+                    </button>
+                  </div>
+                </div>
+                <nz-modal
+                  [(nzVisible)]="isVisibleExport"
+                  nzTitle="Export Excel Sheet"
+                  (nzOnCancel)="handleCancelExport()"
+                  (nzOnOk)="handleOkExport()"
+                >
+                  <ng-container *nzModalContent>
+                    <nz-radio-group [(ngModel)]="radioValue">
+                      <label nz-radio nzValue="New">Create New Excel Sheet</label>
+                      <label nz-radio nzValue="Update">Update An Existing Sheet</label>
+                    </nz-radio-group>
+                    <input
+                      style="margin-top: 10px"
+                      *ngIf="radioValue == 'Update'"
+                      nz-input
+                      placeholder="Your SpreadSheetId"
+                      [(ngModel)]="spreadSheetId"
+                    />
+                    <input
+                      style="margin-top: 10px"
+                      *ngIf="radioValue == 'Update'"
+                      nz-input
+                      placeholder="Your SheetName, VD: Trang tính1"
+                      [(ngModel)]="sheetName"
+                    />
+                    <input
+                      style="margin-top: 10px; width: 90%"
+                      *ngIf="radioValue == 'New'"
+                      readonly="true"
+                      nz-input
+                      placeholder="Your URL sheet will here"
+                      [(ngModel)]="urlSheet"
+                    />
+                    <i
+                      (click)="copyTo()"
+                      *ngIf="radioValue == 'New'"
+                      nz-icon
+                      nzType="copy"
+                      style="font-size: 20px"
+                      nzTheme="outline"
+                    ></i>
+                  </ng-container>
+                </nz-modal>
+              </div>
+            </div>
+            <nz-spin
+            style="
+              display: block;
+              position: relative;
+              margin-left: 50%;
+              margin-top: 25%;
+              width: 50%;
+              z-index: 99;
+            "
+            *ngIf="loaderService.isLoading | async; else doneLoad"
+            [nzIndicator]="indicatorTemplate"
+            nzSimple
+            [nzSize]="'large'"
+          >
+          </nz-spin>
+          <ng-template #indicatorTemplate
+            ><i nz-icon nzType="loading" style="font-size: 35px; color: #f50"></i
+          ></ng-template>
+          <ng-template #doneLoad>
+            <div class="table-project" style="margin-top: 20px">
+              <nz-table class="tableAdminIssues" #basicTable2 [nzData]="listIssue" [nzFrontPagination]="false">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Created By</th>
+                    <th>Project</th>
+                    <th>Status</th>
+                    <th>Category</th>
+                    <th>Due date</th>
+                    <th>Creation Time</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let data of basicTable2.data">
+                  <tr style="text-align: center">
+                    <td>
+                        <a style="text-decoration: none; color: black;"
+                          nzTooltipTitle="Issue details"
+                          nzTooltipPlacement="bottom"
+                          nz-tooltip
+                          routerLink="/project/{{ data.ProjectID }}/issues/view/{{ data.IdIssue }}">
+                          {{ data.Name }}</a>
+                    </td>
+                    <td>{{ data.UserName }}</td>
+                    <td>
+                        <a>
+                          {{ data.ProjectName }}</a>
+                    </td>
+                    <td>
+                      <nz-badge nzColor="{{data.NzColor}}" nzText="{{ data.StatusName }}"></nz-badge>
+                    </td>
+                    <!-- <td>{{ data.statusName }}</td> -->
+                    <td>
+                      {{ data.CategoryName }} <span *ngIf="data.CategoryName == null">.</span>
+                    </td>
+                    <td>
+                      <nz-tag>{{ data.DueDate | date }}</nz-tag>
+                    </td>
+                    <td>{{ data.StartDate | date: 'longDate' }}</td>
+                    <td>
+                      <a (click)="RemoveIssue(data.IdIssue)" nzType="default"
+                        ><i
+                          class="iconDelete"
+                          nz-icon
+                          nzType="delete"
+                          style="cursor: pointer; color: red"
+                        ></i
+                      ></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </div>
+
+            <div id="mobile-card3">
+              <div *ngFor="let data of listIssue">
+                <nz-card
+                  nzSize="small"
+                  style="width: 100%; padding: 5px; border: 1px solid #f8895191; margin-top: 5px;"
+                  [nzBordered]="false"
+                >
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px; width: 100%;">
+                    <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Name:</span></div>
+                    <div nz-col nzSpan="12" ><span (click)="routerBug(data.projectID, data.id)" style="float: right;" >{{ data.Name }}</span></div>
+                  </div>
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                    <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Created By:</span></div>
+                    <div nz-col nzSpan="12" ><span style="float: right;" >{{ data.UserName }}</span></div>
+                  </div>
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                    <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Project:</span></div>
+                    <div nz-col nzSpan="12" ><span style="float: right;" >{{ data.ProjectName }}</span></div>
+                  </div>
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                    <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Status:</span></div>
+                    <div nz-col nzSpan="12" ><span style="float: right;" ><nz-badge nzColor="{{data.NzColor}}" nzText="{{ data.StatusName }}"></nz-badge></span></div>
+                  </div>
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                    <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Category:</span></div>
+                    <div nz-col nzSpan="12" ><span style="float: right;" >{{ data.CategoryName }}</span></div>
+                  </div>
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                    <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Due date:</span></div>
+                    <div nz-col nzSpan="12" ><span style="float: right;" ><nz-tag>{{ data.DueDate | date }}</nz-tag></span></div>
+                  </div>
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                    <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Creation Time:</span></div>
+                    <div nz-col nzSpan="12" ><span style="float: right;" >{{ data.StartDate | date: 'short' }}</span></div>
+                  </div>
+                  <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                    <div nz-col nzSpan="12" style="font-weight: 500"><span style="float: left;">Action:</span></div>
+                    <div nz-col nzSpan="12" ><span style="float: right;" ><a (click)="RemoveIssue(data.IdIssue)" nzType="default"
+                      ><i
+                        class="iconDelete"
+                        nz-icon
+                        nzType="close"
+                        style="cursor: pointer; color: red"
+                      ></i
+                    ></a></span></div>
+                  </div>
+                </nz-card>
+              </div>
+            </div>
+            <nz-pagination
+              style="float: right; margin: 5px 0"
+              class="pagination"
+              nzShowSizeChanger
+              nzShowQuickJumper
+              [nzTotal]="totalCount"
+              [(nzPageIndex)]="pageIndex"
+              [(nzPageSize)]="pageSize"
+              (nzPageSizeChange)="filterChangeIssue(inputIssue)"
+              (nzPageIndexChange)="filterChangeIssue(inputIssue)"
+              [nzSize]="'small'"
+            >
+            </nz-pagination>
+
+            <div class="lableTotalAdminIssues" style="margin-top: 10px">
+              <label
+                >Total: <nz-tag [nzColor]="'#f50'">BUGS--{{ totalCount }}</nz-tag></label
+              >
+            </div>
+          </ng-template>
+          </div>
+        </div>
+      </div>
+  </nz-tab>
+  <nz-tab [nzTitle]="titleTemplate2">
+    <ng-template #titleTemplate2>
+      <i nz-icon [nzType]="'carry-out'"></i>
+      Status
+    </ng-template>
+    <nz-layout>
+      <app-status-manager></app-status-manager>
+    </nz-layout>
+  </nz-tab>
+  <nz-tab [nzTitle]="titleTemplate5">
+    <ng-template #titleTemplate5>
+      <i nz-icon [nzType]="'select'"></i>
+      Category
+    </ng-template>
+    <nz-layout>
+      <app-category></app-category>
+    </nz-layout>
+  </nz-tab>
+  <nz-tab [nzTitle]="titleTemplate4">
+    <ng-template #titleTemplate4>
+      <i nz-icon [nzType]="'cloud'"></i>
+      TFS Host
+    </ng-template>
+    <nz-layout>
+      <app-board></app-board>
+    </nz-layout>
+  </nz-tab>
+</nz-tabset>
+<!-- </ng-template> -->

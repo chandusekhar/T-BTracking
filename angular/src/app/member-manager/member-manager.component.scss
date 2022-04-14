@@ -1,0 +1,207 @@
+.menuTab {
+  color: rgb(25, 0, 255);
+}
+.ant-tag {
+  margin-right:0;
+}
+.span{
+  float: right;
+  word-break: break-word;
+}
+.user {
+  float: left;
+}
+:host {
+  text-align: left;
+}
+nz-input{
+    width: 100%;
+}
+.iconDelete{
+    text-align: center;
+    color: rgb(245, 11, 11)
+}
+nz-header,
+nz-footer {
+  color: #fff;
+  background-color: #fff;
+}
+label{
+  font-weight: 500;
+  text-align: left;
+  max-width: 130px;
+  word-wrap: break-word;
+}
+nz-sider {
+  color: #fff;
+  line-height: 120px;
+}
+.table{
+  max-height: 550px;
+  display: block;
+  overflow-y: auto;
+  margin: 0 5px 0 0;
+}
+nz-content {
+  color: #fff;
+  min-height: 120px;
+  line-height: 120px;
+}
+
+nz-layout {
+  margin-bottom: 48px;
+}
+
+nz-layout:last-child {
+  margin: 0;
+}
+
+#memberManager{
+  overflow-y: auto;
+  height: 92.5vh;
+  overflow-x: hidden;
+}
+@media only screen and (max-width: 740px){
+  .boxChild{
+    padding: 0 !important;
+    nz-card{
+      padding: 0 !important;
+    }
+  }
+  .ant-col-12 {
+    word-wrap: break-word;
+  }
+  .ant-col-8 {
+    max-width: 100%;
+  }
+  .cardBox{
+    flex-wrap: nowrap;
+    flex-direction: column;
+  }
+  .ant-tag {
+    margin-right: 0px;
+  }
+  .container-fluid{
+    padding: 5px 5px !important;
+}
+  #pcTable{
+    display: none;
+  }
+  #settingMember{
+    padding: 10px 10px !important;
+    .tableUser{
+      overflow: auto hidden !important;
+      border: 1px solid brown !important;
+    }
+  }
+}
+#responTable{
+  // max-height: 510px;
+  overflow-y: auto;
+  border: 1px solid #2db7f5;
+  table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+    overflow-x: hidden;
+  }
+
+  table caption {
+    font-size: 1.5em;
+    margin: .5em 0 .75em;
+  }
+
+  table tr {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: .55em;
+  }
+
+  table th,
+  table td {
+    padding: .625em;
+    text-align: center;
+  }
+
+  table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  @media screen and (max-width: 600px) {
+    table {
+      border: 0;
+    }
+
+    table caption {
+      font-size: 1.3em;
+    }
+
+    table thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+
+    table tr {
+      display: block;
+      margin-bottom: .625em;
+      overflow-x: hidden;
+    }
+
+    table td {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      font-size: .8em;
+      text-align: right;
+    }
+
+    table td::before {
+      /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    table td:last-child {
+      border-bottom: 0;
+    }
+  }
+}
+@media only screen and (min-width: 740px) {
+  #responTable{
+    display: none;
+  }
+  #memberManager::-webkit-scrollbar-track
+  {
+  	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  	background-color: #F5F5F5;
+    border-radius: 3px;
+  }
+
+  #memberManager::-webkit-scrollbar
+  {
+  	width: 3px;
+  	background-color: #d5ecf7;
+    border-radius: 3px;
+  }
+
+  #memberManager::-webkit-scrollbar-thumb
+  {
+  	background-color: #f50;
+    border-radius: 3px;
+  }
+}

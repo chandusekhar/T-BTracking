@@ -1,0 +1,50 @@
+<div id = "board"class="container">
+  <div nz-row>
+    <div class="img" nz-col nzSpan="8"><img src="https://mail.tmtco.asia/custom/webmail/img/loginlogo_2edd6.PNG"></div>
+    <div nz-col nzSpan="16">
+      <div>
+        <div>
+          <div class="form-group">
+            <label for="fullName">TFS Host <span class="form-required">*</span></label>
+            <input
+              style="border-radius: 5px"
+              [(ngModel)]="Host"
+              type="text"
+              class="form-control"
+              placeholder="TFS Host"
+            />
+          </div>
+        </div>
+      </div>
+      <div>
+        <div>
+          <div class="form-group">
+            <label for="fullName">Collection <span class="form-required">*</span></label>
+            <input
+              style="border-radius: 5px"
+              [(ngModel)]="Collection"
+              type="text"
+              class="form-control"
+              placeholder="TFS Collection"
+            />
+          </div>
+        </div>
+      </div>
+      <!-- <div>
+        <div>
+          <div class="form-group">
+            <label for="fullName">Personal Access Token <span class="form-required">*</span></label>
+            <input
+              style="border-radius: 5px"
+              [(ngModel)]="Pat"
+              type="text"
+              class="form-control"
+              placeholder="Personal Access Token"
+            />
+          </div>
+        </div>
+      </div> -->
+      <div style="float:right;"><button (click)="updateHost()" nz-button nzType="primary"><i nz-icon [nzType]="ButtonText == 'Update' ? 'save' : 'plus'" nzTheme="outline"></i> {{ ButtonText }}</button></div>
+    </div>
+  </div>
+</div>

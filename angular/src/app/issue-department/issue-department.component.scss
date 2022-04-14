@@ -1,0 +1,394 @@
+nz-select {
+  width: 100%;
+}
+.list-department{
+  width: 100%;
+   padding: 5px;
+    margin: 5px
+}
+.container-card {
+  max-height: 56vh;
+}
+.container-card::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+.container-card::-webkit-scrollbar {
+  width: 5px;
+  background-color: #d5ecf7;
+  border-radius: 5px;
+}
+
+.container-card::-webkit-scrollbar-thumb {
+  background-color: #ff9059;
+  border-radius: 5px;
+}
+.container-fluid {
+  overflow-y: hidden;
+  max-height: 92.5vh;
+}
+.cardTeam {
+  :hover {
+    background-color: rgba(255, 85, 0, 0.1);
+  }
+}
+.cardDepartment {
+  :hover {
+    background-color: rgba(255, 85, 0, 0.1);
+  }
+}
+p{
+  background: none !important;
+}
+.cardDepartmentChoice {
+  background-color: rgba(255, 85, 0, 0.1);
+  color: #f50;
+}
+.inputChild {
+  float: right;
+  padding-left: 5px;
+}
+.cardChoice {
+  background-color: rgba(255, 85, 0, 0.1);
+  color: #f50;
+}
+.colSpan {
+  // border-right:1px solid #ccc;
+  overflow-y: auto;
+  max-height: 75vh;
+  padding: 10px;
+}
+.childCard {
+  padding: 10px;
+}
+.header-team {
+  margin-top: 1vh;
+  height: 5vh;
+  display: flex;
+  //  background-color: #ECECEC;
+  justify-content: space-between;
+}
+
+[nz-tabset] {
+  //  background: #ECECEC;
+}
+.bt-list-department {
+  display: inline-flex;
+  margin-top: 1vh;
+  text-align: center;
+  margin-left: 1vh;
+}
+.bt-dpisue {
+  margin: 0.5vh 1vh 0vh 0vh;
+  border-radius: 0.5vh;
+}
+.bt-Tisue {
+  margin-top: 0.5vh;
+  // height: 70%;
+  border-radius: 5px;
+  background-color: rgb(85, 131, 231);
+}
+.bt-name {
+  width: 100%;
+  background-color: white;
+  color: #f50;
+  border-radius: 5px;
+}
+.bt-list-name {
+  display: flex;
+}
+.label {
+  margin-top: 0.5vh;
+  margin-left: 3vh;
+}
+.bt-list-team {
+  display: inline-flex;
+  margin-left: 2vh;
+  margin-top: 2vh;
+}
+.active1 {
+  background-color: rgb(76, 211, 87);
+}
+.active2 {
+  background-color: rgba(255, 85, 0, 0.8);
+  color:white;
+}
+.bt-created-assigned{
+  background-color: #fff;
+  color: rgba(255, 85, 0, 0.8);
+}
+.activeTeam {
+  background-color: rgb(76, 211, 87);
+}
+.button {
+  display: flex;
+}
+// .input {
+//   margin-top: 1vh;
+//   input {
+//     width: 50vh;
+//     margin-right: 4vh;
+//   }
+// }
+.count {
+  margin: 1.2vh 0px 0px 1vh;
+}
+.bt-name1 {
+  display: flex;
+  float: right;
+  margin-top: 1vh;
+}
+.list-team {
+  display: flex;
+}
+.list-search {
+  margin-top: 0.5vh;
+  display: flex;
+  float: right;
+
+  nz-select {
+    width: 18vh;
+  }
+}
+.table-issue {
+  background: #ececec;
+  height: 60vh;
+  margin-top: 2vh;
+}
+.card-search{
+  width: 100%;
+   padding: 5px;
+    margin: 5px;
+    border: 1px solid rgba(255, 85, 0, 0.2);
+}
+@media only screen and (min-width: 741px) {
+  #tableIssue,#mobile-card {
+    display: none;
+  }
+  #btnShowmore{
+    display: none;
+  }
+}
+@media only screen and (max-width: 740px) {
+  #mobile-card{
+    .ant-tag {
+      margin-right: 0px;
+    }
+  }
+  #row-dp-pc{
+    display: none;
+  }
+  .card-search{
+    margin-bottom: 0.5vh;
+    margin-left: 0vw;
+    border: 1px solid rgba(255, 85, 0, 0.2);
+  }
+  #cardsearch{
+    ::ng-deep .ant-card-small > .ant-card-body {
+      padding: 2px;
+    }
+  }
+  .table-Issue{
+    display: none;
+  }
+  #filCreate{
+    margin-top: 1vh;
+    display: flex;
+    flex-direction: row;
+    .filName{
+      width: 34vw;
+    }
+  }
+  nz-select,#inputFil {
+    width: 35.6vw;
+  }
+  .container-fluid {
+    overflow-y: auto;
+    max-height: 92.5vh;
+  }
+
+  .name-search{
+  .ant-col-3 {
+    max-width: 100%;
+  }
+}
+  .list-department{
+    margin-bottom: 0.5vh;
+    margin-left: 0vw;
+    .ant-col-2{
+      max-width: 100%;
+    }
+  }
+  .tableAdmin {
+    display: none;
+  }
+  .row1 {
+    margin-top: 20vh !important;
+  }
+  .header-team {
+    // .input {
+    //   margin-top: -2vh;
+    //   margin-left: 32vw;
+    // }
+    display: block;
+    height: 4vh;
+    .label {
+      margin-top: 2vh !important;
+      margin-left: 1.9vw;
+      h3 {
+        margin-top: -1.3vh;
+        //    margin-bottom: -2.4vh;
+        margin-left: -1vh;
+      }
+    }
+  }
+  .count {
+    margin-top: 1vh !important;
+  }
+  // ::ng-deep .ant-input-group > .ant-input:last-child,
+  // .ant-input-group-addon:last-child {
+  //   width: 17.4vh !important;
+  //   margin-top: -2vh;
+  //   margin-left: 4.24vw;
+  // }
+  .button {
+    display: block;
+    margin-top: -16vh;
+    margin-left: 2vw;
+    p {
+      display: none;
+    }
+    .bt-list-department {
+      margin-top: -1vh;
+      margin-left: 0vw;
+    }
+  }
+  .bt-name1 {
+    margin-top: -19vh;
+    margin-left: -61.73vw;
+  }
+  .bt-list-department {
+    margin-left: 1.26vw;
+  }
+  .bt-dpisue {
+    margin: 2vh 1vw 0px 0px !important;
+    z-index: 100;
+  }
+  .list-team {
+    margin-top: -6.2vh;
+    margin-left: 2px;
+    p {
+      display: none;
+    }
+  }
+  .bt-list-team {
+    margin-left: 2px !important;
+  }
+  .list-search {
+    display: block;
+    margin-top: -1vh;
+    .endDiv {
+      margin-top: -2vh;
+    }
+    .startDiv {
+      margin-top: -2vh;
+    }
+    label {
+      display: none;
+    }
+    nz-select {
+      width: 38vw;
+      margin-top: -30px;
+      margin-left: -13px;
+    }
+  }
+}
+#tableIssue {
+  width: 78vw;
+  margin-left: 0vw;
+  overflow: auto;
+  border: 1px solid #2db7f5;
+  table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+    overflow-x: hidden;
+  }
+
+  table caption {
+    font-size: 1.5em;
+    margin: 0.5em 0 0.75em;
+  }
+
+  table tr {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 0.55em;
+  }
+
+  table th,
+  table td {
+    padding: 0.625em;
+    text-align: center;
+  }
+
+  table th {
+    font-size: 0.85em;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  @media screen and (max-width: 600px) {
+    table {
+      border: 0;
+    }
+
+    table caption {
+      font-size: 1.3em;
+    }
+
+    table thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+
+    table tr {
+      display: block;
+      margin-bottom: 0.625em;
+      overflow-x: hidden;
+    }
+
+    table td {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      font-size: 0.8em;
+      text-align: right;
+      word-wrap: break-word;
+    }
+
+    table td::before {
+      /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    table td:last-child {
+      border-bottom: 0;
+    }
+  }
+}

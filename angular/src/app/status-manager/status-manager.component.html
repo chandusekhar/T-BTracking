@@ -1,0 +1,95 @@
+<div class="container-fluid" style="padding: 20px 20px 20px 20px">
+  <button (click)="showModalAddStatus()" nz-button nzType="primary" nzDanger style="background-color: rgba(255, 85, 0, 0.8);">
+    <i nz-icon nzType="plus" nzTheme="outline"></i> New Status ({{ listStatus?.length }})
+  </button>
+  <nz-modal
+    [(nzVisible)]="isVisibleAddStatus"
+    nzTitle="Add Status"
+    (nzOnCancel)="handleCancelAddStatus()"
+    (nzOnOk)="CreateStatus()"
+    [nzOkLoading]="isOkLoadingAddStatus"
+  >
+    <ng-template nzModalContent>
+      <div nz-row>
+        <div nz-col nzSpan="20" style="padding-right: 10px">
+          <input
+            style="width: 100%"
+            nz-input
+            placeholder="Input Status Name..."
+            [(ngModel)]="selectedStatus"
+          />
+        </div>
+        <div nz-col nzSpan="4">
+          <input
+            type="color"
+            (ngModelChange)="getColor($event)"
+            [(ngModel)]="colorFinish"
+            style="height: 100%"
+          />
+        </div>
+      </div>
+    </ng-template>
+  </nz-modal>
+  <div class="containerDragDrop">
+    <div
+      cdkDropList
+      class="example-list"
+      [cdkDropListData]="listStatus"
+      (cdkDropListDropped)="drop($event)"
+    >
+      <div class="example-box" *ngFor="let status of listStatus" cdkDrag>
+        <div nz-row class="custom-Box">
+          <div nz-col style="margin-left: 5px">
+            {{ status?.name }}
+            <nz-badge nzColor="{{ status.nzColor }}"></nz-badge>
+            <a class="hoverItem">
+              <i
+                (click)="showModalEditStatus(status.id, status.name, status.nzColor)"
+                nz-icon
+                nzType="edit"
+              ></i>
+
+              <i
+                *ngIf="!status.isDefault"
+                class="iconDelete"
+                (click)="RemoveStatus(status.id)"
+                nz-icon
+                nzType="close"
+                nzTheme="outline"
+              ></i>
+              <nz-modal
+                *ngIf="idStatusEdit == status.id"
+                [(nzVisible)]="isVisible"
+                nzTitle="Edit Status"
+                (nzOnCancel)="handleCancelEditStatus()"
+                (nzOnOk)="EditStatus()"
+                [nzOkLoading]="isOkLoadingEditStatus"
+              >
+                <ng-template nzModalContent>
+                  <div nz-row>
+                    <div nz-col nzSpan="20" style="padding-right: 10px">
+                      <input
+                      [disabled]="status.isDefault"
+                        nz-input
+                        placeholder="Input Status Name..."
+                        [(ngModel)]="selectedStatusEdit"
+                      />
+                    </div>
+                    <div nz-col nzSpan="4">
+                      <input
+                        type="color"
+                        (ngModelChange)="getColor($event)"
+                        [(ngModel)]="colorFinish"
+                        style="height: 100%"
+                      />
+                    </div>
+                  </div>
+                </ng-template>
+              </nz-modal>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,236 @@
+#garenal{
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 92.5vh;
+}
+input.ng-touched.ng-invalid {
+  border: 1px solid red;
+}
+.nameproject {
+  width: 400px;
+  border-radius: 10px;
+}
+.colorproject {
+  width: 50px;
+  height: 30px;
+}
+
+.buttonDelete {
+  font-size: 20px;
+  color: rgb(5, 5, 5);
+}
+nz-button {
+  font-size: 50px;
+}
+.button-com :hover {
+  background-color: rgb(76, 184, 211);
+}
+.button-com {
+  text-align: center;
+}
+nz-icon {
+  margin-bottom: 10px;
+}
+input {
+  margin-right: 30px;
+}
+.chartLine {
+  box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  margin-top: 10px;
+}
+.chartDoughnut {
+  box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  margin-top: 10px;
+}
+
+@media only screen and (min-width: 740px){
+  #responTable, #mobile-card{
+    display: none;
+  }
+  #garenal::-webkit-scrollbar-track
+  {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+    border-radius: 3px;
+  }
+
+  #garenal::-webkit-scrollbar
+  {
+    width: 3px;
+    background-color: #d5ecf7;
+    border-radius: 3px;
+  }
+
+  #garenal::-webkit-scrollbar-thumb
+  {
+    background-color: #f50;
+    border-radius: 3px;
+  }
+}
+@media only screen and (max-width: 740px){
+  #mobile-card{
+    margin: 0 3vw;
+    ::ng-deep .ant-card-small > .ant-card-body {
+      padding: 0 12px;
+    }
+  }
+  #tablePc{
+    display: none;
+  }
+  .ant-col-8, .ant-col-12, .ant-col-16 {
+    max-width: 100%;
+  }
+  #progress{
+    padding: 0 2vw !important;
+    ::ng-deep .ant-card-body {
+      padding: 0px;
+    }
+    .ant-row {
+      flex-direction: column;
+    }
+    #card{
+      flex-direction: row;
+    }
+  }
+  #chart{
+    padding: 0 2vw !important;
+    .ant-row {
+      flex-direction: column;
+    }
+    ::ng-deep .ant-card-body {
+      padding: 0px;
+    }
+  }
+  ::ng-deep .ant-statistic{
+    margin-left: 10px;
+  }
+  #headerSetting{
+    padding: 4px !important;
+    .row1{
+      display: flex;
+      flex-direction: column;
+      margin-left: 0px !important;
+      margin-right: 0px !important;
+    }
+    .ant-col-6 {
+        max-width: 100% !important;
+    }
+    ::ng-deep .ant-card-small > .ant-card-body {
+      padding: 6px !important;
+    }
+    .row1child{
+      padding: 5px !important;
+    }
+    .gutter-row{
+      max-height: 76px !important;
+    }
+    #row3{
+      margin-bottom: 8px;
+    }
+  }
+  #settingChart{
+    display: flex !important;
+    flex-direction: column !important;
+      .ant-col-12 {
+        max-width: 100% !important;
+    }
+  }
+}
+#responTable{
+  ::ng-deep .badge {
+    font-size: 0.9em;
+  }
+  ::ng-deep .ant-tag {
+    margin-right: 0px;
+  }
+  td {
+    height: 40px !important;
+}
+  // max-height: 364px;
+  overflow-y: auto;
+  border: 1px solid #f50;
+  border-radius: 7px;
+  table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+    overflow-x: hidden;
+  }
+
+  table caption {
+    font-size: 1.5em;
+    margin: .5em 0 .75em;
+  }
+
+  table tr {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: .55em;
+  }
+
+  table th,
+  table td {
+    padding: .625em;
+    text-align: center;
+  }
+
+  table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  @media screen and (max-width: 600px) {
+    table {
+      border: 0;
+    }
+
+    table caption {
+      font-size: 1.3em;
+    }
+
+    table thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+
+    table tr {
+      display: block;
+      margin-bottom: .625em;
+      overflow-x: hidden;
+    }
+
+    table td {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      font-size: .78em;
+      text-align: right;
+    }
+
+    table td::before {
+      /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    table td:last-child {
+      border-bottom: 0;
+    }
+  }
+}

@@ -1,0 +1,235 @@
+<div class="container-fluid" id="myIssues">
+  <div style="margin-top: 1vh; height: 100%">
+    <div class="header">
+      <div>
+        <nz-select
+          id="selectProject"
+          nzShowSearch
+          nzAllowClear
+          nzPlaceHolder="Select Project"
+          [(ngModel)]="projectId"
+          (ngModelChange)="onChangeProject($event)"
+          style="width: 300px"
+        >
+          <nz-option
+            *ngFor="let item of projectList?.items"
+            nzLabel="{{ item.name }}"
+            nzValue="{{ item.id }}"
+          ></nz-option>
+        </nz-select>
+      </div>
+      <div class="list-input">
+        <button
+          nzSize="small"
+          class="status"
+          [class.choosen]="filterStatus == 'null'"
+          (click)="onChangeStatus('null')"
+          nz-button
+        >
+          <span>All</span>
+        </button>
+        <ng-container *ngFor="let item of listStatus">
+          <button
+            nzSize="small"
+            class="status"
+            [class.choosen]="filterStatus == item.id"
+            (click)="onChangeStatus(item.id)"
+            nz-button
+          >
+            {{ item.name }}
+          </button>
+        </ng-container>
+      </div>
+      <div class="list-bt">
+        <div *ngFor="let bt of button" class="bt-list-name">
+          <button
+            class="bt-name"
+            (click)="changeSearchIssue(bt.id)"
+            [ngClass]="{ active2: isActive2(bt.id) }"
+            nz-button
+            nzDanger
+          >
+            <i [class]="bt.class" [class.iconChoice]="selected2 == bt.id" class="iconBtn"></i>
+            {{ bt.name }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <nz-spin
+      style="
+        display: block;
+        position: relative;
+        margin-left: 25%;
+        margin-top: 25%;
+        width: 50%;
+        z-index: 99;
+        color: #f50;
+      "
+      *ngIf="loaderService.isLoading | async; else doneLoad"
+      nzSimple
+      [nzSize]="'large'"
+      [nzIndicator]="indicatorTemplate"
+    >
+    </nz-spin>
+    <ng-template #indicatorTemplate
+      ><i nz-icon nzType="loading" style="font-size: 35px; color: rgba(255, 85, 0, 0.8)"></i
+    ></ng-template>
+    <ng-template #doneLoad>
+      <div>
+        <nz-card
+          style="width: 100%; font-weight: 500; margin-top: 10px"
+          nzSize="small"
+          class="table-issue"
+        >
+          <div nz-row>
+            <div nz-col nzSpan="3">Project</div>
+            <div nz-col nzSpan="9">Name</div>
+            <div nz-col nzSpan="2">Assignees</div>
+            <div nz-col nzSpan="2">Start Date</div>
+            <div nz-col nzSpan="2">Due Date</div>
+            <div nz-col nzSpan="2">Finish Date</div>
+            <div nz-col nzSpan="2">Status</div>
+            <div nz-col nzSpan="2">Delete</div>
+          </div>
+        </nz-card>
+        <nz-card
+          style="width: 100%; margin-top: 5px"
+          nzSize="small"
+          class="table-issue"
+          *ngFor="let data of listIssues?.items"
+          @fadeIn
+        >
+          <div nz-row>
+            <div nz-col nzSpan="3">{{ data.projectName }}</div>
+            <div nz-col nzSpan="9">
+              <a
+              style="text-decoration: none; color: black;" 
+                nz-tooltip
+                routerLink="/project/{{ data.projectID }}/issues/view/{{ data.id }}"
+                nzTooltipTitle="View Detail"
+                >{{ data.name }}
+            </a>
+            </div>
+            <div nz-col nzSpan="2">{{ data?.assigneesList?.length }}</div>
+            <div nz-col nzSpan="2">
+              {{ data.startDate | date }}
+            </div>
+            <div nz-col nzSpan="2">
+              <nz-tag>{{ data.dueDate | date }}</nz-tag>
+            </div>
+            <div nz-col nzSpan="2">
+              {{ data.finishDate | date }}
+            </div>
+            <div nz-col nzSpan="2">
+              <nz-badge nzColor="{{data.nzColor}}" nzText="{{ data.statusName }}"></nz-badge>
+            </div>
+            <div nz-col nzSpan="2">
+              <i
+                class="iconDelete"
+                nz-icon
+                nzType="close"
+                nzTheme="outline"
+                nz-popconfirm
+                nzPopconfirmTitle="Are you sure delete this issue?"
+                (nzOnConfirm)="RemoveIssue(data.id)"
+                nzTooltipTitle="Remove Issue"
+                nz-tooltip
+              >
+              </i>
+            </div>
+          </div>
+        </nz-card>
+      </div>
+    </ng-template>
+    <div id="mobile-card">
+      <div *ngFor="let data of listIssues?.items">
+        <nz-card
+          nzSize="small"
+          style="width: 100%; padding: 5px; border: 1px solid #f8895191; margin-top: 5px"
+          [nzBordered]="false"
+        >
+          <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+            <div nz-col nzSpan="4" style="font-weight: 500">
+              <span style="float: left">Project:</span>
+            </div>
+            <div nz-col nzSpan="20">
+              <span style="float: right">{{ data.projectName }}</span>
+            </div>
+          </div>
+          <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+            <div nz-col nzSpan="4" style="font-weight: 500"><span style="float: left;">Name:</span></div>
+              <div nz-col nzSpan="20" >
+                <span style="float: right;" >
+                  <a
+                  nz-tooltip
+                  style="text-decoration: none; color: black;" 
+                  routerLink="/project/{{ data.projectID }}/issues/view/{{ data.id }}"
+                  nzTooltipTitle="View Detail"
+                >
+                  {{ data.name }}
+                </a>
+              </span>
+            </div>
+          </div>
+          <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+            <div nz-col nzSpan="4" style="font-weight: 500">
+              <span style="float: left">Assignees:</span>
+            </div>
+            <div nz-col nzSpan="20">
+              <span style="float: right">{{ data?.assigneesList?.length }}</span>
+            </div>
+          </div>
+          <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+            <div nz-col nzSpan="8" style="font-weight: 500">
+              <span style="float: left">Start Date:</span>
+            </div>
+            <div nz-col nzSpan="16">
+              <span style="float: right">{{ data.startDate | date }}</span>
+            </div>
+          </div>
+          <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+            <div nz-col nzSpan="6" style="font-weight: 500"><span style="float: left;">Due Date:</span></div>
+            <div nz-col nzSpan="18" ><span style="float: right;" ><nz-tag>{{ data.dueDate | date }}</nz-tag></span></div>
+          </div>
+          <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+            <div nz-col nzSpan="8" style="font-weight: 500"><span style="float: left;">Finish Date:</span></div>
+            <div nz-col nzSpan="16" ><span style="float: right;" >{{ data.finishDate | date }}</span></div>
+          </div>
+          <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+            <div nz-col nzSpan="4" style="font-weight: 500"><span style="float: left;">Status:</span></div>
+            <div nz-col nzSpan="20" ><span style="float: right;" ><nz-badge nzColor="{{data.nzColor}}" nzText="{{ data.statusName }}"></nz-badge></span></div>
+          </div>
+          <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+            <div nz-col nzSpan="4" style="font-weight: 500">
+              <span style="float: left">Delete:</span>
+            </div>
+            <div nz-col nzSpan="20">
+              <span style="float: right"
+                ><i
+                  class="iconDelete"
+                  nz-icon
+                  nzType="close"
+                  nzTheme="outline"
+                  nz-popconfirm
+                  nzPopconfirmTitle="Are you sure delete this issue?"
+                  (nzOnConfirm)="RemoveIssue(data.id)"
+                  nzTooltipTitle="Remove Issue"
+                  nz-tooltip
+                >
+                </i
+              ></span>
+            </div>
+          </div>
+        </nz-card>
+      </div>
+    </div>
+    <nz-pagination
+      style="padding: 10px 0; float: right"
+      [nzPageIndex]="pageIndex"
+      [nzTotal]="listIssues?.totalCount"
+      nzSimple
+      (nzPageIndexChange)="nzPageIndexChange($event)"
+    ></nz-pagination>
+  </div>
+  <!-- </div> -->
+</div>

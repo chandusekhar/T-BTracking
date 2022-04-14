@@ -1,0 +1,45 @@
+<div class="container-fluid">
+  <div>
+    <button
+      nz-button
+      nzType="primary"
+      nzDanger
+      style="background-color: rgba(255, 85, 0, 0.8); float: right"
+    >
+      <a href="{{ shareService.ELSA_REST_API_SERVER }}/elsa" target="blank"><i class="fas fa-code-branch" style="margin-right: 5px;"></i>Workflow Manager</a>
+    </button>
+  </div>
+  <div style="margin-top: 5px">
+    <nz-card style="width:100%;margin-top: 5px;font-weight: 500;" nzSize="small">
+      <div nz-row>
+        <div nz-col nzSpan="2">$Id</div>
+        <div nz-col nzSpan="3">Name</div>
+        <div nz-col nzSpan="5">Definition Id</div>
+        <div nz-col nzSpan="3">isLatest</div>
+        <div nz-col nzSpan="3">isPublished</div>
+        <div nz-col nzSpan="3">isSingleton</div>
+        <div nz-col nzSpan="3">Persistence Behavior</div>
+        <div nz-col nzSpan="2">version</div>
+      </div>
+    </nz-card>
+    <div class="containerCard">
+      <nz-card style="width:100%;margin-top: 5px" nzSize="small" *ngFor="let definition of definitions?.items">
+        <div nz-row>
+          <div nz-col nzSpan="2">{{definition.$id}}</div>
+          <div nz-col nzSpan="3">{{definition.name}}</div>
+          <div nz-col nzSpan="5">{{definition.definitionId}}</div>
+          <div nz-col nzSpan="3">{{definition.isLatest}}</div>
+          <div nz-col nzSpan="3">{{definition.isPublished}}</div>
+          <div nz-col nzSpan="3">{{definition.isSingleton}}</div>
+          <div nz-col nzSpan="3">{{definition.persistenceBehavior}}</div>
+          <div nz-col nzSpan="2">{{definition.version}}</div>
+        </div>
+      </nz-card>
+    </div>
+  </div>
+  <nz-modal [(nzVisible)]="isVisible" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <ng-container *nzModalContent>
+      <app-elsa-definition [definition]="definitionId"></app-elsa-definition>
+    </ng-container>
+  </nz-modal>
+</div>

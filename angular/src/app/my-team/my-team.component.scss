@@ -1,0 +1,339 @@
+.bt-add{
+    float: right;
+    margin-right: 0.52vw;
+  }
+  .all-select{
+  //  background-color: #ECECEC;
+    margin-top: 0.5vh;
+     display: flex;
+  }
+  .group-department{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .member-team{
+   height: 100%;
+  }
+  ::ng-deep .ant-tabs-content {
+    height: 100%;
+}
+  .table-member{
+   // background: #ECECEC;
+     margin-top: 0.5vh;
+     height: 100%;
+  }
+  .bt-dp{
+    margin: 0.5vh 0.52vw 0px 0.52vw;
+    border-radius: 5px;
+    background-color: darkcyan;
+  }
+  .table-issue{
+  //  background: #ECECEC;
+    height: 100%;
+  }
+  .header-team{
+    margin-top: -1.5vh;
+    height: 5vh;
+    display :flex;
+  //  background-color: #ECECEC;
+  }
+  .list-team{
+    width: 70%; 
+    text-align: center;
+      margin-top: 3vh;
+      margin-left: 10%;
+   //   background: #ECECEC;
+  }
+  .bt-list-department{
+    display:inline-flex;
+    margin-top: 3vh;
+  }
+  .active{
+    background-color: rgb(177, 212, 233);
+  }
+  .header-issue{
+    margin-top: -1.5vh;
+    height: 5vh;
+    display :flex;
+   // background-color: #ECECEC;
+  }
+
+  [nz-tabset] {
+  //  background: #ECECEC;
+  }
+  .bt-list-department{
+    display:inline-flex;
+    margin-top: 3vh;
+  }
+  .bt-dpisue{
+    margin: 0.5vh 0.52vw 0px 0px;
+    border-radius: 5px;
+    background-color: darkcyan;
+  }
+  .bt-Tisue{
+    margin: 0.5vh 0px 0px 0px;
+   // height: 70%;
+    border-radius: 5px;
+    background-color: rgb(30, 120, 161);
+  }
+  .bt-name{
+    margin: 0.5vh 0px 0px 0.52vw;
+    border-radius: 5px;
+  }
+  .bt-list-name{
+    display:inline-flex;
+    margin-top: 3vh;
+  }
+  .bt-list-team{
+    display: inline-flex;;
+  }
+  .active2{
+    background-color: rgb(76, 211, 87);
+  }
+  .input{
+    margin-left: 58%;
+     margin-top: 1vh;
+     input{
+      width: 26.04vw;
+     }
+  }
+  .list-input{
+    margin-top: 0.5vh;
+     display: flex;
+     margin-left: 1.56vw;
+     nz-select{
+      width: 9.38vw;
+     }
+  }
+  @media only screen and (min-width: 741px) {
+    #tableMember1{
+      display: none;
+    }
+    #tableIssue{
+      display: none;
+    }
+  }
+  @media only screen and (max-width: 740px){
+    .all-select{
+      display: block;
+    }
+    .group-department{
+      overflow: auto;
+    }
+    .bt-add{
+      margin-right: 2vw;
+    }
+    .tableAdmin{
+      display: none;
+    }
+    .bt-name{
+      margin-top: 1vh;
+    }
+    .list-input{
+
+      label{
+        display: none;
+      }
+      .endDiv{
+        margin-top: -2vh;
+      }
+      .startDiv{
+        margin-top: -2vh;
+      }
+      nz-select{
+        width: 40vw;
+       }
+    }
+    .bt-list-name{
+     // display:block !important;
+      margin-top: 1vh;
+    }
+    .header-issue{
+      margin-top: -1.6vh;
+    }
+    .input{
+      margin-left: 2% !important;
+      input{
+        width: 50vw;
+       }
+    }
+    .tableMember{
+      display: none;
+    }
+    .header-team{
+      margin-top: -1.6vh;
+    }
+   ::ng-deep .ant-tabs > .ant-tabs-nav .ant-tabs-nav-list, .ant-tabs > div > .ant-tabs-nav .ant-tabs-nav-list {
+      justify-content: center;
+  }
+  }
+  #tableMember1{
+    width: 82vw;
+  border: 1px solid #2db7f5;
+  table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+    overflow-x: hidden;
+  }
+  
+  table caption {
+    font-size: 1.5em;
+    margin: .5em 0 .75em;
+  }
+  
+  table tr {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: .55em;
+  }
+  
+  table th,
+  table td {
+    padding: .625em;
+    text-align: center;
+  }
+  
+  table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  @media screen and (max-width: 600px) {
+    table {
+      border: 0;
+    }
+  
+    table caption {
+      font-size: 1.3em;
+    }
+    
+    table thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+    
+    table tr {
+      display: block;
+      margin-bottom: .625em;
+      overflow-x: hidden;
+    }
+    
+    table td {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      font-size: .8em;
+      text-align: right;
+      word-wrap: break-word;
+    }
+    
+    table td::before {
+      /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    
+    table td:last-child {
+      border-bottom: 0;
+    }
+  }
+  }
+  #tableIssue{
+    width: 310px;
+  border: 1px solid #2db7f5;
+  table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+    overflow-x: hidden;
+  }
+  
+  table caption {
+    font-size: 1.5em;
+    margin: .5em 0 .75em;
+  }
+  
+  table tr {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: .55em;
+  }
+  
+  table th,
+  table td {
+    padding: .625em;
+    text-align: center;
+  }
+  
+  table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  @media screen and (max-width: 600px) {
+    table {
+      border: 0;
+    }
+  
+    table caption {
+      font-size: 1.3em;
+    }
+    
+    table thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+    
+    table tr {
+      display: block;
+      margin-bottom: .625em;
+      overflow-x: hidden;
+    }
+    
+    table td {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      font-size: .8em;
+      text-align: right;
+    }
+    
+    table td::before {
+      /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    
+    table td:last-child {
+      border-bottom: 0;
+    }
+  }
+  }

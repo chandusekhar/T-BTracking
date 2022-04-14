@@ -1,0 +1,594 @@
+<nz-layout style="height: 100vh" class="app-layout">
+  <nz-layout class="app-layout">
+    <nz-header style="height: 7vh">
+      <div class="app-header">
+        <div nz-row id="header">
+          <div nz-col nzSpan="14">
+            <div nz-row>
+              <div nz-col nzSpan="3" id="loGo">
+                <a routerLink="/" class="logo-link">
+                  <img nz-image nzSrc="https://mail.tmtco.asia/custom/webmail/img/loginlogo_2edd6.PNG" alt=""
+                    nzDisablePreview="true" />
+                </a>
+              </div>
+              <div nz-col nzSpan="19">
+                <div
+                  id="header-menu"
+                  *ngIf="
+                    this.router.url != '/' &&
+                    this.router.url != '/dashboard' &&
+                    !this.router.url.includes('sign')
+                  " class="header-menu-left">
+                  <button nz-button nzType="primary" nzType="text" class="btn-header-menu"
+                    (click)="navigate('dashboard')">
+                    <i class="fab fa-windows icon-header-menu"></i> Dashboard
+                  </button>
+                  <button nz-button nzType="primary" nzType="text" class="btn-header-menu" nz-dropdown
+                    [nzDropdownMenu]="menuProjects">
+                    <i class="fas fa-desktop icon-header-menu"></i> Projects
+                  </button>
+                  <nz-dropdown-menu #menuProjects="nzDropdownMenu">
+                    <div class="menuProjectsDrop">
+                      <div
+                      *ngFor="let project of listProject"
+                      (click)="redirectProject(project.id)"
+                      class="sub-Menu"
+                    >
+                      <button nz-button nzType="text" >
+                        {{ project.name }}
+                      </button>
+                    </div>
+                    </div>
+                  </nz-dropdown-menu>
+                  <button nz-button nzType="primary" nzType="text" class="btn-header-menu" nz-dropdown
+                    [nzDropdownMenu]="menuNew">
+                    <i class="fas fa-plus icon-header-menu"></i> New
+                  </button>
+                  <nz-dropdown-menu class="dropdownShadown" #menuNew="nzDropdownMenu">
+                    <div class="sub-Menu">
+                      <button nz-button nzType="text" (click)="showModalAddProject()">
+                        <i class="fas fa-desktop icon-sub-menu"></i>
+                        Project
+                      </button>
+                    </div>
+                    <div class="sub-Menu">
+                      <button nz-button nzType="text" (click)="showModalAddMember()">
+                        <i class="fas fa-user-plus icon-sub-menu"></i>
+                        Members
+                      </button>
+                    </div>
+                    <div class="sub-Menu">
+                      <button nz-button nzType="text" (click)="showModalAddIssue()">
+                        <i class="fas fa-bug icon-sub-menu"></i> Bug
+                      </button>
+                    </div>
+                  </nz-dropdown-menu>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div nz-col nzSpan="10" *ngIf="!this.router.url.includes('sign')">
+            <div display="flex" style="float: right">
+              <i class="fas fa-bell icon-right-menu" nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
+                <nz-badge class="Notifytion" [nzCount]="listNotify?.unRead" [nzStyle]="{
+                    backgroundColor: 'white',
+                    color: '#f50',
+                    fontWeight: 1000,
+                    fontSize: '15px'
+                  }" style="margin-left: 5px">
+                  <a class="head-example"></a>
+                </nz-badge>
+              </i>
+              <nz-dropdown-menu #menu="nzDropdownMenu">
+                <div id="notifi">
+                  <div class="notifications-dropdown user-notifications-dropdown" style="display: block">
+                    <div class="dropdown-caret">
+                      <div class="caret-fill"></div>
+                    </div>
+                    <div class="dropdown-body">
+                      <div class="dropdown-header clearfix">
+                        <div class="float-left">Notifications</div>
+                        <a style="float: right; text-decoration: underline; color: #f50" (click)="updateUnread()">Mark
+                          all as read</a>
+                      </div>
+                      <ul *ngFor="let item of listNotify?.resultRequestDto?.items">
+                        <li [class.unRead]="!item.isRead">
+                          <a (click)="EnterNotify(item.issueID, item.id)" class="clearfix">
+                            <div class="float-left">
+                              <img src="https://i.imgur.com/b08hxPY.png" alt="Marty" />
+                            </div>
+                            <div class="float-right">
+                              <div class="messageNotifi">
+                                <strong>{{ item.userName }} :</strong> {{ item.message }}
+                              </div>
+
+                              <div class="time">
+                                <span class="ion-chatbubble text-green">&nbsp;</span>
+                                <abbr class="timeago">{{ item.creationTime | notification }}
+                                  <label style="float: right">{{
+                                    item.creationTime | date
+                                    }}</label></abbr>
+                              </div>
+                            </div>
+                          </a>
+                        </li>
+                      </ul>
+                      <div>
+                        <label style="
+                            float: right;
+                            text-decoration: underline;
+                            margin-right: 10px;
+                            color: #f50;
+                            cursor: pointer;
+                            font-size:14px
+                          " (click)="getMoreListNotify()"><i nz-icon nzType="loading" nzTheme="outline"
+                            style="color: #f50; margin-right: 5px" *ngIf="notificationLoading"></i>Show More
+                          Notifications</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- <div class="notify">
+                    <div *ngFor="let item of listNotify?.resultRequestDto?.items">
+                      <div nz-row id="listNotify">
+                        <div nz-col nzSpan="20">
+                          <p (click)="EnterNotify(item.issueID)" [class.unRead]="!item.isRead">
+                            From <b>{{ item.userName }}</b> : {{ item.message }}
+                          </p>
+                        </div>
+                        <div nz-col nzSpan="4">
+                          <p [class.unRead]="!item.isRead">{{ item.creationTime | date: 'short' }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div> -->
+              </nz-dropdown-menu>
+
+              <i class="fab fa-facebook-messenger icon-right-menu" [routerLink]="'/messenger'"
+                nzTooltipTitle="Go to messenger" nzTooltipPlacement="bottom" nz-tooltip>
+                <nz-badge [nzCount]="conversationService.countUnReadMessage" [nzStyle]="{
+                    backgroundColor: 'white',
+                    color: '#f50',
+                    fontWeight: 1000,
+                    fontSize: '15px'
+                  }">
+                  <a class="head-example"></a>
+                </nz-badge>
+              </i>
+              <i class="fas fa-bug icon-right-menu" (click)="showModal()">
+                <nz-badge (click)="showModal()" [nzCount]="countIssue" id="countbugIssues" [nzStyle]="{
+                    backgroundColor: 'white',
+                    color: '#f50',
+                    fontWeight: 1000,
+                    fontSize: '15px'
+                  }" style="margin-left: 5px">
+                  <a class="head-example"></a>
+                </nz-badge>
+              </i>
+              <label id="userName" style="margin-right: 10px; font-size: 14px; font-weight: 500">{{
+                shareService.getUserData?.name
+                }}</label>
+              <i class="fas fa-cog icon-right-menu" nz-dropdown [nzDropdownMenu]="menuSetting"></i>
+              <nz-dropdown-menu #menuSetting="nzDropdownMenu">
+                <ul nz-menu>
+                  <div class="sub-Menu">
+                    <button nz-button nzType="text" class="btn-header-menu" (click)="navigate('my-profile')">
+                      <i class="fas fa-id-card icon-sub-menu"></i>
+                      My Profile
+                    </button>
+                  </div>
+                  <!-- <div class="sub-Menu">
+                    <button
+                      nz-button
+                      nzType="text"
+                      class="btn-header-menu"
+                      *ngIf="currentPath"
+                      (click)="navigate('my-follow')"
+                    >
+                      <i class="fas fa-star-half-alt icon-sub-menu"></i>
+                      My Follows
+                    </button>
+                  </div> -->
+                  <div class="sub-Menu">
+                    <button nz-button nzType="text" class="btn-header-menu" (click)="signOut()">
+                      <i class="fas fa-sign-out-alt icon-sub-menu"></i>
+                      Sign Out
+                    </button>
+                  </div>
+                </ul>
+              </nz-dropdown-menu>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nz-header>
+
+    <nz-layout id="menu">
+      <nz-sider class="sider" style="background-color: rgb(255, 255, 255); display: block; box-shadow: 2px 2px #e9e8e6"
+        *ngIf="
+          this.router.url != '/messenger' &&
+          this.router.url != '/' &&
+          this.router.url != '/my-profile' &&
+          this.router.url != '/departmentManage/admin' &&
+          this.router.url != '/team' &&
+          this.router.url != '/issue-department' &&
+          this.router.url != '/admin' &&
+          this.router.url != '/workflow' &&
+          this.router.url != '/my-issue' &&
+          this.router.url != '/myFollow' &&
+          this.router.url != '/departmentManage' &&
+          this.router.url != '/dashboard' &&
+          this.router.url != '/departmentManage/workflow' &&
+          this.router.url != '/departmentManage/department' &&
+          this.router.url != '/departmentManage/team' &&
+          this.router.url != '/departmentManage/issue-department' &&
+          this.router.url != '/departmentManage/my-issue' &&
+          this.router.url != '/departmentManage/myFollow' &&
+          this.router.url != '/department' &&
+          this.router.url != '/my-follow' &&
+          this.router.url != '/departmentManage/dashboard' &&
+          this.router.url != '/my-department' &&
+          this.router.url != '/my-team' &&
+          this.router.url != '/profile' &&
+          !this.router.url.includes('sign')
+        " class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md" [(nzCollapsed)]="isCollapsed"
+        [nzTrigger]="null">
+        <div class="projectNameParent">
+          <div class="projectName">
+            <div class="boxStartName"><p>{{GetCharAt(projectName)}}</p></div>
+            <span>{{projectName | formatMaxstring: [15, '...']}}</span>
+          </div>
+        </div>
+        <div class="child-sidebar" [routerLink]="currentPath + 'home'"
+          [class.choosenBar]="currentRouter.includes('home')">
+          <div nz-row>
+            <div nz-col nzSpan="5">
+              <div>
+                <i class="fas fa-stream icon-child" [class.icon-choosen]="currentRouter.includes('home')"></i>
+              </div>
+            </div>
+            <div nz-col nzSpan="19" style="font-weight: 500" class="menuName">History</div>
+          </div>
+        </div>
+        <div class="child-sidebar" [routerLink]="currentPath + 'add-issue'"
+          [class.choosenBar]="currentRouter.includes('add-issue')">
+          <div nz-row>
+            <div nz-col nzSpan="5">
+              <div>
+                <i class="fas fa-plus icon-child" [class.icon-choosen]="currentRouter.includes('add-issue')"></i>
+              </div>
+            </div>
+            <div nz-col nzSpan="19" style="font-weight: 500" class="menuName">New {{projectTfsDto?.witType}}</div>
+          </div>
+        </div>
+        <div class="child-sidebar" [routerLink]="currentPath + 'issues'"
+          [class.choosenBar]="currentRouter.includes('issues')">
+          <div nz-row>
+            <div nz-col nzSpan="5">
+              <div>
+                <i class="{{projectTfsDto?.icon}} icon-child" [class.icon-choosen]="currentRouter.includes('issues')">
+                </i>
+              </div>
+            </div>
+            <div nz-col nzSpan="19" style="font-weight: 500" class="menuName">{{projectTfsDto?.witType}}s <label
+                *ngIf="countIssue > 0">({{countIssue}})</label></div>
+          </div>
+        </div>
+        <div class="child-sidebar" [routerLink]="currentPath + 'board'"
+          [class.choosenBar]="currentRouter.includes('board')">
+          <div nz-row>
+            <div nz-col nzSpan="5">
+              <div>
+                <i class="fas fa-chalkboard-teacher icon-child"
+                  [class.icon-choosen]="currentRouter.includes('board')"></i>
+              </div>
+            </div>
+            <div nz-col nzSpan="19" style="font-weight: 500" class="menuName">Board</div>
+          </div>
+        </div>
+        <div class="child-sidebar" [routerLink]="currentPath + 'settings/statistic'"
+          [class.choosenBar]="currentRouter.includes('settings/statistic')">
+          <div nz-row>
+            <div nz-col nzSpan="5">
+              <div>
+                <i class="fas fa-chart-pie icon-child"
+                  [class.icon-choosen]="currentRouter.includes('settings/statistic')"></i>
+              </div>
+            </div>
+            <div nz-col nzSpan="19" style="font-weight: 500" class="menuName">Statistic</div>
+          </div>
+        </div>
+        <div class="child-sidebar" [routerLink]="currentPath + 'settings/config'"
+          [class.choosenBar]="currentRouter.includes('settings/config')">
+          <div nz-row>
+            <div nz-col nzSpan="5">
+              <div>
+                <i class="fas fa-user-cog icon-child"
+                  [class.icon-choosen]="currentRouter.includes('settings/config')"></i>
+              </div>
+            </div>
+            <div nz-col nzSpan="19" style="font-weight: 500" class="menuName">Setting</div>
+          </div>
+        </div>
+        <div class="child-sidebar" [routerLink]="currentPath + 'settings/user'"
+          [class.choosenBar]="currentRouter.includes('settings/user')">
+          <div nz-row>
+            <div nz-col nzSpan="5">
+              <div>
+                <i class="fas fa-users icon-child" [class.icon-choosen]="currentRouter.includes('settings/user')"></i>
+              </div>
+            </div>
+            <div nz-col nzSpan="19" style="font-weight: 500" class="menuName">Members</div>
+          </div>
+        </div>
+        <div class="child-sidebar" [routerLink]="currentPath + 'timeOnProject'"
+          [class.choosenBar]="currentRouter.includes('timeOnProject')">
+          <div nz-row>
+            <div nz-col nzSpan="5">
+              <div>
+                <i class="fas fa-clock icon-child" [class.icon-choosen]="currentRouter.includes('timeOnProject')"></i>
+              </div>
+            </div>
+            <div nz-col nzSpan="19" style="font-weight: 500" class="menuName">Time On</div>
+          </div>
+        </div>
+        <!-- <div class="child-sidebar" (click)="showMessProject()">
+        <div nz-row>
+          <div nz-col nzSpan="5">
+            <div>
+              <i class="fab fa-facebook-messenger icon-child" style="margin-left: 3px"></i>
+            </div>
+          </div>
+          <div nz-col nzSpan="19" style="font-weight: 500" class="menuName">Chat In Project</div>
+        </div>
+      </div> -->
+      </nz-sider>
+      <nz-layout>
+        <nz-content>
+          <div [ngClass]="{ 'dashboard-route': this.router.url == '/dashboard' }" class="inner-content" [ngStyle]="{
+              'background-color':
+                this.router.url == '/' ||
+                this.router.url == '/dashboard' ||
+                this.router.url.includes('sign')
+                  ? '#fff0'
+                  : '#fff'
+            }">
+            <router-outlet></router-outlet>
+          </div>
+        </nz-content>
+      </nz-layout>
+      <!-- <button  class="open-button" (click)="showMesss()"><i nz-icon nzType="message" nzTheme="outline" style="font-size: 42px;" ></i></button> -->
+    </nz-layout>
+    <nz-modal class="customModal" [(nzVisible)]="isVisible" nzWidth="90%" (nzOnCancel)="handleCancel()"
+      (nzOnOk)="handleOk()" [nzFooter]="modalFooter">
+      <ng-container *nzModalContent>
+        <div nz-row style="margin-bottom: 10px" class="headerModelbug">
+          <div nz-col nzSpan="4">
+            <nz-select style="width: 100%" nzShowSearch nzAllowClear nzPlaceHolder="Select a Project"
+              [(ngModel)]="projectId" (ngModelChange)="onChangeProject($event)">
+              <nz-option *ngFor="let item of listProject" nzLabel="{{ item.name }}" nzValue="{{ item.id }}"></nz-option>
+            </nz-select>
+          </div>
+          <div nz-col nzSpan="8" style="margin: 5px 0 0 10px" class="headerModelbug2">
+            <button nzSize="small" class="status" [class.choosen]="Filter == 'null'" (click)="onChangeStatus('null')"
+              nz-button>
+              <span>All</span>
+            </button>
+            <ng-container *ngFor="let item of listStatus">
+              <button nzSize="small" class="status" [class.choosen]="Filter == item.id"
+                (click)="onChangeStatus(item.id)" nz-button>
+                {{ item.name }}
+              </button>
+            </ng-container>
+          </div>
+          <div nz-col nzSpan="12"></div>
+        </div>
+        <nz-spin style="
+            display: block;
+            position: relative;
+            margin-left: 50%;
+            margin-top: 5%;
+            width: 50%;
+            z-index: 99;
+          " *ngIf="loaderService.isLoading | async; else doneLoad" [nzIndicator]="indicatorTemplate" nzSimple
+          [nzSize]="'large'">
+        </nz-spin>
+        <ng-template #indicatorTemplate><i nz-icon nzType="loading" style="font-size: 35px; color: #f50"></i>
+        </ng-template>
+        <ng-template #doneLoad>
+          <nz-card style="width: 100%; font-weight: 500" nzSize="small" id="result">
+            <div nz-row>
+              <div nz-col nzSpan="3">Project</div>
+              <div nz-col nzSpan="9">Name</div>
+              <div nz-col nzSpan="2">Priority</div>
+              <div nz-col nzSpan="2">Level</div>
+              <div nz-col nzSpan="2">Start Date</div>
+              <div nz-col nzSpan="2">Due Date</div>
+              <div nz-col nzSpan="2">Finish Date</div>
+              <div nz-col nzSpan="2">Status</div>
+            </div>
+          </nz-card>
+          <div class="containerCard" id="result">
+            <nz-card style="width: 100%; margin-top: 5px" nzSize="small"
+              *ngFor="let data of listAssign?.pagedResultDto.items">
+              <div nz-row>
+                <div nz-col nzSpan="3">{{ data?.project }}</div>
+                <div nz-col nzSpan="9">
+                  <a nz-tooltip nzTooltipTitle="View Detail" style="text-decoration: none; color: black; "
+                    (click)="routerBug(data.projectID, data.issueID)">{{ data?.issueName }}</a>
+                </div>
+                <div nz-col nzSpan="2">{{ data?.priorityValue }}</div>
+                <div nz-col nzSpan="2">{{ data?.levelValue }}</div>
+                <div nz-col nzSpan="2">{{ data?.startDate | date }}</div>
+                <div nz-col nzSpan="2">
+                  {{ data?.dueDate | date }}
+                </div>
+                <div nz-col nzSpan="2">
+                  {{ data?.finishDate | date }}
+                </div>
+                <div nz-col nzSpan="2" style="font-weight: 500">
+                  <nz-badge nzColor="{{data.nzColor}}" nzText="{{ data.statusName }}"></nz-badge>
+                </div>
+              </div>
+            </nz-card>
+          </div>
+
+          <div id="mobile-card">
+            <div *ngFor="let data of listAssign?.pagedResultDto.items">
+              <nz-card nzSize="small" style="width: 100%; padding: 5px; border: 1px solid #f8895191; margin-top: 5px"
+                [nzBordered]="false">
+                <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                  <div nz-col nzSpan="4" style="font-weight: 500">
+                    <span style="float: left">Project:</span>
+                  </div>
+                  <div nz-col nzSpan="20">
+                    <span style="float: right">{{ data?.project }}</span>
+                  </div>
+                </div>
+                <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                  <div nz-col nzSpan="4" style="font-weight: 500">
+                    <span style="float: left">Name:</span>
+                  </div>
+                  <div nz-col nzSpan="20">
+                    <span style="float: right">
+                      <nz-tag (click)="routerBug(data.projectID, data.issueID)" [nzColor]="'rgba(255, 85, 0, 0.8)'">{{
+                        data?.issueName }}</nz-tag>
+                    </span>
+                  </div>
+                </div>
+                <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                  <div nz-col nzSpan="4" style="font-weight: 500">
+                    <span style="float: left">Priority:</span>
+                  </div>
+                  <div nz-col nzSpan="20">
+                    <span style="float: right">{{ data?.priorityValue }}</span>
+                  </div>
+                </div>
+                <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                  <div nz-col nzSpan="4" style="font-weight: 500">
+                    <span style="float: left">Level:</span>
+                  </div>
+                  <div nz-col nzSpan="20">
+                    <span style="float: right">{{ data?.levelValue }}</span>
+                  </div>
+                </div>
+                <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                  <div nz-col nzSpan="8" style="font-weight: 500">
+                    <span style="float: left">Start Date:</span>
+                  </div>
+                  <div nz-col nzSpan="16">
+                    <span style="float: right">{{ data?.startDate | date }}</span>
+                  </div>
+                </div>
+                <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                  <div nz-col nzSpan="8" style="font-weight: 500">
+                    <span style="float: left">Due Date:</span>
+                  </div>
+                  <div nz-col nzSpan="16">
+                    <span style="float: right">
+                      <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'">{{
+                        data?.dueDate | date
+                        }}</nz-tag>
+                    </span>
+                  </div>
+                </div>
+                <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                  <div nz-col nzSpan="8" style="font-weight: 500">
+                    <span style="float: left">Finish Date:</span>
+                  </div>
+                  <div nz-col nzSpan="16">
+                    <span style="float: right">
+                      <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'">{{
+                        data?.finishDate | date
+                        }}</nz-tag>
+                    </span>
+                  </div>
+                </div>
+                <div nz-row style="border-bottom: 1px solid #f0f2f5; margin-top: 5px">
+                  <div nz-col nzSpan="4" style="font-weight: 500">
+                    <span style="float: left">Status:</span>
+                  </div>
+                  <div nz-col nzSpan="20">
+                    <span style="float: right">
+                      <nz-tag [nzColor]="'rgba(255, 85, 0, 0.8)'">{{
+                        data?.statusName
+                        }}</nz-tag>
+                    </span>
+                  </div>
+                </div>
+              </nz-card>
+            </div>
+          </div>
+        </ng-template>
+        <div style="margin-bottom: 20px;">
+          <nz-pagination [nzPageIndex]="pageIndex" [nzTotal]="totalIssueCount" [nzSize]="'small'"
+            style="margin-top: 10px; margin-bottom: 5px; float: right"
+            (nzPageIndexChange)="PageIndexAssigneeChange($event)" (nzPageSizeChange)="PageSizeAssigneeChange($event)"
+            nzShowSizeChanger nzShowQuickJumper [nzPageSizeOptions]="[10, 20, 30, 40, totalIssueCount]"></nz-pagination>
+        </div>
+      </ng-container>
+      <ng-template #modalFooter></ng-template>
+    </nz-modal>
+    <nz-modal [(nzVisible)]="isVisibleAddProject" nzTitle="New Project" (nzOnCancel)="handleCancelAddProject()"
+      (nzOnOk)="handleOkAddProject()" [nzOkLoading]="isOkLoadingAddProject">
+      <ng-template nzModalContent>
+        <div *ngIf="checktext != ''" style="margin-bottom: 10px">
+          <nz-alert nzType="error" nzMessage="{{ checktext }}" nzShowIcon></nz-alert>
+        </div>
+        <div>
+          <input autofocus nz-input placeholder="Project Name" [(ngModel)]="valueAddProject"
+            (ngModelChange)="checkNameExist(valueAddProject)" required />
+        </div>
+        <div style="margin-top: 10px">
+          <label> ( Existing items ) :</label>
+        </div>
+        <div>
+          <label *ngFor="let project of listProject"> {{ project.name }} /</label>
+        </div>
+      </ng-template>
+    </nz-modal>
+    <nz-modal [(nzVisible)]="isVisibleAddMember" nzTitle="Add Member" (nzOnCancel)="handleCancelAddMember()"
+      (nzOnOk)="CreateMember()" [nzOkLoading]="isOkLoadingAddMember">
+      <ng-template nzModalContent>
+        <nz-select nzMode="multiple" nzShowSearch nzAllowClear nzPlaceHolder="Select a person"
+          [(ngModel)]="selectedUserAssign">
+          <nz-option *ngFor="let user of listUser" nzLabel="{{ user.name }}" nzValue="{{ user.id }}">
+          </nz-option>
+        </nz-select>
+      </ng-template>
+    </nz-modal>
+    <nz-modal [nzStyle]="{ top: '20px' }" [nzWidth]="1200" [(nzVisible)]="shareService.modalAddIssue" [nzFooter]="modalFooter"
+      (nzOnCancel)="handleCancelAddIssue()">
+      <ng-container *nzModalContent>
+        <app-add-issue></app-add-issue>
+      </ng-container>
+      <ng-template #modalFooter></ng-template>
+    </nz-modal>
+    <div>
+      <app-mini-chatbox (messProject)="reciveFalseMess($event)" [test1]="test1" class="minichat"
+        (positionMini)="inputPositionMiniChat($event)"
+        *ngIf="!this.router.url.includes('sign') && this.router.url != '/messenger'">
+      </app-mini-chatbox>
+      <!-- [ngClass]="{'positionMiniChat':positionMiniChat.length!=0 && !dragTemp  ,'head-example1':positionMiniChat.length==0 && dragTemp,'positionMiniChatTogge':!conversationService.positionMini && !dragTemp }" -->
+      <div
+        class="head-example1"
+        cdkDrag *ngIf="!this.router.url.includes('sign') && this.router.url != '/messenger'"
+        (cdkDragStarted)="handleDragStart($event)">
+        <div (click)="open($event)" class="mainMess">
+          <nz-badge [nzCount]="conversationService.countUnReadMessage" nzTooltipTitle="Message"
+            nzTooltipPlacement="leftTop" nz-tooltip>
+            <i class="fab fa-facebook-messenger"></i>
+          </nz-badge>
+        </div>
+      </div>
+    </div>
+
+    <nz-drawer [nzClosable]="false" [nzVisible]="visibledrawer" nzPlacement="right" nzTitle="T-BugTracking Messenger"
+      (nzOnClose)="close()">
+      <ng-container *nzDrawerContent>
+        <app-drawer-chat *ngIf="visibledrawer" (drawerFalse)="receiveDrawer($event)"></app-drawer-chat>
+      </ng-container>
+    </nz-drawer>
+  </nz-layout>
+</nz-layout>
